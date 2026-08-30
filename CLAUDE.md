@@ -8,7 +8,7 @@ dashboard.
 ## Architecture
 
 ```
-config/sources.yaml        20 outlets: url, country, lang, lean (3-way: left/center/right, from AllSides / Ad Fontes ratings — basis commented per source), type
+config/sources.yaml        21 outlets: url, country, lang, lean (3-way: left/center/right, from AllSides / Ad Fontes ratings — basis commented per source), type
 config/keywords.yaml       multilingual Israel keyword pre-filter (en/fr/de/es/it)
 prompts/sentiment_rubric_v1.md   the scoring rubric (versioned — see below)
 pipeline/                  the whole pipeline (plain Python, no agent in the loop)

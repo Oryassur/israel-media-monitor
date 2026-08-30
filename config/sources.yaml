@@ -50,6 +50,13 @@ sources:
     lang: en
     lean: left  # AllSides: Lean Left
     type: broadcaster
+  - name: newsweek
+    display: Newsweek
+    url: https://www.newsweek.com
+    country: US
+    lang: en
+    lean: center  # AllSides: Center (March 2026 editorial review)
+    type: magazine
 
   # --- United Kingdom ---
   - name: bbc
