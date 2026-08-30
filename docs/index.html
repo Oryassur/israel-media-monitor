@@ -366,10 +366,13 @@ function renderItems(list,title){
     row.appendChild(scoreChip(it.s));
     const h=document.createElement("div");h.className="h";
     const a=document.createElement("a");a.href=it.u;a.target="_blank";a.rel="noopener";a.textContent=it.h;
+    let tr=null;
+    if(it.ht){tr=document.createElement("div");tr.className="m";tr.style.fontStyle="italic";
+      tr.style.color="var(--ink2)";tr.textContent="→ "+it.ht}
     const m=document.createElement("div");m.className="m";
     m.textContent=`${disp[it.src]||it.src} · ${new Date(it.fs).toLocaleString(undefined,{month:"short",day:"numeric",hour:"numeric"})}`
       +(it.c?` · ${it.c.replaceAll("_"," ")}`:"")+(it.w>=3?" · top story":it.w===2?" · prominent":"");
-    h.append(a,m);row.appendChild(h);el.appendChild(row);
+    h.append(a);if(tr)h.append(tr);h.append(m);row.appendChild(h);el.appendChild(row);
   }
 }
 

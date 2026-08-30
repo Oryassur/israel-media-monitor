@@ -77,7 +77,13 @@ def run(no_llm=False):
 
     # Score fresh items plus earlier ones that missed scoring, within the retry window
     cutoff = (now - timedelta(hours=SCORE_RETRY_WINDOW_H)).strftime("%Y-%m-%dT%H:%M:%SZ")
-    pending = [r for r in items_idx.values() if "related" not in r and r["first_seen"] >= cutoff]
+    pending = [
+        r for r in items_idx.values()
+        if r["first_seen"] >= cutoff and (
+            "related" not in r
+            or (r["lang"] != "en" and r.get("related") is not False and "ht" not in r)
+        )
+    ]
     disp = {s["name"]: s["display"] for s in sources}
     if pending and not no_llm:
         for r in pending:

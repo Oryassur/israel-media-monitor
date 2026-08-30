@@ -42,8 +42,9 @@ def _build_prompt(batch):
         f"{rubric}\n\n"
         "Score every headline below. Respond with ONLY a JSON array (no prose, no markdown fence), "
         "one object per headline, each: "
-        '{"i": <index>, "related": <bool>, "score": <int -2..2>, "category": "<category>"}. '
-        "If related is false, still include score 0 and category \"other\".\n\n"
+        '{"i": <index>, "related": <bool>, "score": <int -2..2>, "category": "<category>", "t": <string|null>}. '
+        "\"t\" is a faithful English translation of the headline when its lang is not \"en\", else null. "
+        "If related is false, still include score 0, category \"other\", and \"t\" as specified.\n\n"
         f"Headlines:\n{json.dumps(lines, ensure_ascii=False, indent=1)}"
     )
 
@@ -60,10 +61,12 @@ def _parse_response(text, batch_len):
             continue
         score = max(-2, min(2, int(obj.get("score", 0))))
         cat = obj.get("category", "other")
+        t = obj.get("t")
         out[i] = {
             "related": bool(obj.get("related", True)),
             "score": score,
             "category": cat if cat in VALID_CATEGORIES else "other",
+            "t": t.strip() if isinstance(t, str) and t.strip() else None,
         }
     return out
 
@@ -120,10 +123,15 @@ def score_items(items, backend=None, log=print):
             r = parsed.get(i)
             if r is None:
                 continue
-            it["related"] = r["related"]
-            it["sentiment"] = r["score"] if r["related"] else None
-            it["category"] = r["category"] if r["related"] else None
-            it["model"] = model_tag
-            it["rubric"] = RUBRIC_VERSION
+            if "related" not in it:  # full scoring for a new item
+                it["related"] = r["related"]
+                it["sentiment"] = r["score"] if r["related"] else None
+                it["category"] = r["category"] if r["related"] else None
+                it["model"] = model_tag
+                it["rubric"] = RUBRIC_VERSION
+            # translation (also backfills already-scored non-English items
+            # without touching their existing score)
+            if it.get("lang") != "en" and r["t"]:
+                it["ht"] = r["t"]
             scored += 1
     return scored

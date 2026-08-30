@@ -60,7 +60,7 @@ def build():
 
     # recent items for the drill-down panel (confirmed related, or still unscored)
     recent_items = [
-        {"src": r["source"], "h": r["headline"], "u": r["url"],
+        {"src": r["source"], "h": r["headline"], "ht": r.get("ht"), "u": r["url"],
          "fs": r["first_seen"], "ls": r["last_seen"], "w": r["best_weight"],
          "s": r.get("sentiment"), "c": r.get("category")}
         for r in items
