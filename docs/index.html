@@ -129,7 +129,14 @@ footer a{color:inherit}
   (stories below the top 20 are tracked and listed as "below fold" but don't move the indexes). <i>Sentiment</i> scores each Israel-related headline's framing
   toward Israel on a fixed rubric (−2 hostile … +2 sympathetic) using a language model; scores are
   cached per headline and record the model + rubric version. Hours where an outlet failed to respond
-  are excluded, not counted as zero. Headline drill-down covers the most recent 7 days.
+  are excluded, not counted as zero.
+  Political lean (Left / Center / Right) is assigned mechanically from published ratings —
+  <a href="https://www.allsides.com/media-bias/media-bias-chart" rel="noopener">AllSides Media Bias Ratings</a>
+  where the outlet is rated (Lean&nbsp;Left/Left → Left, Center → Center, Lean&nbsp;Right/Right → Right),
+  <a href="https://adfontesmedia.com" rel="noopener">Ad Fontes Media</a> for international outlets they
+  cover, and the widely documented characterization otherwise; the per-outlet basis is noted in
+  <a href="https://github.com/Oryassur/israel-media-monitor/blob/main/config/sources.yaml" rel="noopener">config/sources.yaml</a>.
+  Headline drill-down covers the most recent 7 days.
   Source code &amp; data: <a id="repolink" href="https://github.com/Oryassur/israel-media-monitor">GitHub</a>.
 </footer>
 </div>
@@ -139,7 +146,8 @@ footer a{color:inherit}
 const $=s=>document.querySelector(s);
 const SLOTS=["--s1","--s2","--s3","--s4","--s5"];
 const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
-const LEAN_ORDER=["left","center-left","center","center-right","right"];
+const LEAN_ORDER=["left","center","right"];
+const cap=s=>s?s[0].toUpperCase()+s.slice(1):s;
 const REGION=(c)=>c==="US"?"US":c==="UK"?"UK":["FR","DE","ES","IT"].includes(c)?"Europe":"Other";
 const REGION_ORDER=["US","UK","Europe","Other"];
 const RANGES=[["24h",1],["7d",7],["30d",30],["90d",90],["All",99999]];
@@ -174,9 +182,9 @@ function buildControls(){
   };
   seg($("#rangeSeg"),RANGES.map(r=>[r[0],r[0]]),()=>state.range,v=>state.range=v);
   seg($("#splitSeg"),SPLITS.map(s=>[s[0],s[1]]),()=>state.split,v=>state.split=v);
-  const fill=(sel,vals)=>{for(const v of [...new Set(vals)]){const o=document.createElement("option");o.value=v;o.textContent=v;sel.appendChild(o)}};
+  const fill=(sel,vals,fmt)=>{for(const v of [...new Set(vals)]){const o=document.createElement("option");o.value=v;o.textContent=fmt?fmt(v):v;sel.appendChild(o)}};
   fill($("#fCountry"),META.sources.map(s=>s.country));
-  fill($("#fLean"),LEAN_ORDER.filter(l=>META.sources.some(s=>s.lean===l)));
+  fill($("#fLean"),LEAN_ORDER.filter(l=>META.sources.some(s=>s.lean===l)),cap);
   fill($("#fType"),META.sources.map(s=>s.type));
   for(const s of META.sources){const o=document.createElement("option");o.value=s.name;o.textContent=s.display;$("#fSource").appendChild(o)}
   for(const [id,key] of [["#fCountry","country"],["#fLean","lean"],["#fType","type"],["#fSource","source"]])
@@ -194,7 +202,7 @@ function selectedSources(){
 function groupsFor(sources){
   if(state.split==="lean"){
     const gs=LEAN_ORDER.filter(l=>sources.some(s=>s.lean===l));
-    return gs.map(l=>({key:l,label:l,slot:LEAN_ORDER.indexOf(l),members:new Set(sources.filter(s=>s.lean===l).map(s=>s.name))}));
+    return gs.map(l=>({key:l,label:cap(l),slot:LEAN_ORDER.indexOf(l),members:new Set(sources.filter(s=>s.lean===l).map(s=>s.name))}));
   }
   if(state.split==="region"){
     const gs=REGION_ORDER.filter(r=>sources.some(s=>REGION(s.country)===r));

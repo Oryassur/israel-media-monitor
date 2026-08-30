@@ -1,5 +1,8 @@
 # Western media sources monitored by the pipeline.
-# lean: published composite of AllSides / Ad Fontes style ratings (left / center-left / center / center-right / right)
+# lean: 3-way (left / center / right), assigned mechanically from published ratings:
+#   AllSides Media Bias Ratings where the outlet is rated (Lean Left/Left -> left,
+#   Center -> center, Lean Right/Right -> right); Ad Fontes Media for internationals
+#   they cover; otherwise the widely documented characterization. Basis noted per source.
 # weight_profile: how homepage rank maps to prominence (see pipeline/extract.py)
 # selector: optional CSS scope for the main content area (falls back to full page)
 
@@ -10,42 +13,42 @@ sources:
     url: https://www.nytimes.com
     country: US
     lang: en
-    lean: center-left
+    lean: left  # AllSides: Lean Left
     type: broadsheet
   - name: usatoday
     display: USA Today
     url: https://www.usatoday.com
     country: US
     lang: en
-    lean: center
+    lean: left  # AllSides: Lean Left
     type: broadsheet
   - name: nypost
     display: New York Post
     url: https://nypost.com
     country: US
     lang: en
-    lean: right
+    lean: right  # AllSides: Lean Right
     type: tabloid
   - name: cnn
     display: CNN
     url: https://edition.cnn.com
     country: US
     lang: en
-    lean: center-left
+    lean: left  # AllSides: Lean Left
     type: broadcaster
   - name: foxnews
     display: Fox News
     url: https://www.foxnews.com
     country: US
     lang: en
-    lean: right
+    lean: right  # AllSides: Right
     type: broadcaster
   - name: nbcnews
     display: NBC News
     url: https://www.nbcnews.com
     country: US
     lang: en
-    lean: center-left
+    lean: left  # AllSides: Lean Left
     type: broadcaster
 
   # --- United Kingdom ---
@@ -54,28 +57,28 @@ sources:
     url: https://www.bbc.com/news
     country: UK
     lang: en
-    lean: center
+    lean: center  # AllSides: Center
     type: broadcaster
   - name: guardian
     display: The Guardian
     url: https://www.theguardian.com/international
     country: UK
     lang: en
-    lean: left
+    lean: left  # AllSides: Lean Left
     type: broadsheet
   - name: thetimes
     display: The Times
     url: https://www.thetimes.com
     country: UK
     lang: en
-    lean: center-right
+    lean: right  # documented centre-right broadsheet
     type: broadsheet
   - name: dailymail
     display: Daily Mail
     url: https://www.dailymail.co.uk/home/index.html
     country: UK
     lang: en
-    lean: right
+    lean: right  # AllSides: Right
     type: tabloid
 
   # --- Wires ---
@@ -84,14 +87,14 @@ sources:
     url: https://www.dw.com/en/
     country: INT
     lang: en
-    lean: center
+    lean: center  # Ad Fontes: Middle
     type: broadcaster
   - name: ap
     display: Associated Press
     url: https://apnews.com
     country: INT
     lang: en
-    lean: center
+    lean: left  # AllSides: Lean Left
     type: wire
 
   # --- Continental Europe ---
@@ -100,42 +103,42 @@ sources:
     url: https://www.lemonde.fr
     country: FR
     lang: fr
-    lean: center-left
+    lean: left  # documented centre-left
     type: broadsheet
   - name: lefigaro
     display: Le Figaro
     url: https://www.lefigaro.fr
     country: FR
     lang: fr
-    lean: center-right
+    lean: right  # documented conservative/right
     type: broadsheet
   - name: spiegel
     display: Der Spiegel
     url: https://www.spiegel.de
     country: DE
     lang: de
-    lean: center-left
+    lean: left  # documented centre-left
     type: broadsheet
   - name: bild
     display: Bild
     url: https://www.bild.de
     country: DE
     lang: de
-    lean: right
+    lean: right  # documented right-leaning tabloid
     type: tabloid
   - name: elpais
     display: El País
     url: https://elpais.com
     country: ES
     lang: es
-    lean: center-left
+    lean: left  # documented centre-left
     type: broadsheet
   - name: corriere
     display: Corriere della Sera
     url: https://www.corriere.it
     country: IT
     lang: it
-    lean: center
+    lean: center  # documented centrist
     type: broadsheet
 
   # --- Anglosphere ---
@@ -144,12 +147,12 @@ sources:
     url: https://www.cbc.ca/news
     country: CA
     lang: en
-    lean: center-left
+    lean: left  # documented centre-left public broadcaster
     type: broadcaster
   - name: abcau
     display: ABC News (Australia)
     url: https://www.abc.net.au/news
     country: AU
     lang: en
-    lean: center
+    lean: center  # documented centrist public broadcaster
     type: broadcaster
