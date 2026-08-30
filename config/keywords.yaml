@@ -1,0 +1,101 @@
+# Multilingual keyword pre-filter for Israel-related coverage.
+# A headline matching ANY term (case-insensitive, word-boundary where sensible)
+# is flagged as a candidate; the LLM scoring pass makes the final call
+# (related: true/false), so this list can err on the inclusive side.
+
+common: &common
+  - israel
+  - israeli
+  - israelis
+  - gaza
+  - gazan
+  - hamas
+  - hezbollah
+  - netanyahu
+  - idf
+  - "west bank"
+  - jerusalem
+  - "tel aviv"
+  - rafah
+  - "khan younis"
+  - hostage
+  - hostages
+  - zionis  # zionist / zionism
+  - knesset
+  - mossad
+  - intifada
+  - palestinian
+  - palestinians
+  - palestine
+
+en: *common
+
+fr:
+  - israël
+  - israélien
+  - israélienne
+  - israéliens
+  - gaza
+  - hamas
+  - hezbollah
+  - netanyahou
+  - cisjordanie
+  - jérusalem
+  - "tel-aviv"
+  - otage
+  - otages
+  - palestinien
+  - palestiniens
+  - palestine
+  - tsahal
+
+de:
+  - israel
+  - israelisch
+  - israelis
+  - gaza
+  - gazastreifen
+  - hamas
+  - hisbollah
+  - netanjahu
+  - westjordanland
+  - jerusalem
+  - "tel aviv"
+  - geisel
+  - geiseln
+  - palästinenser
+  - palästina
+
+es:
+  - israel
+  - israelí
+  - israelíes
+  - gaza
+  - hamás
+  - hezbolá
+  - netanyahu
+  - cisjordania
+  - jerusalén
+  - "tel aviv"
+  - rehén
+  - rehenes
+  - palestino
+  - palestinos
+  - palestina
+
+it:
+  - israele
+  - israeliano
+  - israeliani
+  - gaza
+  - hamas
+  - hezbollah
+  - netanyahu
+  - cisgiordania
+  - gerusalemme
+  - "tel aviv"
+  - ostaggio
+  - ostaggi
+  - palestinese
+  - palestinesi
+  - palestina

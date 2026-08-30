@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Israel in Western Media</title>
+<style>
+:root{
+  color-scheme: light;
+  --page:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
+  --grid:#e1e0d9; --baseline:#c3c2b7; --border:rgba(11,11,11,.10);
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4;
+  --div-pos:#2a78d6; --div-neg:#e34948; --div-mid:#f0efec;
+}
+@media (prefers-color-scheme: dark){
+  :root:where(:not([data-theme="light"])){
+    color-scheme: dark;
+    --page:#0d0d0d; --surface:#1a1a19; --ink:#ffffff; --ink2:#c3c2b7; --muted:#898781;
+    --grid:#2c2c2a; --baseline:#383835; --border:rgba(255,255,255,.10);
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181;
+    --div-pos:#3987e5; --div-neg:#e66767; --div-mid:#383835;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --page:#0d0d0d; --surface:#1a1a19; --ink:#ffffff; --ink2:#c3c2b7; --muted:#898781;
+  --grid:#2c2c2a; --baseline:#383835; --border:rgba(255,255,255,.10);
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181;
+  --div-pos:#3987e5; --div-neg:#e66767; --div-mid:#383835;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);
+  font:15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:1060px;margin:0 auto;padding:24px 20px 60px}
+header h1{font-size:22px;margin:0 0 2px}
+header .sub{color:var(--ink2);font-size:13px;margin:0 0 18px}
+header .sub a{color:inherit}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 16px}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:none;color:var(--ink2);padding:6px 11px;font:inherit;font-size:13px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--page);font-weight:600}
+select{font:inherit;font-size:13px;color:var(--ink);background:var(--surface);
+  border:1px solid var(--border);border-radius:8px;padding:6px 8px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:0 0 16px}
+.tile{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px}
+.tile .k{font-size:12px;color:var(--muted)}
+.tile .v{font-size:26px;font-weight:650;margin-top:2px}
+.tile .d{font-size:12px;color:var(--ink2)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 16px 8px;margin:0 0 16px;position:relative}
+.card h2{font-size:14px;margin:0 0 2px}
+.card .hint{font-size:12px;color:var(--muted);margin:0 0 8px}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--ink2);margin:4px 0 6px}
+.legend .li{display:inline-flex;align-items:center;gap:6px}
+.legend .sw{width:14px;height:3px;border-radius:2px;display:inline-block}
+svg text{font:11px system-ui,-apple-system,"Segoe UI",sans-serif;fill:var(--muted)}
+.tooltip{position:absolute;pointer-events:none;background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;box-shadow:0 4px 14px rgba(0,0,0,.15);padding:8px 10px;font-size:12px;display:none;z-index:5;min-width:150px}
+.tooltip .tt-t{color:var(--muted);margin-bottom:4px}
+.tooltip .row{display:flex;align-items:center;gap:6px;margin:2px 0}
+.tooltip .row .sw{width:12px;height:2.5px;border-radius:2px}
+.tooltip .row b{margin-left:auto;font-variant-numeric:tabular-nums}
+.items{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px}
+.items h2{font-size:14px;margin:0 0 8px}
+.item{display:flex;gap:10px;align-items:baseline;padding:7px 0;border-top:1px solid var(--grid)}
+.item:first-of-type{border-top:0}
+.item .score{flex:0 0 38px;text-align:center;font-weight:650;font-size:12px;border-radius:6px;padding:2px 0}
+.item .h a{color:var(--ink);text-decoration:none}
+.item .h a:hover{text-decoration:underline}
+.item .m{font-size:12px;color:var(--muted)}
+.tblwrap{overflow-x:auto;margin-top:6px}
+table.data{border-collapse:collapse;font-size:12.5px;width:100%}
+table.data th,table.data td{padding:5px 10px;text-align:right;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums}
+table.data th:first-child,table.data td:first-child{text-align:left}
+.linklike{border:0;background:none;color:var(--ink2);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;padding:0}
+footer{color:var(--muted);font-size:12px;margin-top:24px}
+footer a{color:inherit}
+.empty{color:var(--muted);font-size:13px;padding:24px 0;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Israel in Western Media</h1>
+  <p class="sub">Hourly homepage monitoring of <span id="nsources">20</span> major western outlets —
+    editorial attention and headline framing. Updated <span id="updated">…</span>.
+    <a href="#method">Methodology</a></p>
+</header>
+
+<div class="controls" id="controls">
+  <div class="seg" id="rangeSeg" role="group" aria-label="Time range"></div>
+  <div class="seg" id="splitSeg" role="group" aria-label="Split series"></div>
+  <select id="fCountry"><option value="">All countries</option></select>
+  <select id="fLean"><option value="">All leans</option></select>
+  <select id="fType"><option value="">All types</option></select>
+  <select id="fSource"><option value="">All sources</option></select>
+</div>
+
+<div class="tiles" id="tiles"></div>
+
+<div class="card" id="attCard">
+  <h2>Attention — share of homepage prominence on Israel</h2>
+  <p class="hint">Prominence-weighted share of each homepage devoted to Israel-related headlines, averaged equally across selected sources.</p>
+  <div class="legend" id="attLegend"></div>
+  <div id="attChart"></div>
+</div>
+
+<div class="card" id="sentCard">
+  <h2>Sentiment — framing of Israel in headlines</h2>
+  <p class="hint">−2 hostile … +2 sympathetic, prominence-weighted mean of scored headlines. Above zero = sympathetic, below = critical.</p>
+  <div class="legend" id="sentLegend"></div>
+  <div id="sentChart"></div>
+</div>
+
+<div class="tooltip" id="tooltip"></div>
+
+<div class="items" id="itemsPanel">
+  <h2 id="itemsTitle">Latest Israel-related headlines</h2>
+  <div id="itemsList"></div>
+</div>
+
+<p style="margin-top:10px"><button class="linklike" id="tblToggle">Show data table</button></p>
+<div class="tblwrap" id="tblWrap" hidden></div>
+
+<footer id="method">
+  <b>Methodology.</b> Every hour, the pipeline captures the headlines on each outlet's homepage.
+  Each headline gets a prominence weight (top-5 slots ×3, upper quarter ×2, rest ×1).
+  <i>Attention</i> is the Israel-related share of a homepage's total weighted headlines, averaged
+  equally across the selected outlets. <i>Sentiment</i> scores each Israel-related headline's framing
+  toward Israel on a fixed rubric (−2 hostile … +2 sympathetic) using a language model; scores are
+  cached per headline and record the model + rubric version. Hours where an outlet failed to respond
+  are excluded, not counted as zero. Headline drill-down covers the most recent 7 days.
+  Source code &amp; data: <a id="repolink" href="#">GitHub</a>.
+</footer>
+</div>
+
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+const SLOTS=["--s1","--s2","--s3","--s4","--s5"];
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const LEAN_ORDER=["left","center-left","center","center-right","right"];
+const REGION=(c)=>c==="US"?"US":c==="UK"?"UK":["FR","DE","ES","IT"].includes(c)?"Europe":"Other";
+const REGION_ORDER=["US","UK","Europe","Other"];
+const RANGES=[["24h",1],["7d",7],["30d",30],["90d",90],["All",99999]];
+const SPLITS=[["Combined","none"],["By lean","lean"],["By region","region"]];
+const state={range:"7d",split:"none",country:"",lean:"",type:"",source:"",pinned:null};
+let META,HOURLY,DAILY,ITEMS;
+
+const fmtPct=v=>v==null?"—":(v*100).toFixed(1)+"%";
+const fmtSent=v=>v==null?"—":(v>0?"+":"")+v.toFixed(2);
+const parseTs=t=>new Date(t).getTime();
+
+async function boot(){
+  const [meta,hourly,daily,items]=await Promise.all(
+    ["meta.json","hourly.json","daily.json","items.json"].map(f=>fetch("data/"+f).then(r=>r.json())));
+  META=meta;HOURLY=hourly;DAILY=daily;ITEMS=items;
+  $("#updated").textContent=new Date(meta.generated).toLocaleString();
+  $("#nsources").textContent=meta.sources.length;
+  buildControls();render();
+}
+
+const segDefs=[];
+function updateSegs(){for(const [el,get] of segDefs)for(const b of el.children)b.setAttribute("aria-pressed",get()===b.dataset.val)}
+function buildControls(){
+  const seg=(el,opts,get,set)=>{
+    el.innerHTML="";
+    for(const [label,val] of opts){
+      const b=document.createElement("button");
+      b.textContent=label;b.dataset.val=val;b.setAttribute("aria-pressed",get()===val);
+      b.onclick=()=>{set(val);render()};el.appendChild(b);
+    }
+    segDefs.push([el,get]);
+  };
+  seg($("#rangeSeg"),RANGES.map(r=>[r[0],r[0]]),()=>state.range,v=>state.range=v);
+  seg($("#splitSeg"),SPLITS.map(s=>[s[0],s[1]]),()=>state.split,v=>state.split=v);
+  const fill=(sel,vals)=>{for(const v of [...new Set(vals)]){const o=document.createElement("option");o.value=v;o.textContent=v;sel.appendChild(o)}};
+  fill($("#fCountry"),META.sources.map(s=>s.country));
+  fill($("#fLean"),LEAN_ORDER.filter(l=>META.sources.some(s=>s.lean===l)));
+  fill($("#fType"),META.sources.map(s=>s.type));
+  for(const s of META.sources){const o=document.createElement("option");o.value=s.name;o.textContent=s.display;$("#fSource").appendChild(o)}
+  for(const [id,key] of [["#fCountry","country"],["#fLean","lean"],["#fType","type"],["#fSource","source"]])
+    $(id).onchange=e=>{state[key]=e.target.value;render()};
+}
+
+function selectedSources(){
+  return META.sources.filter(s=>
+    (!state.country||s.country===state.country)&&
+    (!state.lean||s.lean===state.lean)&&
+    (!state.type||s.type===state.type)&&
+    (!state.source||s.name===state.source));
+}
+
+function groupsFor(sources){
+  if(state.split==="lean"){
+    const gs=LEAN_ORDER.filter(l=>sources.some(s=>s.lean===l));
+    return gs.map(l=>({key:l,label:l,slot:LEAN_ORDER.indexOf(l),members:new Set(sources.filter(s=>s.lean===l).map(s=>s.name))}));
+  }
+  if(state.split==="region"){
+    const gs=REGION_ORDER.filter(r=>sources.some(s=>REGION(s.country)===r));
+    return gs.map(r=>({key:r,label:r,slot:REGION_ORDER.indexOf(r),members:new Set(sources.filter(s=>REGION(s.country)===r).map(s=>s.name))}));
+  }
+  return [{key:"all",label:"All selected sources",slot:0,members:new Set(sources.map(s=>s.name))}];
+}
+
+// Build per-group time series from hourly or daily rows.
+function buildSeries(){
+  const days=RANGES.find(r=>r[0]===state.range)[1];
+  const useHourly=days<=7;
+  const cutoff=Date.now()-days*864e5;
+  const rows=useHourly?HOURLY:DAILY;
+  const groups=groupsFor(selectedSources());
+  const buckets=new Map(); // ts -> per-group accumulators
+  for(const r of rows){
+    const [t,src,share,sent,items]=useHourly?[r[0],r[1],r[2],r[3],r[4]]:[r[0],r[1],r[2],r[3],r[4]];
+    const ok=useHourly?r[5]===1:r[5]>0;
+    const ms=useHourly?parseTs(t):parseTs(t+"T00:00:00Z");
+    if(ms<cutoff||!ok)continue;
+    let b=buckets.get(ms);
+    if(!b){b=groups.map(()=>({sh:0,shn:0,sn:0,sd:0,items:0}));buckets.set(ms,b)}
+    groups.forEach((g,i)=>{
+      if(!g.members.has(src))return;
+      const a=b[i];
+      if(share!=null){a.sh+=share;a.shn++}
+      if(sent!=null&&items>0){a.sn+=sent*items;a.sd+=items}
+      a.items+=items||0;
+    });
+  }
+  const ts=[...buckets.keys()].sort((a,b)=>a-b);
+  return {useHourly,groups,ts,points:ts.map(ms=>buckets.get(ms).map(a=>({
+    share:a.shn?a.sh/a.shn:null,
+    sent:a.sd?a.sn/a.sd:null,
+    items:a.items})))};
+}
+
+function tiles(S){
+  const cut=Date.now()-864e5;
+  const last24=S.tsAll.filter(([ms])=>ms>=cut);
+  let sh=0,shn=0,sn=0,sd=0;
+  for(const [,p] of last24){if(p.share!=null){sh+=p.share;shn++}if(p.sent!=null){sn+=p.sent*p.items;sd+=p.items}}
+  const nItems=ITEMS.filter(i=>S.selNames.has(i.src)).length;
+  const el=$("#tiles");el.innerHTML="";
+  const tile=(k,v,d)=>{const t=document.createElement("div");t.className="tile";
+    t.innerHTML=`<div class="k"></div><div class="v"></div><div class="d"></div>`;
+    t.children[0].textContent=k;t.children[1].textContent=v;t.children[2].textContent=d;el.appendChild(t)};
+  tile("Attention (last 24h)",fmtPct(shn?sh/shn:null),"share of homepage prominence");
+  tile("Sentiment (last 24h)",fmtSent(sd?sn/sd:null),"−2 hostile … +2 sympathetic");
+  tile("Headlines (7 days)",String(nItems),"unique Israel-related headlines");
+  tile("Sources reporting",S.okNow+" / "+S.selNames.size,"latest hourly cycle");
+}
+
+const M={t:14,r:14,b:26,l:46},H=230;
+function xScale(ts,w){const a=ts[0],b=ts[ts.length-1]||1;return ms=>ts.length<2?w/2:M.l+(ms-a)/(b-a)*(w-M.l-M.r)}
+
+function drawChart(el,S,metric){
+  el.innerHTML="";
+  const w=el.clientWidth||900;
+  const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+  svg.setAttribute("viewBox",`0 0 ${w} ${H}`);svg.style.width="100%";svg.style.display="block";
+  const isSent=metric==="sent";
+  let vmax=0.001;
+  for(const row of S.points)for(const p of row){const v=isSent?Math.abs(p.sent??0):(p.share??0);if(v>vmax)vmax=v}
+  const [lo,hi]=isSent?[-Math.max(0.5,Math.ceil(vmax*4)/4),Math.max(0.5,Math.ceil(vmax*4)/4)]:[0,vmax*1.15];
+  const x=xScale(S.ts,w),y=v=>M.t+(hi-v)/(hi-lo)*(H-M.t-M.b);
+  const NS=svg.namespaceURI,mk=(n,at)=>{const e=document.createElementNS(NS,n);for(const k in at)e.setAttribute(k,at[k]);svg.appendChild(e);return e};
+  // gridlines + y labels
+  const nTicks=4;
+  for(let i=0;i<=nTicks;i++){
+    const v=lo+(hi-lo)*i/nTicks,yy=y(v);
+    mk("line",{x1:M.l,x2:w-M.r,y1:yy,y2:yy,stroke:css(v===0&&isSent?"--baseline":"--grid"),"stroke-width":v===0&&isSent?1.5:1});
+    const t=mk("text",{x:M.l-6,y:yy+4,"text-anchor":"end"});
+    t.textContent=isSent?fmtSent(v).replace(".00",""):(v*100).toFixed(v*100<3?1:0)+"%";
+  }
+  if(!isSent)mk("line",{x1:M.l,x2:w-M.r,y1:y(0),y2:y(0),stroke:css("--baseline"),"stroke-width":1});
+  // x labels
+  const nx=Math.min(6,S.ts.length);
+  for(let i=0;i<nx;i++){
+    const ms=S.ts[Math.round(i*(S.ts.length-1)/Math.max(1,nx-1))]||S.ts[0];
+    const d=new Date(ms);
+    const lbl=S.useHourly?d.toLocaleString(undefined,{weekday:"short",hour:"numeric"}):d.toLocaleDateString(undefined,{month:"short",day:"numeric"});
+    const t=mk("text",{x:x(ms),y:H-8,"text-anchor":"middle"});t.textContent=lbl;
+  }
+  // series
+  S.groups.forEach((g,gi)=>{
+    const color=css(SLOTS[Math.min(g.slot,SLOTS.length-1)]);
+    const pts=S.ts.map((ms,i)=>({ms,v:isSent?S.points[i][gi].sent:S.points[i][gi].share})).filter(p=>p.v!=null);
+    if(!pts.length)return;
+    const path=pts.map((p,i)=>(i?"L":"M")+x(p.ms).toFixed(1)+" "+y(p.v).toFixed(1)).join(" ");
+    if(!isSent&&S.groups.length===1){
+      mk("path",{d:path+`L${x(pts[pts.length-1].ms)} ${y(0)}L${x(pts[0].ms)} ${y(0)}Z`,fill:color,opacity:.14,stroke:"none"});
+    }
+    if(isSent&&S.groups.length===1){
+      // diverging fills around zero
+      const up=css("--div-pos"),dn=css("--div-neg");
+      const area=(sign)=>pts.map((p,i)=>(i?"L":"M")+x(p.ms).toFixed(1)+" "+y(sign>0?Math.max(0,p.v):Math.min(0,p.v)).toFixed(1)).join(" ")
+        +`L${x(pts[pts.length-1].ms)} ${y(0)}L${x(pts[0].ms)} ${y(0)}Z`;
+      mk("path",{d:area(1),fill:up,opacity:.16,stroke:"none"});
+      mk("path",{d:area(-1),fill:dn,opacity:.16,stroke:"none"});
+    }
+    const strokeColor=(isSent&&S.groups.length===1)?css("--ink2"):color;
+    mk("path",{d:path,fill:"none",stroke:strokeColor,"stroke-width":2,"stroke-linejoin":"round","stroke-linecap":"round"});
+    if(pts.length<=40)for(const p of pts)mk("circle",{cx:x(p.ms),cy:y(p.v),r:pts.length<=8?4:2.5,fill:strokeColor});
+  });
+  // crosshair + hover
+  const cross=mk("line",{y1:M.t,y2:H-M.b,stroke:css("--baseline"),"stroke-width":1,visibility:"hidden","stroke-dasharray":"3 3"});
+  const hit=mk("rect",{x:M.l,y:M.t,width:Math.max(1,w-M.l-M.r),height:H-M.t-M.b,fill:"transparent"});
+  hit.style.cursor="crosshair";
+  const nearest=px=>{let best=0,bd=1e18;S.ts.forEach((ms,i)=>{const d=Math.abs(x(ms)-px);if(d<bd){bd=d;best=i}});return best};
+  hit.addEventListener("pointermove",ev=>{
+    const r=svg.getBoundingClientRect(),px=(ev.clientX-r.left)*(w/r.width);
+    const i=nearest(px);cross.setAttribute("x1",x(S.ts[i]));cross.setAttribute("x2",x(S.ts[i]));
+    cross.setAttribute("visibility","visible");
+    tooltip(ev,S,i,isSent);
+  });
+  hit.addEventListener("pointerleave",()=>{cross.setAttribute("visibility","hidden");$("#tooltip").style.display="none"});
+  hit.addEventListener("click",ev=>{
+    const r=svg.getBoundingClientRect(),px=(ev.clientX-r.left)*(w/r.width);
+    showItemsFor(S,nearest(px));
+  });
+  el.appendChild(svg);
+  if(!S.ts.length){const d=document.createElement("div");d.className="empty";d.textContent="No data yet for this selection — the pipeline may have just started.";el.appendChild(d)}
+}
+
+function tooltip(ev,S,i,isSent){
+  const tt=$("#tooltip");tt.innerHTML="";
+  const t=document.createElement("div");t.className="tt-t";
+  const d=new Date(S.ts[i]);
+  t.textContent=S.useHourly?d.toLocaleString(undefined,{weekday:"short",month:"short",day:"numeric",hour:"numeric"}):d.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"});
+  tt.appendChild(t);
+  S.groups.forEach((g,gi)=>{
+    const p=S.points[i][gi],v=isSent?p.sent:p.share;
+    const row=document.createElement("div");row.className="row";
+    const sw=document.createElement("span");sw.className="sw";
+    sw.style.background=css(SLOTS[Math.min(g.slot,SLOTS.length-1)]);
+    const lbl=document.createElement("span");lbl.textContent=g.label;
+    const val=document.createElement("b");val.textContent=isSent?fmtSent(v):fmtPct(v);
+    row.append(sw,lbl,val);tt.appendChild(row);
+  });
+  const hint=document.createElement("div");hint.className="tt-t";hint.style.marginTop="4px";
+  hint.textContent="click for headlines";tt.appendChild(hint);
+  tt.style.display="block";
+  const wr=$(".wrap").getBoundingClientRect();
+  let lx=ev.clientX-wr.left+14,ly=ev.clientY-wr.top+14;
+  if(lx+tt.offsetWidth>wr.width-8)lx-=tt.offsetWidth+28;
+  tt.style.left=lx+"px";tt.style.top=ly+"px";
+}
+
+function scoreChip(s){
+  const el=document.createElement("span");el.className="score";
+  if(s==null){el.textContent="·";el.style.color="var(--muted)";el.style.background="var(--div-mid)"}
+  else{
+    el.textContent=(s>0?"+":"")+s;
+    const c=s>0?"--div-pos":s<0?"--div-neg":"";
+    el.style.background=c?css(c)+"26":"var(--div-mid)";
+    el.style.color=c?css(c):"var(--ink2)";
+  }
+  return el;
+}
+
+function renderItems(list,title){
+  $("#itemsTitle").textContent=title;
+  const el=$("#itemsList");el.innerHTML="";
+  const disp=Object.fromEntries(META.sources.map(s=>[s.name,s.display]));
+  if(!list.length){el.innerHTML='<div class="empty">No headlines in this window.</div>';return}
+  for(const it of list.slice(0,60)){
+    const row=document.createElement("div");row.className="item";
+    row.appendChild(scoreChip(it.s));
+    const h=document.createElement("div");h.className="h";
+    const a=document.createElement("a");a.href=it.u;a.target="_blank";a.rel="noopener";a.textContent=it.h;
+    const m=document.createElement("div");m.className="m";
+    m.textContent=`${disp[it.src]||it.src} · ${new Date(it.fs).toLocaleString(undefined,{month:"short",day:"numeric",hour:"numeric"})}`
+      +(it.c?` · ${it.c.replaceAll("_"," ")}`:"")+(it.w>=3?" · top story":it.w===2?" · prominent":"");
+    h.append(a,m);row.appendChild(h);el.appendChild(row);
+  }
+}
+
+function showItemsFor(S,i){
+  const bucketMs=S.ts[i],span=S.useHourly?36e5:864e5;
+  const list=ITEMS.filter(it=>S.selNames.has(it.src)&&parseTs(it.fs)<parseTs(new Date(bucketMs+span).toISOString())&&parseTs(it.ls)>=bucketMs)
+    .sort((a,b)=>(b.w-a.w)||(b.s!=null)-(a.s!=null));
+  const d=new Date(bucketMs);
+  const lbl=S.useHourly?d.toLocaleString(undefined,{month:"short",day:"numeric",hour:"numeric"}):d.toLocaleDateString(undefined,{month:"short",day:"numeric"});
+  renderItems(list,"Headlines on homepages — "+lbl);
+  $("#itemsPanel").scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+
+function legend(el,S){
+  el.innerHTML="";
+  if(S.groups.length<2)return;
+  for(const g of S.groups){
+    const li=document.createElement("span");li.className="li";
+    const sw=document.createElement("span");sw.className="sw";
+    sw.style.background=css(SLOTS[Math.min(g.slot,SLOTS.length-1)]);
+    const t=document.createElement("span");t.textContent=g.label;
+    li.append(sw,t);el.appendChild(li);
+  }
+}
+
+function dataTable(S){
+  const wrap=$("#tblWrap");wrap.innerHTML="";
+  const tb=document.createElement("table");tb.className="data";
+  const head=document.createElement("tr");
+  head.innerHTML="<th>Time</th>"+S.groups.map(()=>"<th>Attention</th><th>Sentiment</th><th>Headlines</th>").join("");
+  if(S.groups.length>1){
+    const gh=document.createElement("tr");
+    gh.innerHTML="<th></th>"+S.groups.map(g=>`<th colspan="3">${g.label}</th>`).join("");
+    tb.appendChild(gh);
+  }
+  tb.appendChild(head);
+  S.ts.forEach((ms,i)=>{
+    const tr=document.createElement("tr");
+    const cells=[new Date(ms).toLocaleString(undefined,S.useHourly?{month:"short",day:"numeric",hour:"numeric"}:{month:"short",day:"numeric"})];
+    for(const p of S.points[i])cells.push(fmtPct(p.share),fmtSent(p.sent),String(p.items));
+    for(const c of cells){const td=document.createElement("td");td.textContent=c;tr.appendChild(td)}
+    tb.appendChild(tr);
+  });
+  wrap.appendChild(tb);
+}
+
+function render(){
+  updateSegs();
+  const S=buildSeries();
+  const sel=selectedSources();S.selNames=new Set(sel.map(s=>s.name));
+  // all-hourly points for tiles (independent of range)
+  {
+    const saved=state.range,savedSplit=state.split;state.range="7d";state.split="none";
+    const T=buildSeries();state.range=saved;state.split=savedSplit;
+    // filter T to selected sources happens inside buildSeries via groupsFor(selectedSources())
+    S.tsAll=T.ts.map((ms,i)=>[ms,T.points[i][0]]);
+  }
+  // sources reporting in the latest cycle
+  const lastTs=HOURLY.length?HOURLY[HOURLY.length-1][0]:null;
+  S.okNow=lastTs?HOURLY.filter(r=>r[0]===lastTs&&r[5]===1&&S.selNames.has(r[1])).length:0;
+  tiles(S);
+  legend($("#attLegend"),S);legend($("#sentLegend"),S);
+  drawChart($("#attChart"),S,"share");
+  drawChart($("#sentChart"),S,"sent");
+  renderItems(ITEMS.filter(i=>S.selNames.has(i.src)).sort((a,b)=>b.fs<a.fs?-1:1).slice(0,60),
+    "Latest Israel-related headlines (7 days)");
+  dataTable(S);
+}
+
+$("#tblToggle").onclick=()=>{const w=$("#tblWrap");w.hidden=!w.hidden;
+  $("#tblToggle").textContent=w.hidden?"Show data table":"Hide data table"};
+let lastW=window.innerWidth,rzT=null;
+window.addEventListener("resize",()=>{
+  if(window.innerWidth===lastW)return;
+  clearTimeout(rzT);rzT=setTimeout(()=>{lastW=window.innerWidth;render()},150);
+});
+boot().catch(e=>{document.body.insertAdjacentHTML("beforeend","<p style='padding:20px'>Failed to load data: "+String(e).replace(/</g,"&lt;")+"</p>")});
+</script>
+</body>
+</html>
