@@ -1,7 +1,8 @@
 # Israel in Western Media — attention & sentiment tracker
 
 Hourly pipeline that monitors 20 major western news homepages, measures how much
-editorial attention Israel receives (prominence-weighted share of each homepage),
+editorial attention Israel receives (steeply prominence-weighted share of each
+homepage's top-20 slots: lead story ×10, 2–5 ×5, 6–10 ×3, 11–20 ×1),
 scores the framing of every Israel-related headline (−2 hostile … +2 sympathetic,
 via a versioned LLM rubric), and publishes an interactive dashboard.
 

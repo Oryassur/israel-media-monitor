@@ -104,8 +104,8 @@ def run(no_llm=False):
         isr_items, isr_weight, s_num, s_den = 0, 0, 0.0, 0
         for iid, weight in ps["present"]:
             rec = items_idx[iid]
-            if rec.get("related") is False:
-                continue
+            if rec.get("related") is False or weight == 0:
+                continue  # weight 0 = below top-20: tracked, but outside the index
             isr_items += 1
             isr_weight += weight
             if rec.get("sentiment") is not None:

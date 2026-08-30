@@ -13,6 +13,7 @@ DATA = ROOT / "data"
 DOCS_DATA = ROOT / "docs" / "data"
 LOGS = ROOT / "logs"
 
+METHOD_VERSION = "v2"  # prominence weighting: 10/5/3/1 over top-20, 0 beyond
 RUBRIC_VERSION = "v1"
 RUBRIC_PATH = ROOT / "prompts" / f"sentiment_rubric_{RUBRIC_VERSION}.md"
 SCORING_MODEL = "claude-haiku-4-5-20251001"

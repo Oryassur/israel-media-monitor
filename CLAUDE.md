@@ -13,7 +13,7 @@ config/keywords.yaml       multilingual Israel keyword pre-filter (en/fr/de/es/i
 prompts/sentiment_rubric_v1.md   the scoring rubric (versioned — see below)
 pipeline/                  the whole pipeline (plain Python, no agent in the loop)
   run.py                   hourly cycle: fetch → extract → detect → score → store → publish
-  extract.py               homepage HTML → ranked headlines; prominence weights (top5 ×3, top quarter ×2, rest ×1)
+  extract.py               homepage HTML → ranked headlines; prominence weights v2 (rank1 ×10, 2–5 ×5, 6–10 ×3, 11–20 ×1, 21+ ×0)
   detect.py                keyword matching per language
   score.py                 LLM sentiment (backends: anthropic API / claude CLI); batch, cached per headline
   store.py                 data/items/YYYY-MM.jsonl + data/snapshots/YYYY-MM.csv
@@ -24,8 +24,9 @@ docs/                      GitHub Pages dashboard (vanilla JS/SVG, self-containe
 
 ## Invariants — keep these true
 
-- **Attention share** = Israel-weighted headlines ÷ total-weighted headlines per
-  homepage; sources are equal-weighted in aggregates. Failed fetches are recorded
+- **Attention share** (method v2) = Israel-weighted headlines ÷ total weight of the
+  top-20 window per homepage. Prominence weights: rank 1 ×10, 2–5 ×5, 6–10 ×3,
+  11–20 ×1, 21+ ×0 (tracked + scored as "below fold", outside the indexes); sources are equal-weighted in aggregates. Failed fetches are recorded
   as missing, never zero.
 - **Sentiment is framing toward Israel**, not generic positivity. Every score
   stores model + rubric version; changing either means bumping `RUBRIC_VERSION`

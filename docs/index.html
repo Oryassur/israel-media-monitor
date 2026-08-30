@@ -123,9 +123,10 @@ footer a{color:inherit}
 
 <footer id="method">
   <b>Methodology.</b> Every hour, the pipeline captures the headlines on each outlet's homepage.
-  Each headline gets a prominence weight (top-5 slots ×3, upper quarter ×2, rest ×1).
-  <i>Attention</i> is the Israel-related share of a homepage's total weighted headlines, averaged
-  equally across the selected outlets. <i>Sentiment</i> scores each Israel-related headline's framing
+  Each headline gets a prominence weight reflecting how top-heavy reader attention is:
+  the lead story ×10, slots 2–5 ×5, 6–10 ×3, 11–20 ×1. <i>Attention</i> is the Israel-related
+  share of the top-20 window's total weight, averaged equally across the selected outlets
+  (stories below the top 20 are tracked and listed as "below fold" but don't move the indexes). <i>Sentiment</i> scores each Israel-related headline's framing
   toward Israel on a fixed rubric (−2 hostile … +2 sympathetic) using a language model; scores are
   cached per headline and record the model + rubric version. Hours where an outlet failed to respond
   are excluded, not counted as zero. Headline drill-down covers the most recent 7 days.
@@ -371,7 +372,8 @@ function renderItems(list,title){
       tr.style.color="var(--ink2)";tr.textContent="→ "+it.ht}
     const m=document.createElement("div");m.className="m";
     m.textContent=`${disp[it.src]||it.src} · ${new Date(it.fs).toLocaleString(undefined,{month:"short",day:"numeric",hour:"numeric"})}`
-      +(it.c?` · ${it.c.replaceAll("_"," ")}`:"")+(it.w>=3?" · top story":it.w===2?" · prominent":"");
+      +(it.c?` · ${it.c.replaceAll("_"," ")}`:"")
+      +(it.w>=10?" · top story":it.w>=5?" · top 5":it.w>=3?" · top 10":it.w>=1?" · top 20":" · below fold");
     h.append(a);if(tr)h.append(tr);h.append(m);row.appendChild(h);el.appendChild(row);
   }
 }

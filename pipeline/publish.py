@@ -3,7 +3,7 @@ import json
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 
-from .common import DOCS_DATA, RUBRIC_VERSION, load_sources
+from .common import DOCS_DATA, METHOD_VERSION, RUBRIC_VERSION, load_sources
 from .store import load_all_items, read_all_snapshots
 
 HOURLY_WINDOW_DAYS = 14
@@ -71,6 +71,7 @@ def build():
     _write("meta.json", {
         "generated": now.strftime("%Y-%m-%dT%H:%M:%SZ"),
         "rubric": RUBRIC_VERSION,
+        "method": METHOD_VERSION,
         "hourly_cols": ["ts", "source", "share", "sentiment", "items", "ok"],
         "daily_cols": ["date", "source", "share", "sentiment", "items", "runs_ok", "runs"],
         "sources": [
