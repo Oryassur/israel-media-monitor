@@ -77,10 +77,11 @@ def _call_api(prompt):
     client = anthropic.Anthropic()
     msg = client.messages.create(
         model=SCORING_MODEL,
-        max_tokens=4000,
+        max_tokens=8000,
         messages=[{"role": "user", "content": prompt}],
     )
-    return msg.content[0].text
+    # content may open with thinking blocks (e.g. Sonnet) — join only text blocks
+    return "".join(b.text for b in msg.content if getattr(b, "type", None) == "text")
 
 
 def _call_cli(prompt):
