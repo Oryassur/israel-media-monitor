@@ -14,7 +14,7 @@ family — see "Bibi monitor" below.
 ```
 config/sources.yaml        21 outlets: url, country, lang, lean (3-way: left/center/right, from AllSides / Ad Fontes ratings — basis commented per source), type
 config/keywords.yaml       multilingual Israel keyword pre-filter (en/fr/de/es/it)
-prompts/sentiment_rubric_v1.md   the scoring rubric (versioned — see below)
+prompts/sentiment_rubric_v2.md   the scoring rubric (versioned — see below)
 pipeline/                  the whole pipeline (plain Python, no agent in the loop)
   run.py                   hourly cycle: fetch → extract → detect → score → store → publish
   extract.py               homepage HTML → ranked headlines; prominence weights v2 (rank1 ×10, 2–5 ×5, 6–10 ×3, 11–20 ×1, 21+ ×0)

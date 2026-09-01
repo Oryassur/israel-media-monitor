@@ -23,7 +23,7 @@ Preview the dashboard by serving `docs/` (e.g. `python3 -m http.server 8741 --di
 ## Key facts
 
 - Sources: `config/sources.yaml` (20 outlets + metadata). Keyword pre-filter: `config/keywords.yaml`.
-- Sentiment rubric: `prompts/sentiment_rubric_v1.md`. Changing rubric or model requires bumping
+- Sentiment rubric: `prompts/sentiment_rubric_v2.md`. Changing rubric or model requires bumping
   `RUBRIC_VERSION` in `pipeline/common.py` — never silently mix scoring configurations.
 - Data: `data/items/YYYY-MM.jsonl` (unique headlines), `data/snapshots/YYYY-MM.csv` (source-hour stats).
 - A source printing `EMPTY EXTRACTION` or repeated `FETCH FAIL` (401/402/403 = bot-blocked)

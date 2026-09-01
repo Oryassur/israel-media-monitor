@@ -19,8 +19,8 @@ from .common import RUBRIC_PATH, RUBRIC_VERSION, SCORING_MODEL
 BATCH_SIZE = 25
 
 VALID_CATEGORIES = {
-    "israel_action_criticized", "israel_as_victim", "neutral_report",
-    "internal_politics", "diplomacy", "opinion", "other",
+    "israel_action_criticized", "israel_as_victim", "military_operation",
+    "neutral_report", "internal_politics", "diplomacy", "opinion", "other",
 }
 
 
@@ -123,7 +123,8 @@ def score_items(items, backend=None, log=print):
             r = parsed.get(i)
             if r is None:
                 continue
-            if "related" not in it:  # full scoring for a new item
+            # full scoring for a new item, or a re-score under a newer rubric
+            if "related" not in it or it.get("rubric") != RUBRIC_VERSION:
                 it["related"] = r["related"]
                 it["sentiment"] = r["score"] if r["related"] else None
                 it["category"] = r["category"] if r["related"] else None

@@ -6,7 +6,7 @@ homepage's top-20 slots: lead story ×10, 2–5 ×5, 6–10 ×3, 11–20 ×1),
 scores the framing of every Israel-related headline (−2 hostile … +2 sympathetic,
 via a versioned LLM rubric), and publishes an interactive dashboard.
 
-- **Methodology**: see [prompts/sentiment_rubric_v1.md](prompts/sentiment_rubric_v1.md) and [CLAUDE.md](CLAUDE.md)
+- **Methodology**: see [prompts/sentiment_rubric_v2.md](prompts/sentiment_rubric_v2.md) and [CLAUDE.md](CLAUDE.md)
 - **Sources**: 21 outlets across US / UK / FR / DE / ES / IT / CA / AU + wires,
   with 3-way political lean (Left/Center/Right) assigned from AllSides / Ad Fontes
   published ratings — [config/sources.yaml](config/sources.yaml)

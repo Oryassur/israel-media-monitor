@@ -14,9 +14,9 @@ DOCS_DATA = ROOT / "docs" / "data"
 LOGS = ROOT / "logs"
 
 METHOD_VERSION = "v2"  # prominence weighting: 10/5/3/1 over top-20, 0 beyond
-RUBRIC_VERSION = "v1"
+RUBRIC_VERSION = "v2"  # calibrated against human QA 2026-09-01; scorer moved Haiku -> Sonnet
 RUBRIC_PATH = ROOT / "prompts" / f"sentiment_rubric_{RUBRIC_VERSION}.md"
-SCORING_MODEL = "claude-haiku-4-5-20251001"
+SCORING_MODEL = "claude-sonnet-5"
 
 # Retry scoring for unscored items this long after first_seen (hours)
 SCORE_RETRY_WINDOW_H = 48

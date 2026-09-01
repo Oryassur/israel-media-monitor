@@ -9,7 +9,7 @@ import time
 from datetime import datetime, timedelta, timezone
 
 from . import publish
-from .common import LOGS, SCORE_RETRY_WINDOW_H, item_id, load_sources, month_key
+from .common import LOGS, RUBRIC_VERSION, SCORE_RETRY_WINDOW_H, item_id, load_sources, month_key
 from .detect import match_keyword
 from .extract import extract_items, fetch_html, prominence_weight
 from .score import score_items
@@ -79,9 +79,13 @@ def run(no_llm=False):
     cutoff = (now - timedelta(hours=SCORE_RETRY_WINDOW_H)).strftime("%Y-%m-%dT%H:%M:%SZ")
     pending = [
         r for r in items_idx.values()
-        if r["first_seen"] >= cutoff and (
-            "related" not in r
-            or (r["lang"] != "en" and r.get("related") is not False and "ht" not in r)
+        if (
+            # scored under an older rubric -> re-score (auto-migration on rubric bump)
+            ("related" in r and r.get("rubric") != RUBRIC_VERSION)
+            or (r["first_seen"] >= cutoff and (
+                "related" not in r
+                or (r["lang"] != "en" and r.get("related") is not False and "ht" not in r)
+            ))
         )
     ]
     disp = {s["name"]: s["display"] for s in sources}
