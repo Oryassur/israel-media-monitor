@@ -5,6 +5,8 @@ from urllib.parse import urljoin, urlparse
 import requests
 from bs4 import BeautifulSoup
 
+from .common import strip_meta_suffix
+
 UA = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
@@ -56,7 +58,7 @@ def extract_items(html: str, base_url: str, selector: str = None):
         # skip links inside non-editorial chrome
         if any(p.name in SKIP_ANCESTORS for p in a.parents):
             continue
-        text = _clean_text(a.get_text(" "))
+        text = strip_meta_suffix(_clean_text(a.get_text(" ")))
         if len(text) < MIN_HEADLINE_LEN or len(text) > 300:
             continue
         href = urljoin(base_url, a["href"].split("#")[0])

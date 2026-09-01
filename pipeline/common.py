@@ -33,8 +33,31 @@ def load_keywords():
     return {lang: [str(t).lower() for t in terms] for lang, terms in kw.items() if lang != "common"}
 
 
+# Trailing link-text metadata some homepages (notably BBC) append to headlines:
+# a relative-time marker ("5 hrs ago", "il y a 3 heures", ...) optionally followed
+# by a short section label ("Middle East", "US & Canada"). The time part mutates
+# hourly, so it must not participate in the dedup hash. Conservative by design:
+# only fires on a recognized time phrase at the very end, never mid-headline.
+_META_SUFFIX = re.compile(
+    r"""\s+(?:
+        \d+\s*(?:min(?:ute)?s?|hrs?|hours?|days?)\s+ago      # en
+      | il\s+y\s+a\s+\d+\s*(?:min(?:ute)?s?|heures?|jours?)  # fr
+      | vor\s+\d+\s*(?:min(?:ute)?n?\.?|std\.?|stunden?|tag(?:en)?)  # de
+      | hace\s+\d+\s*(?:min(?:uto)?s?|horas?|d[ií]as?)       # es
+      | \d+\s*(?:minut[oi]|ore?|giorn[oi])\s+fa              # it
+    )
+    (?:\s+(?:&|[^\W\d][\w'’-]*)(?:\s+(?:&|[^\W\d][\w'’-]*)){0,3})?  # optional section label, <=4 words
+    \s*$""",
+    re.IGNORECASE | re.VERBOSE | re.UNICODE,
+)
+
+
+def strip_meta_suffix(headline: str) -> str:
+    return _META_SUFFIX.sub("", headline)
+
+
 def item_id(source: str, headline: str) -> str:
-    norm = re.sub(r"\s+", " ", headline.strip().lower())
+    norm = re.sub(r"\s+", " ", strip_meta_suffix(headline).strip().lower())
     return hashlib.sha1(f"{source}|{norm}".encode()).hexdigest()[:16]
 
 
