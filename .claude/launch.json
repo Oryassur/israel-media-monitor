@@ -2,10 +2,10 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "data-journ",
-      "runtimeExecutable": "bash",
-      "runtimeArgs": ["-c", "cd /private/tmp/claude-501/-Users-oryyassur-Desktop-DJ1/f0bc9532-f541-4ce0-905d-00d64306c8c4/scratchpad && python3 -m http.server 8123"],
-      "port": 8123
+      "name": "dashboard",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "8741", "--directory", "docs"],
+      "port": 8741
     }
   ]
 }
