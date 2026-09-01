@@ -52,7 +52,9 @@ sources:
     type: broadsheet
   - name: ch14
     display: Channel 14
-    url: https://www.now14.co.il
+    # now14.co.il 301s to the rebranded domain; the old domain's WAF blocks
+    # datacenter IPs, the new one doesn't
+    url: https://www.c14.co.il
     country: IL
     lang: he
     lean: right  # owner-assigned
