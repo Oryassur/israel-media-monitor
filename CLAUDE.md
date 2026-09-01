@@ -5,6 +5,10 @@ attention (prominence-weighted share of 20 major homepages) and headline framing
 sentiment (−2…+2, LLM-scored against a versioned rubric), with an interactive
 dashboard.
 
+A sibling monitor, **`bibi-media-monitor/`**, applies the same architecture to
+Israeli outlets, measuring attention/sentiment toward Benjamin Netanyahu and his
+family — see "Bibi monitor" below.
+
 ## Architecture
 
 ```
@@ -38,3 +42,22 @@ docs/                      GitHub Pages dashboard (vanilla JS/SVG, self-containe
   are known-blocked.
 - Dashboard reads only `docs/data/*.json`; keep it dependency-free and
   light/dark-safe (CSS tokens per the dataviz skill's reference palette).
+
+## Bibi monitor (`bibi-media-monitor/`)
+
+A self-contained fork of the pipeline (own `config/`, `prompts/`, `pipeline/`,
+`data/`) monitoring 12 Israeli outlets for attention/sentiment toward Benjamin
+Netanyahu and his family. Run from inside the folder: `python -m pipeline.run`.
+All invariants above apply, plus:
+
+- Hebrew keyword matching is **substring-based** (prefixes attach: לנתניהו),
+  and generic PM references (ראש הממשלה, רה"מ) count as candidates — the LLM
+  `related` pass makes the final call.
+- Lean (Israeli spectrum) and the `econ: true` tag (Globes, TheMarker,
+  Calcalist) are owner-assigned in `bibi-media-monitor/config/sources.yaml`;
+  the dashboard has a dedicated econ filter and "Econ vs. general" split.
+- Snapshot fields are `topic_items`/`topic_weight` (not `israel_*`).
+- Dashboard lives at `docs/bibi/`, reads only `docs/bibi/data/*.json`; Hebrew
+  headlines render with `dir="auto"`.
+- Separate workflow `.github/workflows/bibi-pipeline.yml` (cron :17/:47) with
+  its **own secret `ANTHROPIC_API_KEY_BIBI`** — never reuse the main key.

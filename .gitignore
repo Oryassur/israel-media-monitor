@@ -3,3 +3,4 @@ __pycache__/
 *.pyc
 .DS_Store
 data/raw/
+bibi-media-monitor/data/raw/

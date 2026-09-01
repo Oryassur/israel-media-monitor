@@ -1,0 +1,26 @@
+# Keyword pre-filter for Netanyahu-family coverage.
+# A headline matching ANY term is flagged as a candidate; the LLM scoring pass
+# makes the final call (related: true/false), so this list errs inclusive.
+#
+# Hebrew matching (see detect.py) uses word boundaries that allow attached
+# one-letter prefixes (לנתניהו, שביבי) and treats spaces as space/maqaf/hyphen.
+# "נתניהו" also covers שרה/יאיר/אבנר נתניהו and משפחת נתניהו.
+# Generic PM references (ראש הממשלה, רה"מ) are included deliberately — in the
+# Israeli press they nearly always mean Netanyahu, and the LLM filters the rest.
+
+he:
+  - נתניהו
+  - ביבי
+  - ביביסט         # Bibi loyalist (explicit forms — boundaries are strict)
+  - ביביסטים
+  - ראש הממשלה
+  - 'רה"מ'
+  - רה״מ           # gershayim variant
+  - בלפור          # the PM residence, metonym for the Netanyahus
+
+en:
+  - netanyahu
+  - bibi
+  - "prime minister"
+  - "sara netanyahu"
+  - "yair netanyahu"

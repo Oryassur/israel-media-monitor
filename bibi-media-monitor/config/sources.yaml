@@ -1,0 +1,99 @@
+# Israeli media sources monitored by the bibi pipeline.
+# lean: 3-way (left / center / right) on the Israeli spectrum, assigned by the
+#   project owner (no AllSides-style published ratings cover Israeli outlets
+#   consistently).
+# econ: true marks economic/business outlets — they get a dedicated dashboard
+#   filter and an "Econ vs. general" split.
+
+sources:
+  # --- General news ---
+  - name: ynet
+    display: Ynet
+    url: https://www.ynet.co.il
+    country: IL
+    lang: he
+    lean: left  # owner-assigned
+    type: news
+  - name: walla
+    display: Walla News
+    url: https://news.walla.co.il
+    country: IL
+    lang: he
+    lean: left  # owner-assigned
+    type: news
+  - name: n12
+    display: N12 (Channel 12)
+    # n12.co.il server-renders almost nothing; N12's content is hosted on mako
+    url: https://www.mako.co.il/news
+    country: IL
+    lang: he
+    lean: left  # owner-assigned
+    type: broadcaster
+  - name: kan
+    display: Kan 11
+    url: https://www.kan.org.il
+    country: IL
+    lang: he
+    lean: left  # owner-assigned
+    type: broadcaster
+  - name: haaretz
+    display: Haaretz
+    url: https://www.haaretz.co.il
+    country: IL
+    lang: he
+    lean: left  # owner-assigned
+    type: broadsheet
+  - name: israelhayom
+    display: Israel Hayom
+    url: https://www.israelhayom.co.il
+    country: IL
+    lang: he
+    lean: center  # owner-assigned
+    type: broadsheet
+  - name: ch14
+    display: Channel 14
+    url: https://www.now14.co.il
+    country: IL
+    lang: he
+    lean: right  # owner-assigned
+    type: broadcaster
+  - name: makorrishon
+    display: Makor Rishon
+    url: https://www.makorrishon.co.il
+    country: IL
+    lang: he
+    lean: right  # owner-assigned
+    type: broadsheet
+  - name: i24
+    display: i24NEWS
+    url: https://www.i24news.tv/en
+    country: IL
+    lang: en
+    lean: center  # owner-assigned
+    type: broadcaster
+
+  # --- Economic outlets ---
+  - name: globes
+    display: Globes
+    url: https://www.globes.co.il
+    country: IL
+    lang: he
+    lean: center  # owner-assigned
+    type: business
+    econ: true
+  - name: themarker
+    display: TheMarker
+    url: https://www.themarker.com
+    country: IL
+    lang: he
+    lean: left  # owner-assigned
+    type: business
+    econ: true
+  - name: calcalist
+    display: Calcalist
+    url: https://www.calcalist.co.il
+    country: IL
+    lang: he
+    lean: left  # owner-assigned
+    type: business
+    econ: true

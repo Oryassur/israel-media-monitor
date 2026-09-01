@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Israel in Western Media</title>
+<title>Netanyahu in Israeli Media</title>
 <style>
 :root{
   color-scheme: light;
@@ -64,7 +64,7 @@ svg text{font:11px system-ui,-apple-system,"Segoe UI",sans-serif;fill:var(--mute
 .item{display:flex;gap:10px;align-items:baseline;padding:7px 0;border-top:1px solid var(--grid)}
 .item:first-of-type{border-top:0}
 .item .score{flex:0 0 38px;text-align:center;font-weight:650;font-size:12px;border-radius:6px;padding:2px 0}
-.item .h a{color:var(--ink);text-decoration:none}
+.item .h a{color:var(--ink);text-decoration:none;unicode-bidi:plaintext}
 .item .h a:hover{text-decoration:underline}
 .item .m{font-size:12px;color:var(--muted)}
 .tblwrap{overflow-x:auto;margin-top:6px}
@@ -80,16 +80,16 @@ footer a{color:inherit}
 <body>
 <div class="wrap">
 <header>
-  <h1>Israel in Western Media</h1>
-  <p class="sub">Hourly homepage monitoring of <span id="nsources">20</span> major western outlets —
-    editorial attention and headline framing. Updated <span id="updated">…</span>.
-    <a href="#method">Methodology</a> · <a href="bibi/">Netanyahu in Israeli Media →</a></p>
+  <h1>Netanyahu in Israeli Media</h1>
+  <p class="sub">Hourly homepage monitoring of <span id="nsources">12</span> major Israeli outlets —
+    editorial attention on Benjamin Netanyahu and his family, and headline framing. Updated <span id="updated">…</span>.
+    <a href="#method">Methodology</a> · <a href="../">Israel in Western Media →</a></p>
 </header>
 
 <div class="controls" id="controls">
   <div class="seg" id="rangeSeg" role="group" aria-label="Time range"></div>
   <div class="seg" id="splitSeg" role="group" aria-label="Split series"></div>
-  <select id="fCountry"><option value="">All countries</option></select>
+  <select id="fEcon"><option value="">All outlets</option><option value="gen">General news</option><option value="econ">Economic outlets</option></select>
   <select id="fLean"><option value="">All leans</option></select>
   <select id="fType"><option value="">All types</option></select>
   <select id="fSource"><option value="">All sources</option></select>
@@ -98,14 +98,14 @@ footer a{color:inherit}
 <div class="tiles" id="tiles"></div>
 
 <div class="card" id="attCard">
-  <h2>Attention — share of homepage prominence on Israel</h2>
-  <p class="hint">Prominence-weighted share of each homepage devoted to Israel-related headlines, averaged equally across selected sources.</p>
+  <h2>Attention — share of homepage prominence on the Netanyahus</h2>
+  <p class="hint">Prominence-weighted share of each homepage devoted to Netanyahu-related headlines, averaged equally across selected sources.</p>
   <div class="legend" id="attLegend"></div>
   <div id="attChart"></div>
 </div>
 
 <div class="card" id="sentCard">
-  <h2>Sentiment — framing of Israel in headlines</h2>
+  <h2>Sentiment — framing of Netanyahu &amp; family in headlines</h2>
   <p class="hint">−2 hostile … +2 sympathetic, prominence-weighted mean of scored headlines. Above zero = sympathetic, below = critical.</p>
   <div class="legend" id="sentLegend"></div>
   <div id="sentChart"></div>
@@ -114,7 +114,7 @@ footer a{color:inherit}
 <div class="tooltip" id="tooltip"></div>
 
 <div class="items" id="itemsPanel">
-  <h2 id="itemsTitle">Latest Israel-related headlines</h2>
+  <h2 id="itemsTitle">Latest Netanyahu-related headlines</h2>
   <div id="itemsList"></div>
 </div>
 
@@ -124,18 +124,18 @@ footer a{color:inherit}
 <footer id="method">
   <b>Methodology.</b> Every hour, the pipeline captures the headlines on each outlet's homepage.
   Each headline gets a prominence weight reflecting how top-heavy reader attention is:
-  the lead story ×10, slots 2–5 ×5, 6–10 ×3, 11–20 ×1. <i>Attention</i> is the Israel-related
+  the lead story ×10, slots 2–5 ×5, 6–10 ×3, 11–20 ×1. <i>Attention</i> is the Netanyahu-related
   share of the top-20 window's total weight, averaged equally across the selected outlets
-  (stories below the top 20 are tracked and listed as "below fold" but don't move the indexes). <i>Sentiment</i> scores each Israel-related headline's framing
-  toward Israel on a fixed rubric (−2 hostile … +2 sympathetic) using a language model; scores are
-  cached per headline and record the model + rubric version. Hours where an outlet failed to respond
+  (stories below the top 20 are tracked and listed as "below fold" but don't move the indexes).
+  A headline counts as Netanyahu-related when it concerns Benjamin Netanyahu or his family —
+  including "ראש הממשלה" references, which a language model confirms refer to him.
+  <i>Sentiment</i> scores each related headline's framing toward Netanyahu and his family on a
+  fixed rubric (−2 hostile … +2 sympathetic) using a language model; scores are cached per
+  headline and record the model + rubric version. Hours where an outlet failed to respond
   are excluded, not counted as zero.
-  Political lean (Left / Center / Right) is assigned mechanically from published ratings —
-  <a href="https://www.allsides.com/media-bias/media-bias-chart" rel="noopener">AllSides Media Bias Ratings</a>
-  where the outlet is rated (Lean&nbsp;Left/Left → Left, Center → Center, Lean&nbsp;Right/Right → Right),
-  <a href="https://adfontesmedia.com" rel="noopener">Ad Fontes Media</a> for international outlets they
-  cover, and the widely documented characterization otherwise; the per-outlet basis is noted in
-  <a href="https://github.com/Oryassur/israel-media-monitor/blob/main/config/sources.yaml" rel="noopener">config/sources.yaml</a>.
+  Political lean (Left / Center / Right, Israeli spectrum) and the economic-outlet tag are
+  assigned by the project owner and noted per outlet in
+  <a href="https://github.com/Oryassur/israel-media-monitor/blob/main/bibi-media-monitor/config/sources.yaml" rel="noopener">config/sources.yaml</a>.
   Headline drill-down covers the most recent 7 days.
   Source code &amp; data: <a id="repolink" href="https://github.com/Oryassur/israel-media-monitor">GitHub</a>.
 </footer>
@@ -148,11 +148,11 @@ const SLOTS=["--s1","--s2","--s3","--s4","--s5"];
 const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 const LEAN_ORDER=["left","center","right"];
 const cap=s=>s?s[0].toUpperCase()+s.slice(1):s;
-const REGION=(c)=>c==="US"?"US":c==="UK"?"UK":["FR","DE","ES","IT"].includes(c)?"Europe":"Other";
-const REGION_ORDER=["US","UK","Europe","Other"];
+const ECON_ORDER=["gen","econ"];
+const ECON_LABEL={gen:"General news",econ:"Economic"};
 const RANGES=[["24h",1],["7d",7],["30d",30],["90d",90],["All",99999]];
-const SPLITS=[["Combined","none"],["By lean","lean"],["By region","region"]];
-const state={range:"7d",split:"none",country:"",lean:"",type:"",source:"",pinned:null};
+const SPLITS=[["Combined","none"],["By lean","lean"],["Econ vs. general","econ"]];
+const state={range:"7d",split:"none",econ:"",lean:"",type:"",source:"",pinned:null};
 let META,HOURLY,DAILY,ITEMS;
 
 const fmtPct=v=>v==null?"—":(v*100).toFixed(1)+"%";
@@ -183,17 +183,16 @@ function buildControls(){
   seg($("#rangeSeg"),RANGES.map(r=>[r[0],r[0]]),()=>state.range,v=>state.range=v);
   seg($("#splitSeg"),SPLITS.map(s=>[s[0],s[1]]),()=>state.split,v=>state.split=v);
   const fill=(sel,vals,fmt)=>{for(const v of [...new Set(vals)]){const o=document.createElement("option");o.value=v;o.textContent=fmt?fmt(v):v;sel.appendChild(o)}};
-  fill($("#fCountry"),META.sources.map(s=>s.country));
   fill($("#fLean"),LEAN_ORDER.filter(l=>META.sources.some(s=>s.lean===l)),cap);
   fill($("#fType"),META.sources.map(s=>s.type));
   for(const s of META.sources){const o=document.createElement("option");o.value=s.name;o.textContent=s.display;$("#fSource").appendChild(o)}
-  for(const [id,key] of [["#fCountry","country"],["#fLean","lean"],["#fType","type"],["#fSource","source"]])
+  for(const [id,key] of [["#fEcon","econ"],["#fLean","lean"],["#fType","type"],["#fSource","source"]])
     $(id).onchange=e=>{state[key]=e.target.value;render()};
 }
 
 function selectedSources(){
   return META.sources.filter(s=>
-    (!state.country||s.country===state.country)&&
+    (!state.econ||(state.econ==="econ"?s.econ:!s.econ))&&
     (!state.lean||s.lean===state.lean)&&
     (!state.type||s.type===state.type)&&
     (!state.source||s.name===state.source));
@@ -204,9 +203,10 @@ function groupsFor(sources){
     const gs=LEAN_ORDER.filter(l=>sources.some(s=>s.lean===l));
     return gs.map(l=>({key:l,label:cap(l),slot:LEAN_ORDER.indexOf(l),members:new Set(sources.filter(s=>s.lean===l).map(s=>s.name))}));
   }
-  if(state.split==="region"){
-    const gs=REGION_ORDER.filter(r=>sources.some(s=>REGION(s.country)===r));
-    return gs.map(r=>({key:r,label:r,slot:REGION_ORDER.indexOf(r),members:new Set(sources.filter(s=>REGION(s.country)===r).map(s=>s.name))}));
+  if(state.split==="econ"){
+    const eOf=s=>s.econ?"econ":"gen";
+    const gs=ECON_ORDER.filter(e=>sources.some(s=>eOf(s)===e));
+    return gs.map(e=>({key:e,label:ECON_LABEL[e],slot:ECON_ORDER.indexOf(e),members:new Set(sources.filter(s=>eOf(s)===e).map(s=>s.name))}));
   }
   return [{key:"all",label:"All selected sources",slot:0,members:new Set(sources.map(s=>s.name))}];
 }
@@ -253,7 +253,7 @@ function tiles(S){
     t.children[0].textContent=k;t.children[1].textContent=v;t.children[2].textContent=d;el.appendChild(t)};
   tile("Attention (last 24h)",fmtPct(shn?sh/shn:null),"share of homepage prominence");
   tile("Sentiment (last 24h)",fmtSent(sd?sn/sd:null),"−2 hostile … +2 sympathetic");
-  tile("Headlines (7 days)",String(nItems),"unique Israel-related headlines");
+  tile("Headlines (7 days)",String(nItems),"unique Netanyahu-related headlines");
   tile("Sources reporting",S.okNow+" / "+S.selNames.size,"latest hourly cycle");
 }
 
@@ -384,6 +384,7 @@ function renderItems(list,title){
     row.appendChild(scoreChip(it.s));
     const h=document.createElement("div");h.className="h";
     const a=document.createElement("a");a.href=it.u;a.target="_blank";a.rel="noopener";a.textContent=it.h;
+    a.dir="auto"; // Hebrew headlines render RTL, English LTR
     let tr=null;
     if(it.ht){tr=document.createElement("div");tr.className="m";tr.style.fontStyle="italic";
       tr.style.color="var(--ink2)";tr.textContent="→ "+it.ht}
@@ -446,7 +447,6 @@ function render(){
   {
     const saved=state.range,savedSplit=state.split;state.range="7d";state.split="none";
     const T=buildSeries();state.range=saved;state.split=savedSplit;
-    // filter T to selected sources happens inside buildSeries via groupsFor(selectedSources())
     S.tsAll=T.ts.map((ms,i)=>[ms,T.points[i][0]]);
   }
   // sources reporting in the latest cycle
@@ -457,7 +457,7 @@ function render(){
   drawChart($("#attChart"),S,"share");
   drawChart($("#sentChart"),S,"sent");
   renderItems(ITEMS.filter(i=>S.selNames.has(i.src)).sort((a,b)=>b.fs<a.fs?-1:1).slice(0,60),
-    "Latest Israel-related headlines (7 days)");
+    "Latest Netanyahu-related headlines (7 days)");
   dataTable(S);
 }
 
