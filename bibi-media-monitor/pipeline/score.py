@@ -75,7 +75,11 @@ def _parse_response(text, batch_len):
 def _call_api(prompt):
     import anthropic
 
-    client = anthropic.Anthropic()
+    # Identity-linked API keys (newer Console key type) require the workspace
+    # id on every request; workspace-scoped keys ignore the extra header.
+    ws = os.environ.get("ANTHROPIC_WORKSPACE_ID")
+    client = anthropic.Anthropic(
+        default_headers={"anthropic-workspace-id": ws} if ws else None)
     msg = client.messages.create(
         model=SCORING_MODEL,
         max_tokens=4000,

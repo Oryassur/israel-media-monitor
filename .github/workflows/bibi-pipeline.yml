@@ -34,6 +34,8 @@ jobs:
         env:
           # dedicated token for this monitor
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY_BIBI }}
+          # required only when the key is identity-linked
+          ANTHROPIC_WORKSPACE_ID: ${{ secrets.ANTHROPIC_WORKSPACE_ID_BIBI }}
         run: python -m pipeline.run
 
       - name: Commit data
