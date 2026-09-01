@@ -1,0 +1,30 @@
+name: probe-sources
+# TEMPORARY: probes which Israeli news sites are reachable from GitHub runner
+# IPs. Deleted after use.
+on:
+  workflow_dispatch: {}
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Probe
+        run: |
+          UA="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+          for url in \
+            https://www.inn.co.il \
+            https://www.srugim.co.il \
+            https://www.0404.co.il \
+            https://www.maariv.co.il \
+            https://www.kikar.co.il \
+            https://www.jdn.co.il \
+            https://www.israelhayom.co.il \
+            https://www.c14.co.il \
+            https://www.makorrishon.co.il \
+            https://www.calcalist.co.il \
+            https://www.bizportal.co.il \
+            https://www.ice.co.il ; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" -L --max-time 20 -H "User-Agent: $UA" -H "Accept-Language: he-IL,he;q=0.9" "$url" || echo ERR)
+            size=$(curl -s -L --max-time 20 -H "User-Agent: $UA" -H "Accept-Language: he-IL,he;q=0.9" "$url" | wc -c || echo 0)
+            echo "PROBE $url -> $code ($size bytes)"
+          done
