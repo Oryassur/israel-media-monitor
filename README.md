@@ -13,15 +13,14 @@ via a versioned LLM rubric), and publishes an interactive dashboard.
 - **Runs**: GitHub Actions, hourly ([.github/workflows/pipeline.yml](.github/workflows/pipeline.yml))
 - **Dashboard**: GitHub Pages, served from [docs/](docs/)
 
-## Sibling monitor: Netanyahu in Israeli media
+## Sibling monitor: Israeli media
 
-[bibi-media-monitor/](bibi-media-monitor/) is a self-contained fork of the same
-pipeline that watches 12 major Israeli outlets (Hebrew + English) and measures
-attention/sentiment toward Benjamin Netanyahu and his family. Its dashboard is
-served at [docs/bibi/](docs/bibi/), it runs hourly via
-[.github/workflows/bibi-pipeline.yml](.github/workflows/bibi-pipeline.yml), and
-it uses its own API key (repo secret `ANTHROPIC_API_KEY_BIBI`). Run locally with
-`cd bibi-media-monitor && python -m pipeline.run`.
+[il-media-data-stories-monitor](https://github.com/Oryassur/il-media-data-stories-monitor)
+applies the same ingestion architecture to 12 major Israeli outlets (Hebrew +
+English), archiving each homepage's ranked headlines hourly; its analysis layer
+is in progress. The retired Netanyahu-family monitor that previously lived here
+as `bibi-media-monitor/` is archived in that repo (with all its collected data);
+its full history remains in this repo's git log.
 
 ## Data
 
