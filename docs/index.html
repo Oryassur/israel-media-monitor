@@ -11,7 +11,8 @@
   --page:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
   --grid:#e1e0d9; --baseline:#c3c2b7; --border:rgba(11,11,11,.10);
   --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4;
-  --div-pos:#2a78d6; --div-neg:#e34948; --div-mid:#f0efec;
+  --dv-n2:#ab2d2a; --dv-n1:#e08b88; --dv-0:#c9c8bf; --dv-p1:#85b2e8; --dv-p2:#2a63b8;
+  --dv-u:rgba(137,135,129,.38);
 }
 @media (prefers-color-scheme: dark){
   :root:where(:not([data-theme="light"])){
@@ -19,7 +20,8 @@
     --page:#0d0d0d; --surface:#1a1a19; --ink:#ffffff; --ink2:#c3c2b7; --muted:#898781;
     --grid:#2c2c2a; --baseline:#383835; --border:rgba(255,255,255,.10);
     --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181;
-    --div-pos:#3987e5; --div-neg:#e66767; --div-mid:#383835;
+    --dv-n2:#e0524e; --dv-n1:#96504e; --dv-0:#4c4c48; --dv-p1:#4c6d95; --dv-p2:#4c94f0;
+    --dv-u:rgba(137,135,129,.35);
   }
 }
 :root[data-theme="dark"]{
@@ -27,7 +29,8 @@
   --page:#0d0d0d; --surface:#1a1a19; --ink:#ffffff; --ink2:#c3c2b7; --muted:#898781;
   --grid:#2c2c2a; --baseline:#383835; --border:rgba(255,255,255,.10);
   --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181;
-  --div-pos:#3987e5; --div-neg:#e66767; --div-mid:#383835;
+  --dv-n2:#e0524e; --dv-n1:#96504e; --dv-0:#4c4c48; --dv-p1:#4c6d95; --dv-p2:#4c94f0;
+  --dv-u:rgba(137,135,129,.35);
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--page);color:var(--ink);
@@ -75,6 +78,9 @@ svg text{font:11px system-ui,-apple-system,"Segoe UI",sans-serif;fill:var(--mute
 .tooltip .row b{margin-left:auto;font-variant-numeric:tabular-nums}
 .items{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px}
 .items h2{font-size:14px;margin:0 0 8px}
+.storyhead{font-weight:600;font-size:13px;margin:14px 0 2px}
+.storyhead:first-of-type{margin-top:4px}
+.storyhead .m{font-weight:400;color:var(--muted);font-size:12px}
 .item{display:flex;gap:10px;align-items:baseline;padding:7px 0;border-top:1px solid var(--grid)}
 .item:first-of-type{border-top:0}
 .item .score{flex:0 0 38px;text-align:center;font-weight:650;font-size:12px;border-radius:6px;padding:2px 0}
@@ -115,18 +121,13 @@ footer a{color:inherit}
 
 <div class="tiles" id="tiles"></div>
 
-<div class="card" id="attCard">
-  <h2>Attention — share of homepage prominence on Israel</h2>
-  <p class="hint">Prominence-weighted share of each homepage devoted to Israel-related headlines, averaged equally across selected sources.</p>
-  <div class="legend" id="attLegend"></div>
-  <div id="attChart"></div>
-</div>
-
-<div class="card" id="sentCard">
-  <h2>Sentiment — framing of Israel in headlines</h2>
-  <p class="hint">−2 hostile … +2 sympathetic, prominence-weighted mean of scored headlines. Above zero = sympathetic, below = critical.</p>
-  <div class="legend" id="sentLegend"></div>
-  <div id="sentChart"></div>
+<div class="card" id="mainCard">
+  <h2>Attention &amp; framing</h2>
+  <p class="hint">Bar height = share of homepage prominence on Israel-related headlines, averaged equally across
+    selected sources; color splits that attention by headline framing (red hostile … blue sympathetic).
+    The neutral band straddles the baseline. Click a bar for its stories.</p>
+  <div class="legend" id="mainLegend"></div>
+  <div id="mainChart"></div>
 </div>
 
 <div class="tooltip" id="tooltip"></div>
@@ -149,6 +150,12 @@ footer a{color:inherit}
   toward Israel on a fixed rubric (−2 hostile … +2 sympathetic) using a language model; scores are
   cached per headline and record the model + rubric version. Hours where an outlet failed to respond
   are excluded, not counted as zero.
+  The chart is a diverging stacked bar: bar height is the attention share, its colored segments split
+  that attention by headline sentiment (red hostile, blue sympathetic), and the neutral band —
+  including still-unscored headlines in fainter gray — straddles the zero baseline. For runs before
+  the composition columns existed (the ≈ date in the legend) the split is approximated from the
+  headline archive. Headlines are grouped into cross-outlet <i>stories</i> by a language model
+  (clustering model + version recorded per assignment; story titles are model-written).
   Political lean (Left / Center / Right) is assigned mechanically from published ratings —
   <a href="https://www.allsides.com/media-bias/media-bias-chart" rel="noopener">AllSides Media Bias Ratings</a>
   where the outlet is rated (Lean&nbsp;Left/Left → Left, Center → Center, Lean&nbsp;Right/Right → Right),
@@ -178,7 +185,7 @@ const SPLITS=[["Combined","none"],["By lean","lean"],["By region","region"]];
 const HOURLY_KEPT_DAYS=14,ITEMS_KEPT_DAYS=7;
 const state={preset:"7d",start:null,end:null,gran:"hourly",granManual:false,
   split:"none",countries:new Set(),leans:new Set(),sources:new Set()};
-let META,HOURLY,DAILY,ITEMS;
+let META,HOURLY,DAILY,ITEMS,STORIES,DISPN;
 
 const fmtPct=v=>v==null?"—":(v*100).toFixed(1)+"%";
 const fmtSent=v=>v==null?"—":(v>0?"+":"")+v.toFixed(2);
@@ -209,9 +216,10 @@ function effectiveGran(interval){
 }
 
 async function boot(){
-  const [meta,hourly,daily,items]=await Promise.all(
-    ["meta.json","hourly.json","daily.json","items.json"].map(f=>fetch("data/"+f).then(r=>r.json())));
-  META=meta;HOURLY=hourly;DAILY=daily;ITEMS=items;
+  const [meta,hourly,daily,items,stories]=await Promise.all(
+    ["meta.json","hourly.json","daily.json","items.json","stories.json"].map(f=>fetch("data/"+f).then(r=>r.json())));
+  META=meta;HOURLY=hourly;DAILY=daily;ITEMS=items;STORIES=stories;
+  DISPN=Object.fromEntries(meta.sources.map(s=>[s.name,s.display]));
   $("#updated").textContent=new Date(meta.generated).toLocaleString();
   $("#nsources").textContent=meta.sources.length;
   buildControls();render();
@@ -411,103 +419,158 @@ function tiles(S){
   tile("Sources reporting",rep.size+" / "+S.selNames.size,"reported in selected range");
 }
 
-const M={t:14,r:14,b:26,l:46},H=230;
-function xScale(ts,w){const a=ts[0],b=ts[ts.length-1]||1;return ms=>ts.length<2?w/2:M.l+(ms-a)/(b-a)*(w-M.l-M.r)}
+const M={t:12,r:14,b:24,l:46};
+const DV_KEYS=["--dv-n2","--dv-n1","--dv-0","--dv-p1","--dv-p2"];
+const DV_LABELS=["−2 hostile","−1 critical","0 neutral","+1 favorable","+2 sympathetic"];
+// comp index order in data: [n2, n1, 0, p1, p2, u]; draw order bottom->top:
+// n2, n1, 0, u, p1, p2 (the combined 0+u band centers on the baseline)
+const DRAW_ORDER=[0,1,2,5,3,4];
+const segColor=k=>css(k===5?"--dv-u":DV_KEYS[k]);
 
-function drawChart(el,S,metric){
+// Per-bucket extents in share units: [below baseline, above baseline]
+function barExtents(p){
+  const s=p.share;
+  if(s==null)return null;
+  if(!p.comp)return [s/2,s/2]; // composition unknown: center on baseline
+  const w=p.comp.reduce((a,b)=>a+b,0);
+  if(!w)return [s/2,s/2];
+  const f=k=>s*p.comp[k]/w;
+  const neutral=f(2)+f(5);
+  return [f(0)+f(1)+neutral/2,neutral/2+f(3)+f(4)];
+}
+
+function bucketGrid(S){
+  const span=GRAN_SPAN[S.gran];
+  // "all" ranges start at the first populated bucket rather than the epoch
+  const from=S.interval.start===0
+    ?(S.ts.length?S.ts[0]:floorGran[S.gran](Date.now()))
+    :floorGran[S.gran](S.interval.start);
+  const g=[];
+  for(let t=from;t<S.interval.end;t+=span)g.push(t);
+  return g;
+}
+
+function drawStackedChart(el,S){
   el.innerHTML="";
   const w=el.clientWidth||900;
-  const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
-  svg.setAttribute("viewBox",`0 0 ${w} ${H}`);svg.style.width="100%";svg.style.display="block";
-  const isSent=metric==="sent";
-  let vmax=0.001;
-  for(const row of S.points)for(const p of row){const v=isSent?Math.abs(p.sent??0):(p.share??0);if(v>vmax)vmax=v}
-  const [lo,hi]=isSent?[-Math.max(0.5,Math.ceil(vmax*4)/4),Math.max(0.5,Math.ceil(vmax*4)/4)]:[0,vmax*1.15];
-  const x=xScale(S.ts,w),y=v=>M.t+(hi-v)/(hi-lo)*(H-M.t-M.b);
-  const NS=svg.namespaceURI,mk=(n,at)=>{const e=document.createElementNS(NS,n);for(const k in at)e.setAttribute(k,at[k]);svg.appendChild(e);return e};
-  // gridlines + y labels
-  const nTicks=4;
-  for(let i=0;i<=nTicks;i++){
-    const v=lo+(hi-lo)*i/nTicks,yy=y(v);
-    mk("line",{x1:M.l,x2:w-M.r,y1:yy,y2:yy,stroke:css(v===0&&isSent?"--baseline":"--grid"),"stroke-width":v===0&&isSent?1.5:1});
-    const t=mk("text",{x:M.l-6,y:yy+4,"text-anchor":"end"});
-    t.textContent=isSent?fmtSent(v).replace(".00",""):(v*100).toFixed(v*100<3?1:0)+"%";
+  const grid=bucketGrid(S);
+  const idx=new Map(S.ts.map((ms,i)=>[ms,i]));
+  // shared y-domain across all small multiples, per side
+  let maxNeg=1e-4,maxPos=1e-4;
+  for(const row of S.points)for(const p of row){
+    const e=barExtents(p);
+    if(e){if(e[0]>maxNeg)maxNeg=e[0];if(e[1]>maxPos)maxPos=e[1]}
   }
-  if(!isSent)mk("line",{x1:M.l,x2:w-M.r,y1:y(0),y2:y(0),stroke:css("--baseline"),"stroke-width":1});
-  // x labels
-  const nx=Math.min(6,S.ts.length);
-  for(let i=0;i<nx;i++){
-    const ms=S.ts[Math.round(i*(S.ts.length-1)/Math.max(1,nx-1))]||S.ts[0];
-    const d=new Date(ms);
-    const lbl=S.gran==="hourly"?d.toLocaleString(undefined,{weekday:"short",hour:"numeric"}):d.toLocaleDateString(undefined,{month:"short",day:"numeric"});
-    const t=mk("text",{x:x(ms),y:H-8,"text-anchor":"middle"});t.textContent=lbl;
-  }
-  // series
+  maxNeg*=1.08;maxPos*=1.08;
+  const exactMs=META.comp_exact_since?parseTs(META.comp_exact_since):-Infinity;
+  const multi=S.groups.length>1;
+  const H=multi?150:240;
   S.groups.forEach((g,gi)=>{
-    const color=css(SLOTS[Math.min(g.slot,SLOTS.length-1)]);
-    const pts=S.ts.map((ms,i)=>({ms,v:isSent?S.points[i][gi].sent:S.points[i][gi].share})).filter(p=>p.v!=null);
-    if(!pts.length)return;
-    // break the line where data is missing (e.g. skipped scheduler hours) —
-    // drawing a straight line across a gap would fake data that isn't there
-    const gapMs=2.5*GRAN_SPAN[S.gran];
-    const segs=[[pts[0]]];
-    for(let i=1;i<pts.length;i++){
-      if(pts[i].ms-pts[i-1].ms>gapMs)segs.push([]);
-      segs[segs.length-1].push(pts[i]);
+    if(multi){
+      const cap=document.createElement("div");
+      cap.style.cssText="font-size:12px;font-weight:600;color:var(--ink2);margin:8px 0 0";
+      cap.textContent=g.label;el.appendChild(cap);
     }
-    const strokeColor=(isSent&&S.groups.length===1)?css("--ink2"):color;
-    for(const seg of segs){
-      const path=seg.map((p,i)=>(i?"L":"M")+x(p.ms).toFixed(1)+" "+y(p.v).toFixed(1)).join(" ");
-      if(!isSent&&S.groups.length===1&&seg.length>1){
-        mk("path",{d:path+`L${x(seg[seg.length-1].ms)} ${y(0)}L${x(seg[0].ms)} ${y(0)}Z`,fill:color,opacity:.14,stroke:"none"});
-      }
-      if(isSent&&S.groups.length===1&&seg.length>1){
-        const up=css("--div-pos"),dn=css("--div-neg");
-        const area=(sign)=>seg.map((p,i)=>(i?"L":"M")+x(p.ms).toFixed(1)+" "+y(sign>0?Math.max(0,p.v):Math.min(0,p.v)).toFixed(1)).join(" ")
-          +`L${x(seg[seg.length-1].ms)} ${y(0)}L${x(seg[0].ms)} ${y(0)}Z`;
-        mk("path",{d:area(1),fill:up,opacity:.16,stroke:"none"});
-        mk("path",{d:area(-1),fill:dn,opacity:.16,stroke:"none"});
-      }
-      mk("path",{d:path,fill:"none",stroke:strokeColor,"stroke-width":2,"stroke-linejoin":"round","stroke-linecap":"round"});
+    const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+    svg.setAttribute("viewBox",`0 0 ${w} ${H}`);svg.style.width="100%";svg.style.display="block";
+    const NS=svg.namespaceURI,mk=(n,at)=>{const e=document.createElementNS(NS,n);for(const k in at)e.setAttribute(k,at[k]);svg.appendChild(e);return e};
+    const y=v=>M.t+(maxPos-v)/(maxPos+maxNeg)*(H-M.t-M.b);
+    const plotW=w-M.l-M.r,slotW=plotW/Math.max(1,grid.length),barW=Math.max(1,slotW-1);
+    const x=i=>M.l+i*slotW;
+    // y gridlines: a few round share ticks on each side
+    const tickStep=v=>{const raw=v/2.5,p=Math.pow(10,Math.floor(Math.log10(raw)));const c=raw/p;return (c<1.5?1:c<3.5?2:c<7.5?5:10)*p};
+    const step=tickStep(Math.max(maxNeg,maxPos));
+    for(let v=0;v<=maxPos;v+=step){
+      const yy=y(v);
+      mk("line",{x1:M.l,x2:w-M.r,y1:yy,y2:yy,stroke:css(v===0?"--baseline":"--grid"),"stroke-width":v===0?1.5:1});
+      const t=mk("text",{x:M.l-6,y:yy+4,"text-anchor":"end"});t.textContent=(v*100).toFixed(v*100<3&&v>0?1:0)+"%";
     }
-    if(pts.length<=60)for(const p of pts)mk("circle",{cx:x(p.ms),cy:y(p.v),r:pts.length<=8?4:2.5,fill:strokeColor});
+    for(let v=step;v<=maxNeg;v+=step){
+      const yy=y(-v);
+      mk("line",{x1:M.l,x2:w-M.r,y1:yy,y2:yy,stroke:css("--grid"),"stroke-width":1});
+      const t=mk("text",{x:M.l-6,y:yy+4,"text-anchor":"end"});t.textContent=(v*100).toFixed(v*100<3?1:0)+"%";
+    }
+    // x labels (last multiple only, or the single chart)
+    if(!multi||gi===S.groups.length-1){
+      const nx=Math.min(6,grid.length);
+      for(let i=0;i<nx;i++){
+        const s=Math.round(i*(grid.length-1)/Math.max(1,nx-1));
+        const d=new Date(grid[s]);
+        const lbl=S.gran==="hourly"?d.toLocaleString(undefined,{weekday:"short",hour:"numeric"}):d.toLocaleDateString(undefined,{month:"short",day:"numeric"});
+        const t=mk("text",{x:x(s)+slotW/2,y:H-8,"text-anchor":"middle"});t.textContent=lbl;
+      }
+    }
+    // bars
+    grid.forEach((ms,si)=>{
+      const di=idx.get(ms);
+      if(di==null)return; // no run in this slot: gap
+      const p=S.points[di][gi];
+      const e=barExtents(p);
+      if(!e)return;
+      const s=p.share,w0=p.comp?p.comp.reduce((a,b)=>a+b,0):0;
+      const bx=x(si)+(slotW-barW)/2;
+      if(!p.comp||!w0){
+        // unknown composition: single neutral tone at lower opacity
+        mk("rect",{x:bx,y:y(e[1]),width:barW,height:Math.max(0,y(-e[0])-y(e[1])),fill:css("--dv-0"),opacity:.55});
+        return;
+      }
+      let cum=-e[0];
+      for(const k of DRAW_ORDER){
+        const h=s*p.comp[k]/w0;
+        if(h<=0)continue;
+        const y1=y(cum+h),y2=y(cum);
+        mk("rect",{x:bx,y:y1,width:barW,height:Math.max(0.5,y2-y1),fill:segColor(k),"shape-rendering":"crispEdges"});
+        cum+=h;
+      }
+    });
+    // hover + click
+    const cross=mk("rect",{y:M.t,height:H-M.t-M.b,width:slotW,fill:css("--baseline"),opacity:0,"pointer-events":"none"});
+    const hit=mk("rect",{x:M.l,y:M.t,width:Math.max(1,plotW),height:H-M.t-M.b,fill:"transparent"});
+    hit.style.cursor="crosshair";
+    const slotAt=ev=>{
+      const r=svg.getBoundingClientRect(),px=(ev.clientX-r.left)*(w/r.width);
+      return Math.max(0,Math.min(grid.length-1,Math.floor((px-M.l)/slotW)));
+    };
+    hit.addEventListener("pointermove",ev=>{
+      const si=slotAt(ev),di=idx.get(grid[si]);
+      cross.setAttribute("x",x(si));cross.setAttribute("opacity",0.18);
+      if(di!=null)tooltip(ev,S,di,gi,grid[si]<exactMs);else $("#tooltip").style.display="none";
+    });
+    hit.addEventListener("pointerleave",()=>{cross.setAttribute("opacity",0);$("#tooltip").style.display="none"});
+    hit.addEventListener("click",ev=>{
+      const di=idx.get(grid[slotAt(ev)]);
+      if(di!=null)showStoriesFor(S,di,g.members);
+    });
+    el.appendChild(svg);
   });
-  // crosshair + hover
-  const cross=mk("line",{y1:M.t,y2:H-M.b,stroke:css("--baseline"),"stroke-width":1,visibility:"hidden","stroke-dasharray":"3 3"});
-  const hit=mk("rect",{x:M.l,y:M.t,width:Math.max(1,w-M.l-M.r),height:H-M.t-M.b,fill:"transparent"});
-  hit.style.cursor="crosshair";
-  const nearest=px=>{let best=0,bd=1e18;S.ts.forEach((ms,i)=>{const d=Math.abs(x(ms)-px);if(d<bd){bd=d;best=i}});return best};
-  hit.addEventListener("pointermove",ev=>{
-    const r=svg.getBoundingClientRect(),px=(ev.clientX-r.left)*(w/r.width);
-    const i=nearest(px);cross.setAttribute("x1",x(S.ts[i]));cross.setAttribute("x2",x(S.ts[i]));
-    cross.setAttribute("visibility","visible");
-    tooltip(ev,S,i,isSent);
-  });
-  hit.addEventListener("pointerleave",()=>{cross.setAttribute("visibility","hidden");$("#tooltip").style.display="none"});
-  hit.addEventListener("click",ev=>{
-    const r=svg.getBoundingClientRect(),px=(ev.clientX-r.left)*(w/r.width);
-    showItemsFor(S,nearest(px));
-  });
-  el.appendChild(svg);
   if(!S.ts.length){const d=document.createElement("div");d.className="empty";d.textContent="No data yet for this selection — the pipeline may have just started.";el.appendChild(d)}
 }
 
-function tooltip(ev,S,i,isSent){
+function tooltip(ev,S,i,gi,approx){
   const tt=$("#tooltip");tt.innerHTML="";
+  const p=S.points[i][gi];
   const t=document.createElement("div");t.className="tt-t";
-  t.textContent=bucketLabel(S,i);
+  t.textContent=bucketLabel(S,i)+(S.groups.length>1?" — "+S.groups[gi].label:"");
   tt.appendChild(t);
-  S.groups.forEach((g,gi)=>{
-    const p=S.points[i][gi],v=isSent?p.sent:p.share;
+  const line=(label,val,swc)=>{
     const row=document.createElement("div");row.className="row";
-    const sw=document.createElement("span");sw.className="sw";
-    sw.style.background=css(SLOTS[Math.min(g.slot,SLOTS.length-1)]);
-    const lbl=document.createElement("span");lbl.textContent=g.label;
-    const val=document.createElement("b");val.textContent=isSent?fmtSent(v):fmtPct(v);
-    row.append(sw,lbl,val);tt.appendChild(row);
-  });
+    if(swc){const sw=document.createElement("span");sw.className="sw";sw.style.cssText="width:10px;height:10px;border-radius:2px;background:"+swc;row.appendChild(sw)}
+    const lbl=document.createElement("span");lbl.textContent=label;
+    const v=document.createElement("b");v.textContent=val;
+    row.append(lbl,v);tt.appendChild(row);
+  };
+  line("Attention",fmtPct(p.share));
+  line("Mean sentiment",fmtSent(p.sent));
+  if(p.comp){
+    const w0=p.comp.reduce((a,b)=>a+b,0);
+    if(w0){
+      for(let k=4;k>=0;k--)if(p.comp[k]>0)line(DV_LABELS[k],(100*p.comp[k]/w0).toFixed(0)+"%",css(DV_KEYS[k]));
+      if(p.comp[5]>0)line("of which unscored",(100*p.comp[5]/w0).toFixed(0)+"%",css("--dv-u"));
+    }
+  }
   const hint=document.createElement("div");hint.className="tt-t";hint.style.marginTop="4px";
-  hint.textContent="click for headlines";tt.appendChild(hint);
+  hint.textContent=(approx?"≈ approximated composition · ":"")+(p.comp?"":"composition unknown · ")+"click for stories";
+  tt.appendChild(hint);
   tt.style.display="block";
   const wr=$(".wrap").getBoundingClientRect();
   let lx=ev.clientX-wr.left+14,ly=ev.clientY-wr.top+14;
@@ -517,34 +580,73 @@ function tooltip(ev,S,i,isSent){
 
 function scoreChip(s){
   const el=document.createElement("span");el.className="score";
-  if(s==null){el.textContent="·";el.style.color="var(--muted)";el.style.background="var(--div-mid)"}
+  if(s==null){el.textContent="·";el.style.color="var(--muted)";el.style.background="var(--dv-u)"}
+  else if(s===0){el.textContent="0";el.style.background="var(--dv-0)";el.style.color="var(--ink2)"}
   else{
     el.textContent=(s>0?"+":"")+s;
-    const c=s>0?"--div-pos":s<0?"--div-neg":"";
-    el.style.background=c?css(c)+"26":"var(--div-mid)";
-    el.style.color=c?css(c):"var(--ink2)";
+    el.style.background=css(DV_KEYS[s+2])+"33";
+    el.style.color=css(s<0?"--dv-n2":"--dv-p2");
   }
   return el;
 }
 
-function renderItems(list,title){
+function makeItemRow(it){
+  const row=document.createElement("div");row.className="item";
+  row.appendChild(scoreChip(it.s));
+  const h=document.createElement("div");h.className="h";
+  const a=document.createElement("a");a.href=it.u;a.target="_blank";a.rel="noopener";a.textContent=it.h;
+  let tr=null;
+  if(it.ht){tr=document.createElement("div");tr.className="m";tr.style.fontStyle="italic";
+    tr.style.color="var(--ink2)";tr.textContent="→ "+it.ht}
+  const m=document.createElement("div");m.className="m";
+  m.textContent=`${DISPN[it.src]||it.src} · ${new Date(it.fs).toLocaleString(undefined,{month:"short",day:"numeric",hour:"numeric"})}`
+    +(it.c?` · ${it.c.replaceAll("_"," ")}`:"")
+    +(it.w>=10?" · top story":it.w>=5?" · top 5":it.w>=3?" · top 10":" · top 20");
+  h.append(a);if(tr)h.append(tr);h.append(m);row.appendChild(h);
+  return row;
+}
+
+// Cluster the drill-down by story: multi-article stories first (count desc,
+// then peak prominence); singletons and unassigned merge into a trailing
+// "Other headlines" group.
+function groupByStory(list){
+  const by=new Map(),other=[];
+  for(const it of list){
+    if(it.st){if(!by.has(it.st))by.set(it.st,[]);by.get(it.st).push(it)}
+    else other.push(it);
+  }
+  const groups=[];
+  for(const [st,items] of by){
+    if(items.length>1)groups.push({title:STORIES[st]||"Untitled story",items:items.sort((a,b)=>b.w-a.w)});
+    else other.push(items[0]);
+  }
+  groups.sort((a,b)=>(b.items.length-a.items.length)||(b.items[0].w-a.items[0].w));
+  if(other.length)groups.push({title:"Other headlines",items:other.sort((a,b)=>(b.w-a.w)||(b.fs<a.fs?-1:1))});
+  return groups;
+}
+
+function renderStories(list,title,expanded){
   $("#itemsTitle").textContent=title;
   const el=$("#itemsList");el.innerHTML="";
-  const disp=Object.fromEntries(META.sources.map(s=>[s.name,s.display]));
   if(!list.length){el.innerHTML='<div class="empty">No headlines in this window.</div>';return}
-  for(const it of list.slice(0,60)){
-    const row=document.createElement("div");row.className="item";
-    row.appendChild(scoreChip(it.s));
-    const h=document.createElement("div");h.className="h";
-    const a=document.createElement("a");a.href=it.u;a.target="_blank";a.rel="noopener";a.textContent=it.h;
-    let tr=null;
-    if(it.ht){tr=document.createElement("div");tr.className="m";tr.style.fontStyle="italic";
-      tr.style.color="var(--ink2)";tr.textContent="→ "+it.ht}
-    const m=document.createElement("div");m.className="m";
-    m.textContent=`${disp[it.src]||it.src} · ${new Date(it.fs).toLocaleString(undefined,{month:"short",day:"numeric",hour:"numeric"})}`
-      +(it.c?` · ${it.c.replaceAll("_"," ")}`:"")
-      +(it.w>=10?" · top story":it.w>=5?" · top 5":it.w>=3?" · top 10":" · top 20");
-    h.append(a);if(tr)h.append(tr);h.append(m);row.appendChild(h);el.appendChild(row);
+  const groups=groupByStory(list);
+  const shown=expanded?groups:groups.slice(0,5);
+  let rendered=0;
+  for(const g of shown){
+    const head=document.createElement("div");head.className="storyhead";
+    const tt=document.createElement("span");tt.textContent=g.title;
+    const n=document.createElement("span");n.className="m";
+    n.textContent=` · ${g.items.length} headline${g.items.length>1?"s":""}`;
+    head.append(tt,n);el.appendChild(head);
+    const rows=expanded?g.items:g.items.slice(0,3);
+    for(const it of rows)el.appendChild(makeItemRow(it));
+    rendered+=rows.length;
+  }
+  if(!expanded&&rendered<list.length){
+    const b=document.createElement("button");b.className="linklike";b.style.marginTop="10px";
+    b.textContent=`Show all ${list.length} headlines`;
+    b.onclick=()=>renderStories(list,title,true);
+    el.appendChild(b);
   }
 }
 
@@ -555,41 +657,55 @@ function bucketLabel(S,i){
   return d.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"});
 }
 
-function showItemsFor(S,i){
+function showStoriesFor(S,i,members){
   const bucketMs=S.ts[i],span=GRAN_SPAN[S.gran];
-  const list=ITEMS.filter(it=>S.selNames.has(it.src)&&parseTs(it.fs)<bucketMs+span&&parseTs(it.ls)>=bucketMs)
-    .sort((a,b)=>(b.w-a.w)||(b.s!=null)-(a.s!=null));
-  renderItems(list,"Headlines on homepages — "+bucketLabel(S,i));
+  const list=ITEMS.filter(it=>members.has(it.src)&&parseTs(it.fs)<bucketMs+span&&parseTs(it.ls)>=bucketMs);
+  const partial=bucketMs<Date.now()-ITEMS_KEPT_DAYS*864e5-6e4;
+  renderStories(list,"Stories on homepages — "+bucketLabel(S,i)
+    +(partial?" (headlines kept 7 days)":""),false);
   $("#itemsPanel").scrollIntoView({behavior:"smooth",block:"nearest"});
 }
 
-function legend(el,S){
-  el.innerHTML="";
-  if(S.groups.length<2)return;
-  for(const g of S.groups){
-    const li=document.createElement("span");li.className="li";
+function mainLegend(){
+  const el=$("#mainLegend");el.innerHTML="";
+  const li=(color,label)=>{
+    const s=document.createElement("span");s.className="li";
     const sw=document.createElement("span");sw.className="sw";
-    sw.style.background=css(SLOTS[Math.min(g.slot,SLOTS.length-1)]);
-    const t=document.createElement("span");t.textContent=g.label;
-    li.append(sw,t);el.appendChild(li);
+    sw.style.cssText="width:11px;height:11px;border-radius:3px;background:"+color;
+    const t=document.createElement("span");t.textContent=label;
+    s.append(sw,t);el.appendChild(s);
+  };
+  DV_KEYS.forEach((k,i)=>li(css(k),DV_LABELS[i]));
+  li(css("--dv-u"),"unscored");
+  if(META.comp_exact_since){
+    const t=document.createElement("span");t.className="li";t.style.color="var(--muted)";
+    t.textContent="≈ approximated before "
+      +new Date(META.comp_exact_since).toLocaleDateString(undefined,{month:"short",day:"numeric"});
+    el.appendChild(t);
   }
 }
 
 function dataTable(S){
   const wrap=$("#tblWrap");wrap.innerHTML="";
   const tb=document.createElement("table");tb.className="data";
-  const head=document.createElement("tr");
-  head.innerHTML="<th>Time</th>"+S.groups.map(()=>"<th>Attention</th><th>Sentiment</th><th>Headlines</th>").join("");
   if(S.groups.length>1){
     const gh=document.createElement("tr");
-    gh.innerHTML="<th></th>"+S.groups.map(g=>`<th colspan="3">${g.label}</th>`).join("");
+    gh.innerHTML="<th></th>"+S.groups.map(g=>`<th colspan="8">${g.label}</th>`).join("");
     tb.appendChild(gh);
   }
+  const head=document.createElement("tr");
+  head.innerHTML="<th>Time</th>"+S.groups.map(()=>
+    "<th>Attention</th><th>Sentiment</th><th>−2</th><th>−1</th><th>0</th><th>+1</th><th>+2</th><th>Headlines</th>").join("");
   tb.appendChild(head);
   S.ts.forEach((ms,i)=>{
     const tr=document.createElement("tr");
     const cells=[bucketLabel(S,i)];
-    for(const p of S.points[i])cells.push(fmtPct(p.share),fmtSent(p.sent),String(p.items));
+    for(const p of S.points[i]){
+      cells.push(fmtPct(p.share),fmtSent(p.sent));
+      const w0=p.comp?p.comp.reduce((a,b)=>a+b,0):0;
+      for(let k=0;k<5;k++)cells.push(w0?(100*p.comp[k]/w0).toFixed(0)+"%":"—");
+      cells.push(String(p.items));
+    }
     for(const c of cells){const td=document.createElement("td");td.textContent=c;tr.appendChild(td)}
     tb.appendChild(tr);
   });
@@ -602,11 +718,13 @@ function render(){
   syncControls(interval,gran);
   const S=buildSeries(interval,gran);
   tiles(S);
-  legend($("#attLegend"),S);legend($("#sentLegend"),S);
-  drawChart($("#attChart"),S,"share");
-  drawChart($("#sentChart"),S,"sent");
-  renderItems(ITEMS.filter(i=>S.selNames.has(i.src)).sort((a,b)=>b.fs<a.fs?-1:1).slice(0,60),
-    "Latest Israel-related headlines (7 days)");
+  mainLegend();
+  drawStackedChart($("#mainChart"),S);
+  const partial=interval.start<Date.now()-ITEMS_KEPT_DAYS*864e5-6e4;
+  renderStories(
+    ITEMS.filter(it=>S.selNames.has(it.src)&&parseTs(it.fs)<interval.end&&parseTs(it.ls)>=interval.start),
+    "Israel-related stories ("+PRESET_LABEL[state.preset]+")"
+      +(partial?" — headlines within last 7 days":""),false);
   dataTable(S);
 }
 
