@@ -67,8 +67,14 @@ docs/                      GitHub Pages dashboard (vanilla JS/SVG, self-containe
   country/lean balance — WSJ, WaPo, Reuters, Telegraph, Sky, France24, Politico
   are known-blocked (plus, from runner IPs: The Hill, news.com.au, Ouest-France,
   NewsNation).
-- Dashboard reads only `docs/data/*.json`; keep it dependency-free and
-  light/dark-safe (CSS tokens per the dataviz skill's reference palette).
+- Dashboard reads only `docs/data/*.json`; keep it dependency-free (the one
+  external resource is the Fraunces display font from Google Fonts, with a
+  Georgia fallback) and light/dark-safe — three CSS token blocks (light,
+  prefers-dark guarded, `[data-theme=dark]`) that must stay in sync; SVG fills
+  use `var(--token)` so theme flips never leave stale colors. Editorial layout
+  order is masthead → controls → hero verdict → chart → stories; spike
+  annotations come from story clusters (combined view, 7-day items window,
+  one per distinct story, measured after the svg is in the DOM).
 
 ## Retired: bibi monitor
 

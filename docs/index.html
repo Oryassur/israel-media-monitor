@@ -5,85 +5,158 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Israel in Western Media</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%231e293b'/%3E%3Crect%20x='8'%20y='30.5'%20width='48'%20height='3'%20rx='1.5'%20fill='%23475569'/%3E%3Crect%20x='10'%20y='12'%20width='9'%20height='20'%20rx='2'%20fill='%233987e5'/%3E%3Crect%20x='23'%20y='20'%20width='9'%20height='12'%20rx='2'%20fill='%233987e5'/%3E%3Crect%20x='36'%20y='32'%20width='9'%20height='16'%20rx='2'%20fill='%23e66767'/%3E%3Crect%20x='49'%20y='32'%20width='9'%20height='10'%20rx='2'%20fill='%23e66767'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap" rel="stylesheet">
 <style>
 :root{
   color-scheme: light;
-  --page:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
-  --grid:#e1e0d9; --baseline:#c3c2b7; --border:rgba(11,11,11,.10);
-  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4;
-  --dv-n2:#ab2d2a; --dv-n1:#e08b88; --dv-0:#c9c8bf; --dv-p1:#85b2e8; --dv-p2:#2a63b8;
-  --dv-u:rgba(137,135,129,.38);
+  --font-display:"Fraunces",Georgia,"Times New Roman",serif;
+  --font-ui:system-ui,-apple-system,"Segoe UI",sans-serif;
+  --page:#faf7f1; --surface:#fffdf8; --ink:#1a1712; --ink2:#57534a; --muted:#8a857a;
+  --grid:#e8e2d5; --baseline:#c9c3b4; --border:rgba(26,23,18,.10);
+  --dv-n2:#9e2b25; --dv-n1:#d98d80; --dv-0:#d8d0bd; --dv-p1:#8fb4dc; --dv-p2:#2b5fa8;
+  --dv-u:rgba(138,133,122,.35); --ok:#2e8f63;
+  --shadow-pop:0 6px 24px rgba(46,38,23,.14);
 }
 @media (prefers-color-scheme: dark){
   :root:where(:not([data-theme="light"])){
     color-scheme: dark;
-    --page:#0d0d0d; --surface:#1a1a19; --ink:#ffffff; --ink2:#c3c2b7; --muted:#898781;
-    --grid:#2c2c2a; --baseline:#383835; --border:rgba(255,255,255,.10);
-    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181;
-    --dv-n2:#e0524e; --dv-n1:#96504e; --dv-0:#4c4c48; --dv-p1:#4c6d95; --dv-p2:#4c94f0;
-    --dv-u:rgba(137,135,129,.35);
+    --page:#131110; --surface:#1c1917; --ink:#f2ede2; --ink2:#c7c0b1; --muted:#8f8878;
+    --grid:#2b2822; --baseline:#3b382f; --border:rgba(242,237,226,.10);
+    --dv-n2:#e2574f; --dv-n1:#a3574f; --dv-0:#4d4a41; --dv-p1:#4e6f96; --dv-p2:#6aa1ee;
+    --dv-u:rgba(143,136,120,.32); --ok:#3fb27f;
+    --shadow-pop:0 8px 28px rgba(0,0,0,.55);
   }
 }
 :root[data-theme="dark"]{
   color-scheme: dark;
-  --page:#0d0d0d; --surface:#1a1a19; --ink:#ffffff; --ink2:#c3c2b7; --muted:#898781;
-  --grid:#2c2c2a; --baseline:#383835; --border:rgba(255,255,255,.10);
-  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181;
-  --dv-n2:#e0524e; --dv-n1:#96504e; --dv-0:#4c4c48; --dv-p1:#4c6d95; --dv-p2:#4c94f0;
-  --dv-u:rgba(137,135,129,.35);
+  --page:#131110; --surface:#1c1917; --ink:#f2ede2; --ink2:#c7c0b1; --muted:#8f8878;
+  --grid:#2b2822; --baseline:#3b382f; --border:rgba(242,237,226,.10);
+  --dv-n2:#e2574f; --dv-n1:#a3574f; --dv-0:#4d4a41; --dv-p1:#4e6f96; --dv-p2:#6aa1ee;
+  --dv-u:rgba(143,136,120,.32); --ok:#3fb27f;
+  --shadow-pop:0 8px 28px rgba(0,0,0,.55);
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--page);color:var(--ink);
-  font:15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
-.wrap{max-width:1060px;margin:0 auto;padding:24px 20px 60px}
-header h1{font-size:22px;margin:0 0 2px}
-header .sub{color:var(--ink2);font-size:13px;margin:0 0 18px}
-header .sub a{color:inherit}
-.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 16px}
-.seg{display:inline-flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--surface)}
-.seg button{border:0;background:none;color:var(--ink2);padding:6px 11px;font:inherit;font-size:13px;cursor:pointer}
-.seg button[aria-pressed="true"]{background:var(--ink);color:var(--page);font-weight:600}
+body{margin:0;background:var(--page);color:var(--ink);font:15px/1.5 var(--font-ui)}
+.wrap{max-width:1060px;margin:0 auto;padding:26px 20px 60px;position:relative}
+a{color:inherit}
+
+/* masthead */
+header{border-bottom:1px solid var(--grid);padding-bottom:16px;margin-bottom:20px}
+header h1{font:600 34px/1.1 var(--font-display);margin:0 0 5px;letter-spacing:-.3px}
+header .sub{color:var(--muted);font-size:12.5px;margin:0}
+header .sub a{color:var(--ink2)}
+.live{color:var(--ok);font-weight:600}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--ok);
+  margin-right:5px;animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.3}}
+
+/* controls — soft track/thumb segmented for the timeframe, quiet ghost dropdowns for the rest */
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 18px}
+.ctl-row,#more{display:contents}
+.seg{display:inline-flex;gap:2px;background:color-mix(in srgb,var(--ink) 5%,transparent);
+  border-radius:9px;padding:3px}
+.seg button{border:0;background:none;color:var(--ink2);padding:5px 11px;font:inherit;font-size:13px;
+  border-radius:6px;cursor:pointer;transition:background-color .15s ease,color .15s ease}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);font-weight:600;
+  box-shadow:0 1px 2px rgba(0,0,0,.07)}
 .seg button:disabled{color:var(--muted);cursor:not-allowed;opacity:.55}
 #customRange{display:inline-flex;align-items:center;gap:4px;color:var(--muted);font-size:13px}
 #customRange[hidden]{display:none}
 #customRange input{font:inherit;font-size:13px;color:var(--ink);background:var(--surface);
   border:1px solid var(--border);border-radius:8px;padding:4px 6px}
-.msel{position:relative;display:inline-block}
-.msel-btn{font:inherit;font-size:13px;color:var(--ink);background:var(--surface);
-  border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer}
-.msel-btn[aria-expanded="true"]{background:var(--ink);color:var(--page)}
-.msel-pop{position:absolute;top:calc(100% + 4px);left:0;z-index:20;min-width:180px;max-height:280px;
+.ctl-sep{width:1px;height:20px;background:var(--grid);margin:0 2px}
+.ghost{font:inherit;font-size:13px;color:var(--ink2);background:none;border:1px solid var(--border);
+  border-radius:8px;padding:6px 10px;cursor:pointer;transition:background-color .15s ease,color .15s ease,border-color .15s ease;
+  display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.ghost:hover{color:var(--ink);border-color:var(--muted)}
+.ghost .cv{color:var(--muted);font-size:10px}
+.ghost.on{color:var(--ink);border-color:transparent;background:color-mix(in srgb,var(--ink) 7%,transparent)}
+.ghost .badge{background:var(--ink);color:var(--page);border-radius:999px;font-size:10px;
+  font-weight:600;padding:1px 5px;margin-left:1px;line-height:1.4}
+.ghost:disabled{opacity:.55;cursor:not-allowed}
+.filtersBtn{display:none}
+.msel,.ssel{position:relative;display:inline-block}
+.pop{position:absolute;top:calc(100% + 4px);left:0;z-index:20;min-width:180px;max-height:300px;
   overflow-y:auto;background:var(--surface);border:1px solid var(--border);border-radius:10px;
-  box-shadow:0 6px 20px rgba(0,0,0,.18);padding:6px}
-.msel-pop label{display:flex;align-items:center;gap:7px;padding:4px 6px;font-size:13px;
-  border-radius:6px;cursor:pointer;white-space:nowrap}
-.msel-pop label:hover{background:var(--grid)}
-.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:0 0 16px}
-.tile{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px}
-.tile .k{font-size:12px;color:var(--muted)}
-.tile .v{font-size:26px;font-weight:650;margin-top:2px}
-.tile .d{font-size:12px;color:var(--ink2)}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 16px 8px;margin:0 0 16px;position:relative}
-.card h2{font-size:14px;margin:0 0 2px}
-.card .hint{font-size:12px;color:var(--muted);margin:0 0 8px}
-.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--ink2);margin:4px 0 6px}
+  box-shadow:var(--shadow-pop);padding:6px}
+.pop[hidden]{display:none}
+.pop label,.pop .opt{display:flex;align-items:center;gap:7px;padding:5px 7px;font-size:13px;
+  border-radius:6px;cursor:pointer;white-space:nowrap;color:var(--ink2);border:0;background:none;
+  width:100%;text-align:left;font-family:inherit;transition:background-color .15s ease}
+.pop label:hover,.pop .opt:hover{background:var(--grid);color:var(--ink)}
+.pop .opt[aria-selected="true"]{color:var(--ink);font-weight:600}
+.pop .opt:disabled{opacity:.5;cursor:not-allowed}
+.linklike{border:0;background:none;color:var(--ink2);font:inherit;font-size:12.5px;cursor:pointer;
+  text-decoration:underline;padding:0;transition:color .15s ease}
+.linklike:hover{color:var(--ink)}
+
+/* hero */
+.hero{margin:2px 0 4px}
+.hero-kicker{font-size:10.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 8px}
+.hero-main{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap}
+.hero-num{font:600 60px/1 var(--font-display);letter-spacing:-.015em;
+  font-variant-numeric:lining-nums tabular-nums}
+.hero-verdict{font:400 19px/1.35 var(--font-display);color:var(--ink2);margin:0;flex:1 1 300px}
+.hero-verdict b{font-weight:600;color:var(--ink)}
+.hero-verdict b.neg{color:var(--dv-n2)}
+.hero-verdict b.pos{color:var(--dv-p2)}
+.hero-delta{display:inline-flex;align-items:baseline;gap:6px;font-size:15px;margin:14px 0 0;
+  color:var(--ink2);padding:4px 12px 5px;border-radius:999px;background:color-mix(in srgb,var(--ink) 5%,transparent)}
+.hero-delta[hidden]{display:none}
+.hero-delta.up{background:color-mix(in srgb,var(--dv-p2) 11%,transparent)}
+.hero-delta.down{background:color-mix(in srgb,var(--dv-n2) 11%,transparent)}
+.hero-delta .v{font-weight:600;font-size:16px}
+.hero-delta.up .v{color:var(--dv-p2)}
+.hero-delta.down .v{color:var(--dv-n2)}
+.hero-delta .lbl{font-size:13px;color:var(--ink2)}
+
+/* chart section */
+.section{border-top:1px solid var(--grid);padding:20px 0 6px;margin-top:20px;position:relative}
+.section h2{font:600 20px/1.2 var(--font-display);margin:0 0 10px;display:flex;align-items:center}
+.info{position:relative;display:inline-block;margin-left:8px}
+.info-btn{width:17px;height:17px;border-radius:50%;border:1px solid var(--border);background:var(--surface);
+  color:var(--muted);font:600 10px/1 var(--font-display);cursor:pointer;padding:0;
+  transition:color .15s ease,border-color .15s ease}
+.info-btn:hover,.info-btn[aria-expanded="true"]{color:var(--ink);border-color:var(--muted)}
+.info-pop{position:absolute;top:calc(100% + 6px);left:0;z-index:30;width:min(340px,calc(100vw - 40px));
+  background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;
+  font:12.5px/1.55 var(--font-ui);color:var(--ink2);box-shadow:var(--shadow-pop)}
+.info-pop[hidden]{display:none}
+.info-pop p{margin:0 0 8px}.info-pop p:last-child{margin:0}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--ink2);margin:2px 0 10px}
 .legend .li{display:inline-flex;align-items:center;gap:6px}
-.legend .sw{width:14px;height:3px;border-radius:2px;display:inline-block}
-svg text{font:11px system-ui,-apple-system,"Segoe UI",sans-serif;fill:var(--muted)}
+.legend .sw{width:11px;height:11px;border-radius:3px;display:inline-block}
+.multicap{font-size:12px;font-weight:600;color:var(--ink2);margin:10px 0 0}
+svg text{font:11px var(--font-ui);fill:var(--muted)}
+svg text.ann{font-size:11px}
+.anng{cursor:pointer}
+.anng:hover text.ann tspan.t{fill:var(--ink)}
+.skel{height:320px;border-radius:8px;
+  background:linear-gradient(100deg,var(--grid) 40%,var(--surface) 50%,var(--grid) 60%);
+  background-size:200% 100%;animation:shimmer 1.4s linear infinite}
+@keyframes shimmer{to{background-position:-200% 0}}
 .tooltip{position:absolute;pointer-events:none;background:var(--surface);border:1px solid var(--border);
-  border-radius:8px;box-shadow:0 4px 14px rgba(0,0,0,.15);padding:8px 10px;font-size:12px;display:none;z-index:5;min-width:150px}
+  border-radius:8px;box-shadow:var(--shadow-pop);padding:8px 10px;font-size:12px;z-index:5;min-width:150px;
+  opacity:0;visibility:hidden;transform:translateY(4px);transition:opacity .18s ease,transform .18s ease,visibility .18s}
+.tooltip.show{opacity:1;visibility:visible;transform:none}
 .tooltip .tt-t{color:var(--muted);margin-bottom:4px}
 .tooltip .row{display:flex;align-items:center;gap:6px;margin:2px 0}
-.tooltip .row .sw{width:12px;height:2.5px;border-radius:2px}
+.tooltip .row .sw{width:10px;height:10px;border-radius:2px}
 .tooltip .row b{margin-left:auto;font-variant-numeric:tabular-nums}
-.items{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px}
-.items h2{font-size:14px;margin:0 0 8px}
-.storyhead{font-weight:600;font-size:13px;margin:14px 0 2px}
-.storyhead:first-of-type{margin-top:4px}
-.storyhead .m{font-weight:400;color:var(--muted);font-size:12px}
-.item{display:flex;gap:10px;align-items:baseline;padding:7px 0;border-top:1px solid var(--grid)}
-.item:first-of-type{border-top:0}
-.item .score{flex:0 0 38px;text-align:center;font-weight:650;font-size:12px;border-radius:6px;padding:2px 0}
+
+/* stories */
+.items{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-top:22px}
+.items h2{font:600 20px/1.2 var(--font-display);margin:0 0 4px}
+.items .sub{font-size:12.5px;color:var(--muted);margin:0 0 12px}
+.storyhead{font:600 15px/1.3 var(--font-display);margin:16px 0 3px;color:var(--ink)}
+.storyhead:first-of-type{margin-top:6px}
+.storyhead .m{font:400 12px var(--font-ui);color:var(--muted)}
+.item{display:flex;gap:11px;align-items:baseline;padding:7px 0;border-top:1px solid var(--grid)}
+.item .score{flex:0 0 34px;text-align:center;font-weight:600;font-size:12px;border-radius:6px;padding:2px 0}
 .item .h a{color:var(--ink);text-decoration:none}
 .item .h a:hover{text-decoration:underline}
 .item .m{font-size:12px;color:var(--muted)}
@@ -91,88 +164,121 @@ svg text{font:11px system-ui,-apple-system,"Segoe UI",sans-serif;fill:var(--mute
 table.data{border-collapse:collapse;font-size:12.5px;width:100%}
 table.data th,table.data td{padding:5px 10px;text-align:right;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums}
 table.data th:first-child,table.data td:first-child{text-align:left}
-.linklike{border:0;background:none;color:var(--ink2);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;padding:0}
-footer{color:var(--muted);font-size:12px;margin-top:24px}
-footer a{color:inherit}
+footer{color:var(--muted);font-size:12px;margin-top:26px;border-top:1px solid var(--grid);padding-top:14px}
+footer #provenance{margin:0 0 10px;color:var(--muted)}
+footer summary{font-size:13px;font-weight:600;color:var(--ink2);cursor:pointer}
+footer p{margin:10px 0 0;max-width:72ch}
 .empty{color:var(--muted);font-size:13px;padding:24px 0;text-align:center}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+@media (max-width:680px){
+  .wrap{padding:18px 14px 44px}
+  header h1{font-size:26px}
+  .hero-num{font-size:44px}
+  .hero-verdict{font-size:16.5px;flex-basis:100%}
+  .hero-delta{font-size:14px}
+  .controls{display:block;margin:0 0 14px}
+  .ctl-row{display:flex;flex-wrap:nowrap;gap:8px;align-items:center;overflow-x:auto;scrollbar-width:none;
+    margin:0 -14px;padding:0 14px 4px;-webkit-overflow-scrolling:touch}
+  .ctl-row::-webkit-scrollbar{display:none}
+  .seg{flex:0 0 auto}
+  .ctl-sep{display:none}
+  .filtersBtn{display:inline-flex;flex:0 0 auto}
+  #more{display:none}
+  #more.open{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 0 2px}
+  .legend{gap:10px;font-size:11.5px}
+  .items{padding:14px}
+}
 </style>
 </head>
 <body>
 <div class="wrap">
 <header>
   <h1>Israel in Western Media</h1>
-  <p class="sub">Hourly homepage monitoring of <span id="nsources">30</span> major western outlets —
-    editorial attention and headline framing. Updated <span id="updated">…</span>.
-    <a href="#method">Methodology</a></p>
+  <p class="sub"><span class="live"><span class="dot" aria-hidden="true"></span>Live</span> — updated <span id="updated">…</span> ·
+    hourly homepage monitoring of <span id="nsources">30</span> western outlets · <a href="#method" id="methodLink">Methodology</a></p>
 </header>
 
 <div class="controls" id="controls">
-  <div class="seg" id="rangeSeg" role="group" aria-label="Time range"></div>
-  <span id="customRange" hidden>
-    <input type="date" id="dStart" aria-label="Start date">–<input type="date" id="dEnd" aria-label="End date">
-  </span>
-  <div class="seg" id="granSeg" role="group" aria-label="Granularity"></div>
-  <div class="seg" id="splitSeg" role="group" aria-label="Split series"></div>
-  <div class="msel" id="fCountry"></div>
-  <div class="msel" id="fLean"></div>
-  <div class="msel" id="fSource"></div>
-  <button class="linklike" id="resetBtn" hidden>Reset</button>
+  <div class="ctl-row">
+    <div class="seg" id="rangeSeg" role="group" aria-label="Time range"></div>
+    <span id="customRange" hidden>
+      <input type="date" id="dStart" aria-label="Start date">–<input type="date" id="dEnd" aria-label="End date">
+    </span>
+    <span class="ctl-sep"></span>
+    <button class="ghost filtersBtn" id="filtersBtn" type="button" aria-expanded="false">Filters <span class="cv">▾</span></button>
+  </div>
+  <div id="more">
+    <div class="ssel" id="granSel"></div>
+    <div class="ssel" id="splitSel"></div>
+    <div class="msel" id="fCountry"></div>
+    <div class="msel" id="fLean"></div>
+    <div class="msel" id="fSource"></div>
+    <button class="linklike" id="resetBtn" hidden>Reset</button>
+  </div>
 </div>
 
-<div class="tiles" id="tiles"></div>
+<section class="hero" id="hero" aria-live="polite">
+  <p class="hero-kicker" id="heroKicker">Last 7 days</p>
+  <div class="hero-main">
+    <span class="hero-num" id="heroNum">—</span>
+    <p class="hero-verdict" id="heroVerdict"></p>
+  </div>
+  <p class="hero-delta" id="heroDelta" hidden></p>
+</section>
 
-<div class="card" id="mainCard">
-  <h2>Attention &amp; framing</h2>
-  <p class="hint">Bar height = share of homepage prominence on Israel-related headlines, averaged equally across
-    selected sources; color splits that attention by headline framing (red hostile … blue sympathetic).
-    The neutral band straddles the baseline. Click a bar for its stories.</p>
+<div class="section" id="mainCard">
+  <h2>Attention &amp; framing <span id="chartInfo"></span></h2>
   <div class="legend" id="mainLegend"></div>
-  <div id="mainChart"></div>
+  <div id="mainChart"><div class="skel" aria-hidden="true"></div></div>
 </div>
 
 <div class="tooltip" id="tooltip"></div>
 
 <div class="items" id="itemsPanel">
-  <h2 id="itemsTitle">Latest Israel-related headlines</h2>
+  <h2 id="itemsTitle">Israel-related stories</h2>
+  <p class="sub" id="itemsSub"></p>
   <div id="itemsList"></div>
 </div>
 
-<p style="margin-top:10px"><button class="linklike" id="tblToggle">Show data table</button></p>
+<p style="margin-top:12px"><button class="linklike" id="tblToggle">Show data table</button></p>
 <div class="tblwrap" id="tblWrap" hidden></div>
 
 <footer id="method">
-  <b>Methodology.</b> Every hour, the pipeline captures the headlines on each outlet's homepage.
-  Each headline gets a prominence weight reflecting how top-heavy reader attention is:
-  the lead story ×10, slots 2–5 ×5, 6–10 ×3, 11–20 ×1. <i>Attention</i> is the Israel-related
-  share of the top-20 window's total weight, averaged equally across the selected outlets
-  (only the top-20 window is ingested as of 2026-09-09; stories below it are counted for
-  parser health but not tracked). <i>Sentiment</i> scores each Israel-related headline's framing
-  toward Israel on a fixed rubric (−2 hostile … +2 sympathetic) using a language model; scores are
-  cached per headline and record the model + rubric version. Hours where an outlet failed to respond
-  are excluded, not counted as zero.
-  The chart is a diverging stacked bar: bar height is the attention share, its colored segments split
-  that attention by headline sentiment (red hostile, blue sympathetic), and the neutral band —
-  including still-unscored headlines in fainter gray — straddles the zero baseline. For runs before
-  the composition columns existed (the ≈ date in the legend) the split is approximated from the
-  headline archive. Headlines are grouped into cross-outlet <i>stories</i> by a language model
-  (clustering model + version recorded per assignment; story titles are model-written).
-  Political lean (Left / Center / Right) is assigned mechanically from published ratings —
-  <a href="https://www.allsides.com/media-bias/media-bias-chart" rel="noopener">AllSides Media Bias Ratings</a>
-  where the outlet is rated (Lean&nbsp;Left/Left → Left, Center → Center, Lean&nbsp;Right/Right → Right),
-  <a href="https://adfontesmedia.com" rel="noopener">Ad Fontes Media</a> for international outlets they
-  cover, and the widely documented characterization otherwise; the per-outlet basis is noted in
-  <a href="https://github.com/Oryassur/israel-media-monitor/blob/main/config/sources.yaml" rel="noopener">config/sources.yaml</a>.
-  Headline drill-down covers the most recent 7 days.
-  On 2026-09-09 the panel expanded from 20 to 30 outlets; Associated Press and El País were
-  retired at the same time (persistent fetch failures) — their history remains in the daily series.
-  Source code &amp; data: <a id="repolink" href="https://github.com/Oryassur/israel-media-monitor">GitHub</a>.
+  <p id="provenance"></p>
+  <details id="methodDetails">
+    <summary>Methodology &amp; changelog</summary>
+    <p>Every hour, the pipeline captures the headlines on each outlet's homepage. Each headline gets a
+      prominence weight reflecting how top-heavy reader attention is: the lead story ×10, slots 2–5 ×5,
+      6–10 ×3, 11–20 ×1. <i>Attention</i> is the Israel-related share of the top-20 window's total weight,
+      averaged equally across the selected outlets (only the top-20 window is ingested as of 2026-09-09;
+      stories below it are counted for parser health but not tracked). Hours where an outlet failed to
+      respond are excluded, not counted as zero.</p>
+    <p><i>Sentiment</i> scores each Israel-related headline's framing toward Israel on a fixed rubric
+      (−2 hostile … +2 sympathetic) using a language model; scores are cached per headline and record the
+      model + rubric version. The chart is a diverging stacked bar: bar height is the attention share, its
+      colored segments split that attention by headline sentiment, and the neutral band — including
+      still-unscored headlines in fainter gray — straddles the zero baseline. For runs before the
+      composition columns existed the split is approximated from the headline archive.</p>
+    <p>Headlines are grouped into cross-outlet <i>stories</i> by a language model (clustering model +
+      version recorded per assignment; story titles are model-written). The chart labels the largest
+      attention spikes with the story that dominated them. Political lean (Left / Center / Right) is
+      assigned mechanically from published ratings —
+      <a href="https://www.allsides.com/media-bias/media-bias-chart" rel="noopener">AllSides Media Bias Ratings</a>
+      where the outlet is rated (Lean&nbsp;Left/Left → Left, Center → Center, Lean&nbsp;Right/Right → Right),
+      <a href="https://adfontesmedia.com" rel="noopener">Ad Fontes Media</a> for international outlets they
+      cover, and the widely documented characterization otherwise; the per-outlet basis is noted in
+      <a href="https://github.com/Oryassur/israel-media-monitor/blob/main/config/sources.yaml" rel="noopener">config/sources.yaml</a>.
+      Headline drill-down covers the most recent 7 days.</p>
+    <p>On 2026-09-09 the panel expanded from 20 to 30 outlets; Associated Press and El País were retired
+      at the same time (persistent fetch failures) — their history remains in the daily series.
+      Source code &amp; data: <a href="https://github.com/Oryassur/israel-media-monitor">GitHub</a>.</p>
+  </details>
 </footer>
 </div>
 
 <script>
 "use strict";
 const $=s=>document.querySelector(s);
-const SLOTS=["--s1","--s2","--s3","--s4","--s5"];
 const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 const LEAN_ORDER=["left","center","right"];
 const cap=s=>s?s[0].toUpperCase()+s.slice(1):s;
@@ -188,8 +294,9 @@ const state={preset:"7d",start:null,end:null,gran:"hourly",granManual:false,
 let META,HOURLY,DAILY,ITEMS,STORIES,DISPN;
 
 const fmtPct=v=>v==null?"—":(v*100).toFixed(1)+"%";
-const fmtSent=v=>v==null?"—":(v>0?"+":"")+v.toFixed(2);
+const fmtSent=v=>v==null?"—":v<0?"−"+(-v).toFixed(2):(v>0?"+":"")+v.toFixed(2);
 const parseTs=t=>new Date(t).getTime();
+const reducedMotion=()=>matchMedia("(prefers-reduced-motion: reduce)").matches;
 // bucket flooring (D6): hour / UTC day / ISO week (Monday, epoch math —
 // day 0, 1970-01-01, was a Thursday, hence the +3)
 const floorGran={
@@ -220,12 +327,16 @@ async function boot(){
     ["meta.json","hourly.json","daily.json","items.json","stories.json"].map(f=>fetch("data/"+f).then(r=>r.json())));
   META=meta;HOURLY=hourly;DAILY=daily;ITEMS=items;STORIES=stories;
   DISPN=Object.fromEntries(meta.sources.map(s=>[s.name,s.display]));
-  $("#updated").textContent=new Date(meta.generated).toLocaleString();
+  const gen=new Date(meta.generated);
+  $("#updated").textContent=gen.toDateString()===new Date().toDateString()
+    ?gen.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"})
+    :gen.toLocaleString(undefined,{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});
   $("#nsources").textContent=meta.sources.length;
+  mountChartInfo();
   buildControls();render();
 }
 
-const segDefs=[];
+/* ---------- popover machinery (multi-selects, single-selects, ⓘ) ---------- */
 let openPop=null;
 function closePop(focusBtn){
   if(!openPop)return;
@@ -233,17 +344,30 @@ function closePop(focusBtn){
   if(focusBtn)openPop.btn.focus();
   openPop=null;
 }
+function togglePop(root,btn,pop){
+  if(openPop&&openPop.btn===btn){closePop(false);return}
+  closePop(false);
+  pop.hidden=false;btn.setAttribute("aria-expanded","true");
+  openPop={root,btn,pop};
+}
 document.addEventListener("pointerdown",e=>{if(openPop&&!openPop.root.contains(e.target))closePop(false)});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closePop(true)});
 
+const ghostBtn=()=>{const b=document.createElement("button");b.type="button";b.className="ghost";
+  b.setAttribute("aria-haspopup","listbox");b.setAttribute("aria-expanded","false");return b};
+const ghostLabel=(btn,text,count)=>{
+  btn.innerHTML="";btn.append(document.createTextNode(text+" "));
+  const tail=document.createElement("span");
+  if(count){tail.className="badge";tail.textContent=count}else{tail.className="cv";tail.textContent="▾"}
+  btn.appendChild(tail);btn.classList.toggle("on",!!count);
+};
+
 function buildMultiSelect(el,label,opts,set){
   el.innerHTML="";
-  const btn=document.createElement("button");
-  btn.type="button";btn.className="msel-btn";
-  btn.setAttribute("aria-haspopup","listbox");btn.setAttribute("aria-expanded","false");
+  const btn=ghostBtn();
   const pop=document.createElement("div");
-  pop.className="msel-pop";pop.setAttribute("role","listbox");pop.hidden=true;
-  const sync=()=>{btn.textContent=set.size?`${label} · ${set.size}`:label};
+  pop.className="pop";pop.setAttribute("role","listbox");pop.hidden=true;
+  const sync=()=>ghostLabel(btn,label,set.size);
   for(const o of opts){
     const lab=document.createElement("label");
     const cb=document.createElement("input");
@@ -253,13 +377,34 @@ function buildMultiSelect(el,label,opts,set){
     pop.appendChild(lab);
   }
   sync();
-  btn.onclick=()=>{
-    if(openPop&&openPop.btn===btn){closePop(false);return}
-    closePop(false);
-    pop.hidden=false;btn.setAttribute("aria-expanded","true");
-    openPop={root:el,btn,pop};
-  };
+  btn.onclick=()=>togglePop(el,btn,pop);
   el.appendChild(btn);el.appendChild(pop);
+}
+
+// Single-choice dropdown (granularity, split): the button shows the current value.
+const singles=[];
+function buildSingleSelect(el,opts,get,set,isOn){
+  el.innerHTML="";
+  const btn=ghostBtn();
+  const pop=document.createElement("div");
+  pop.className="pop";pop.setAttribute("role","listbox");pop.hidden=true;
+  const items=[];
+  for(const [label,val] of opts){
+    const o=document.createElement("button");o.type="button";o.className="opt";o.setAttribute("role","option");
+    o.dataset.val=val;o.textContent=label;
+    o.onclick=()=>{if(o.disabled)return;set(val);closePop(false);render()};
+    pop.appendChild(o);items.push(o);
+  }
+  const sync=()=>{
+    const cur=get();
+    for(const o of items)o.setAttribute("aria-selected",String(o.dataset.val===cur));
+    const lbl=(opts.find(x=>x[1]===cur)||opts[0])[0];
+    ghostLabel(btn,lbl,0);btn.classList.toggle("on",!!isOn());
+  };
+  btn.onclick=()=>togglePop(el,btn,pop);
+  el.appendChild(btn);el.appendChild(pop);
+  singles.push({sync,items});
+  sync();
 }
 
 function syncCustomInputs(){
@@ -267,12 +412,13 @@ function syncCustomInputs(){
   $("#dEnd").value=state.end!=null?new Date(state.end-864e5).toISOString().slice(0,10):"";
 }
 
+const segDefs=[];
 function buildControls(){
-  segDefs.length=0;
+  segDefs.length=0;singles.length=0;
   const seg=(el,opts,get,set)=>{
     el.innerHTML="";
     for(const [label,val] of opts){
-      const b=document.createElement("button");
+      const b=document.createElement("button");b.type="button";
       b.textContent=label;b.dataset.val=val;b.setAttribute("aria-pressed",get()===val);
       b.onclick=()=>{set(val);render()};el.appendChild(b);
     }
@@ -285,8 +431,9 @@ function buildControls(){
     state.gran=defaultGran((i.end-i.start)/864e5);
     syncCustomInputs();
   });
-  seg($("#granSeg"),GRANS,()=>effectiveGran(resolveInterval()),v=>{state.gran=v;state.granManual=true});
-  seg($("#splitSeg"),SPLITS,()=>state.split,v=>state.split=v);
+  buildSingleSelect($("#granSel"),GRANS,()=>effectiveGran(resolveInterval()),
+    v=>{state.gran=v;state.granManual=true},()=>state.granManual);
+  buildSingleSelect($("#splitSel"),SPLITS,()=>state.split,v=>state.split=v,()=>state.split!=="none");
   buildMultiSelect($("#fCountry"),"Country",
     [...new Set(META.sources.map(s=>s.country))].map(v=>({v,label:v})),state.countries);
   buildMultiSelect($("#fLean"),"Lean",
@@ -311,18 +458,27 @@ $("#resetBtn").onclick=()=>{
   state.countries.clear();state.leans.clear();state.sources.clear();
   closePop(false);buildControls();render();
 };
+$("#filtersBtn").onclick=()=>{
+  const m=$("#more"),open=!m.classList.contains("open");
+  m.classList.toggle("open",open);$("#filtersBtn").setAttribute("aria-expanded",String(open));
+};
 
 function syncControls(interval,gran){
   for(const [el,get] of segDefs)
     for(const b of el.children)b.setAttribute("aria-pressed",String(get()===b.dataset.val));
   const hAvail=interval.start>=Date.now()-HOURLY_KEPT_DAYS*864e5;
-  for(const b of $("#granSeg").children)
-    if(b.dataset.val==="hourly"){b.disabled=!hAvail;b.title=hAvail?"":"Hourly detail kept for 14 days"}
+  for(const s of singles){
+    for(const o of s.items)if(o.dataset.val==="hourly"){o.disabled=!hAvail;o.title=hAvail?"":"Hourly detail kept for 14 days"}
+    s.sync();
+  }
   $("#customRange").hidden=state.preset!=="custom";
   const spanDays=(interval.end-interval.start)/864e5;
+  const nFilters=state.countries.size+state.leans.size+state.sources.size
+    +(state.split!=="none"?1:0)+(state.granManual&&state.gran!==defaultGran(spanDays)?1:0);
   const nonDefault=state.preset!=="7d"||state.split!=="none"||state.gran!==defaultGran(spanDays)
     ||state.countries.size>0||state.leans.size>0||state.sources.size>0;
   $("#resetBtn").hidden=!nonDefault;
+  ghostLabel($("#filtersBtn"),"Filters",nFilters);
 }
 
 function selectedSources(){
@@ -335,13 +491,13 @@ function selectedSources(){
 function groupsFor(sources){
   if(state.split==="lean"){
     const gs=LEAN_ORDER.filter(l=>sources.some(s=>s.lean===l));
-    return gs.map(l=>({key:l,label:cap(l),slot:LEAN_ORDER.indexOf(l),members:new Set(sources.filter(s=>s.lean===l).map(s=>s.name))}));
+    return gs.map(l=>({key:l,label:cap(l),members:new Set(sources.filter(s=>s.lean===l).map(s=>s.name))}));
   }
   if(state.split==="region"){
     const gs=REGION_ORDER.filter(r=>sources.some(s=>REGION(s.country)===r));
-    return gs.map(r=>({key:r,label:r,slot:REGION_ORDER.indexOf(r),members:new Set(sources.filter(s=>REGION(s.country)===r).map(s=>s.name))}));
+    return gs.map(r=>({key:r,label:r,members:new Set(sources.filter(s=>REGION(s.country)===r).map(s=>s.name))}));
   }
-  return [{key:"all",label:"All selected sources",slot:0,members:new Set(sources.map(s=>s.name))}];
+  return [{key:"all",label:"All selected sources",members:new Set(sources.map(s=>s.name))}];
 }
 
 // Build per-group time series from hourly or daily rows, bucketed per the
@@ -388,18 +544,77 @@ function buildSeries(interval,gran){
 const PRESET_LABEL={"24h":"last 24 hours","7d":"last 7 days","30d":"last 30 days",
   "90d":"last 90 days","all":"all time","custom":"custom range"};
 
-function tiles(S){
+/* ---------- hero ---------- */
+// Mean attention share over an arbitrary window (used for the previous-period delta).
+function windowShare(lo,hi,selNames){
+  const useHourly=lo>=Date.now()-HOURLY_KEPT_DAYS*864e5;
+  const rows=useHourly?HOURLY:DAILY;
+  let sh=0,shn=0;
+  for(const r of rows){
+    if(!selNames.has(r[1]))continue;
+    if(!(useHourly?r[5]===1:r[5]>0))continue;
+    const ms=useHourly?parseTs(r[0]):parseTs(r[0]+"T00:00:00Z");
+    if(ms<lo||ms>=hi)continue;
+    if(r[2]!=null){sh+=r[2];shn++}
+  }
+  return shn?sh/shn:null;
+}
+const sentWord=s=>s==null?null:s<=-.6?["sharply negative","neg"]:s<=-.15?["negative on balance","neg"]
+  :s<.15?["broadly neutral",""]:s<.6?["positive on balance","pos"]:["strongly positive","pos"];
+let heroAnimated=false;
+function hero(S){
   let sh=0,shn=0,sn=0,sd=0;
   for(const p of S.combined){
     if(p.share!=null){sh+=p.share;shn++}
     if(p.sent!=null&&p.items>0){sn+=p.sent*p.items;sd+=p.items}
   }
-  const rl=PRESET_LABEL[state.preset];
+  const cur=shn?sh/shn:null,sent=sd?sn/sd:null;
+  $("#heroKicker").textContent=PRESET_LABEL[state.preset];
+  const filtered=state.countries.size||state.leans.size||state.sources.size;
+  const scope=filtered?`the ${S.selNames.size} selected outlets'`:"western";
+  const v=$("#heroVerdict");v.innerHTML="";
+  if(cur==null){
+    v.textContent="No attention data for this selection.";
+  }else{
+    const w=sentWord(sent);
+    v.append(document.createTextNode(`of ${scope} front-page attention went to Israel — framed `));
+    const b=document.createElement("b");
+    if(w){b.className=w[1];b.textContent=w[0];v.append(b,document.createTextNode(` (${fmtSent(sent)}).`))}
+    else{b.style.color="var(--muted)";b.textContent="not yet scored";v.append(b,document.createTextNode("."))}
+  }
+  // number, counted up once on first load
+  const num=$("#heroNum");
+  if(cur==null)num.textContent="—";
+  else if(!heroAnimated&&!reducedMotion()){
+    const t0=performance.now(),dur=700;
+    const step=t=>{const k=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-k,3);
+      num.textContent=fmtPct(cur*e);if(k<1)requestAnimationFrame(step)};
+    requestAnimationFrame(step);
+  }else num.textContent=fmtPct(cur);
+  heroAnimated=true;
+  // delta vs the previous equal-length window
+  const d=$("#heroDelta");d.hidden=true;d.className="hero-delta";
+  if(state.preset!=="all"&&cur!=null){
+    const span=S.interval.end-S.interval.start;
+    const prev=windowShare(S.interval.start-span,S.interval.start,S.selNames);
+    if(prev!=null){
+      const spanDays=span/864e5;
+      const phrase=state.preset==="custom"?`${Math.round(spanDays)} days`:PRESET_LABEL[state.preset].replace(/^last /,"");
+      const delta=(cur-prev)*100;
+      d.innerHTML="";
+      const val=document.createElement("span");val.className="v";
+      const lbl=document.createElement("span");lbl.className="lbl";
+      if(Math.abs(delta)<.05){val.textContent="≈ level";lbl.textContent=`with the previous ${phrase}`}
+      else{d.classList.add(delta>0?"up":"down");
+        val.textContent=(delta>0?"▲ ":"▼ ")+Math.abs(delta).toFixed(1)+"pt";lbl.textContent=`vs the previous ${phrase}`}
+      d.append(val,lbl);d.hidden=false;
+    }
+  }
+  // provenance line lives in the footer
   const now=Date.now();
   const itemsPartial=S.interval.start<now-ITEMS_KEPT_DAYS*864e5-6e4;
   const nItems=ITEMS.filter(it=>S.selNames.has(it.src)
     &&parseTs(it.fs)<S.interval.end&&parseTs(it.ls)>=S.interval.start).length;
-  // sources with at least one ok run inside the interval (D12)
   const rep=new Set();
   if(S.interval.start>=now-HOURLY_KEPT_DAYS*864e5){
     for(const r of HOURLY){const ms=parseTs(r[0]);
@@ -408,24 +623,18 @@ function tiles(S){
     for(const r of DAILY){const ms=parseTs(r[0]+"T00:00:00Z");
       if(ms>=floorGran.daily(S.interval.start)&&ms<S.interval.end&&r[5]>0&&S.selNames.has(r[1]))rep.add(r[1])}
   }
-  const el=$("#tiles");el.innerHTML="";
-  const tile=(k,v,d)=>{const t=document.createElement("div");t.className="tile";
-    t.innerHTML=`<div class="k"></div><div class="v"></div><div class="d"></div>`;
-    t.children[0].textContent=k;t.children[1].textContent=v;t.children[2].textContent=d;el.appendChild(t)};
-  tile(`Attention (${rl})`,fmtPct(shn?sh/shn:null),"share of homepage prominence");
-  tile(`Sentiment (${rl})`,fmtSent(sd?sn/sd:null),"−2 hostile … +2 sympathetic");
-  tile("Headlines",String(nItems),
-    "unique Israel-related headlines"+(itemsPartial?" (within last 7 days)":""));
-  tile("Sources reporting",rep.size+" / "+S.selNames.size,"reported in selected range");
+  $("#provenance").textContent=`${PRESET_LABEL[state.preset]}: ${nItems} unique Israel-related headline${nItems===1?"":"s"}`
+    +(itemsPartial?" (within the last 7 days)":"")+` · ${rep.size} of ${S.selNames.size} sources reporting.`;
 }
 
-const M={t:12,r:14,b:24,l:46};
+/* ---------- chart ---------- */
 const DV_KEYS=["--dv-n2","--dv-n1","--dv-0","--dv-p1","--dv-p2"];
 const DV_LABELS=["−2 hostile","−1 critical","0 neutral","+1 favorable","+2 sympathetic"];
 // comp index order in data: [n2, n1, 0, p1, p2, u]; draw order bottom->top:
 // n2, n1, 0, u, p1, p2 (the combined 0+u band centers on the baseline)
 const DRAW_ORDER=[0,1,2,5,3,4];
-const segColor=k=>css(k===5?"--dv-u":DV_KEYS[k]);
+const segVar=k=>k===5?"--dv-u":DV_KEYS[k];
+const HALO="paint-order:stroke;stroke:var(--page);stroke-width:3.5px;stroke-linejoin:round";
 
 // Per-bucket extents in share units: [below baseline, above baseline]
 function barExtents(p){
@@ -450,6 +659,47 @@ function bucketGrid(S){
   return g;
 }
 
+// ~4 gridline divisions per side, snapped to 1/2/2.5/5/10 × a power of ten
+function tickStep(v){
+  const raw=v/4,p=Math.pow(10,Math.floor(Math.log10(raw))),c=raw/p;
+  return (c<1.5?1:c<2.2?2:c<3.5?2.5:c<7.5?5:10)*p;
+}
+
+// Attention spikes worth labeling: local maxima well above the median, inside
+// the 7-day window where headlines exist, one per distinct dominant story.
+function computeAnnotations(S){
+  if(S.groups.length>1)return [];
+  const n=S.ts.length;if(n<6)return [];
+  const shares=S.combined.map(p=>p.share||0);
+  const pos=shares.filter(v=>v>0).sort((a,b)=>a-b);
+  if(!pos.length)return [];
+  const med=pos[Math.floor(pos.length/2)];
+  const span=GRAN_SPAN[S.gran],itemsLo=Date.now()-ITEMS_KEPT_DAYS*864e5;
+  const cands=[];
+  for(let i=0;i<n;i++){
+    const v=shares[i];
+    if(v<=0||v<1.5*med||S.ts[i]+span<=itemsLo)continue;
+    let localMax=true;
+    for(let j=Math.max(0,i-2);j<=Math.min(n-1,i+2);j++)if(shares[j]>v)localMax=false;
+    if(localMax)cands.push({i,v});
+  }
+  cands.sort((a,b)=>b.v-a.v);
+  const minSep=Math.max(3,Math.ceil(n/12)),picked=[],seen=new Set();
+  for(const c of cands){
+    if(picked.length===3)break;
+    if(picked.some(p=>Math.abs(p.i-c.i)<minSep))continue;
+    const ms=S.ts[c.i],w=new Map();
+    for(const it of ITEMS){
+      if(!it.st||!S.selNames.has(it.src))continue;
+      if(parseTs(it.fs)<ms+span&&parseTs(it.ls)>=ms)w.set(it.st,(w.get(it.st)||0)+it.w);
+    }
+    let best=null,bw=0;for(const [st,ww] of w)if(ww>bw){bw=ww;best=st}
+    if(!best||seen.has(best))continue;
+    seen.add(best);picked.push({i:c.i,share:c.v,title:STORIES[best]||"",st:best});
+  }
+  return picked;
+}
+
 function drawStackedChart(el,S){
   el.innerHTML="";
   const w=el.clientWidth||900;
@@ -461,43 +711,43 @@ function drawStackedChart(el,S){
     const e=barExtents(p);
     if(e){if(e[0]>maxNeg)maxNeg=e[0];if(e[1]>maxPos)maxPos=e[1]}
   }
-  maxNeg*=1.08;maxPos*=1.08;
+  maxNeg*=1.08;maxPos*=1.16;
   const exactMs=META.comp_exact_since?parseTs(META.comp_exact_since):-Infinity;
   const multi=S.groups.length>1;
-  const H=multi?150:240;
+  let anns=multi?[]:computeAnnotations(S);
+  if(w<560)anns=anns.sort((a,b)=>b.share-a.share).slice(0,1);
+  anns.sort((a,b)=>a.i-b.i);
+  const M={t:anns.length?52:18,r:16,b:26,l:48};
+  const H=multi?170:(w<560?230:320);
+  const step=tickStep(Math.max(maxNeg,maxPos));
   S.groups.forEach((g,gi)=>{
     if(multi){
-      const cap=document.createElement("div");
-      cap.style.cssText="font-size:12px;font-weight:600;color:var(--ink2);margin:8px 0 0";
-      cap.textContent=g.label;el.appendChild(cap);
+      const capEl=document.createElement("div");capEl.className="multicap";
+      capEl.textContent=g.label;el.appendChild(capEl);
     }
     const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
     svg.setAttribute("viewBox",`0 0 ${w} ${H}`);svg.style.width="100%";svg.style.display="block";
-    const NS=svg.namespaceURI,mk=(n,at)=>{const e=document.createElementNS(NS,n);for(const k in at)e.setAttribute(k,at[k]);svg.appendChild(e);return e};
+    el.appendChild(svg); // in the DOM first: text measurement below needs a rendered tree
+    const NS=svg.namespaceURI,mk=(n,at,parent)=>{const e=document.createElementNS(NS,n);for(const k in at)e.setAttribute(k,at[k]);(parent||svg).appendChild(e);return e};
     const y=v=>M.t+(maxPos-v)/(maxPos+maxNeg)*(H-M.t-M.b);
     const plotW=w-M.l-M.r,slotW=plotW/Math.max(1,grid.length),barW=Math.max(1,slotW-1);
     const x=i=>M.l+i*slotW;
-    // y gridlines: a few round share ticks on each side
-    const tickStep=v=>{const raw=v/2.5,p=Math.pow(10,Math.floor(Math.log10(raw)));const c=raw/p;return (c<1.5?1:c<3.5?2:c<7.5?5:10)*p};
-    const step=tickStep(Math.max(maxNeg,maxPos));
-    for(let v=0;v<=maxPos;v+=step){
-      const yy=y(v);
-      mk("line",{x1:M.l,x2:w-M.r,y1:yy,y2:yy,stroke:css(v===0?"--baseline":"--grid"),"stroke-width":v===0?1.5:1});
-      const t=mk("text",{x:M.l-6,y:yy+4,"text-anchor":"end"});t.textContent=(v*100).toFixed(v*100<3&&v>0?1:0)+"%";
-    }
-    for(let v=step;v<=maxNeg;v+=step){
-      const yy=y(-v);
-      mk("line",{x1:M.l,x2:w-M.r,y1:yy,y2:yy,stroke:css("--grid"),"stroke-width":1});
-      const t=mk("text",{x:M.l-6,y:yy+4,"text-anchor":"end"});t.textContent=(v*100).toFixed(v*100<3?1:0)+"%";
-    }
+    // gridlines + signed tick labels
+    const tick=(v,neg)=>{
+      const yy=y(neg?-v:v);
+      mk("line",{x1:M.l,x2:w-M.r,y1:yy,y2:yy,style:"stroke:var(--grid)","stroke-width":1});
+      mk("text",{x:M.l-7,y:yy+4,"text-anchor":"end"}).textContent=(neg?"−":"")+(v*100).toFixed(v*100<3&&v>0?1:0)+"%";
+    };
+    for(let v=0;v<=maxPos;v+=step)tick(v,false);
+    for(let v=step;v<=maxNeg;v+=step)tick(v,true);
     // x labels (last multiple only, or the single chart)
     if(!multi||gi===S.groups.length-1){
-      const nx=Math.min(6,grid.length);
+      const nx=Math.min(w<560?4:6,grid.length);
       for(let i=0;i<nx;i++){
         const s=Math.round(i*(grid.length-1)/Math.max(1,nx-1));
         const d=new Date(grid[s]);
         const lbl=S.gran==="hourly"?d.toLocaleString(undefined,{weekday:"short",hour:"numeric"}):d.toLocaleDateString(undefined,{month:"short",day:"numeric"});
-        const t=mk("text",{x:x(s)+slotW/2,y:H-8,"text-anchor":"middle"});t.textContent=lbl;
+        mk("text",{x:x(s)+slotW/2,y:H-8,"text-anchor":"middle"}).textContent=lbl;
       }
     }
     // bars
@@ -511,7 +761,7 @@ function drawStackedChart(el,S){
       const bx=x(si)+(slotW-barW)/2;
       if(!p.comp||!w0){
         // unknown composition: single neutral tone at lower opacity
-        mk("rect",{x:bx,y:y(e[1]),width:barW,height:Math.max(0,y(-e[0])-y(e[1])),fill:css("--dv-0"),opacity:.55});
+        mk("rect",{x:bx,y:y(e[1]),width:barW,height:Math.max(0,y(-e[0])-y(e[1])),style:"fill:var(--dv-0)",opacity:.55});
         return;
       }
       let cum=-e[0];
@@ -519,12 +769,14 @@ function drawStackedChart(el,S){
         const h=s*p.comp[k]/w0;
         if(h<=0)continue;
         const y1=y(cum+h),y2=y(cum);
-        mk("rect",{x:bx,y:y1,width:barW,height:Math.max(0.5,y2-y1),fill:segColor(k),"shape-rendering":"crispEdges"});
+        mk("rect",{x:bx,y:y1,width:barW,height:Math.max(0.5,y2-y1),style:`fill:var(${segVar(k)})`,"shape-rendering":"crispEdges"});
         cum+=h;
       }
     });
+    // the zero baseline, painted over the bars
+    mk("line",{x1:M.l,x2:w-M.r,y1:y(0),y2:y(0),style:"stroke:var(--ink)","stroke-width":2,"shape-rendering":"crispEdges"});
     // hover + click
-    const cross=mk("rect",{y:M.t,height:H-M.t-M.b,width:slotW,fill:css("--baseline"),opacity:0,"pointer-events":"none"});
+    const cross=mk("rect",{y:M.t,height:H-M.t-M.b,width:slotW,style:"fill:var(--baseline)",opacity:0,"pointer-events":"none"});
     const hit=mk("rect",{x:M.l,y:M.t,width:Math.max(1,plotW),height:H-M.t-M.b,fill:"transparent"});
     hit.style.cursor="crosshair";
     const slotAt=ev=>{
@@ -534,27 +786,52 @@ function drawStackedChart(el,S){
     hit.addEventListener("pointermove",ev=>{
       const si=slotAt(ev),di=idx.get(grid[si]);
       cross.setAttribute("x",x(si));cross.setAttribute("opacity",0.18);
-      if(di!=null)tooltip(ev,S,di,gi,grid[si]<exactMs);else $("#tooltip").style.display="none";
+      if(di!=null)tooltip(ev,S,di,gi,grid[si]<exactMs);else hideTooltip();
     });
-    hit.addEventListener("pointerleave",()=>{cross.setAttribute("opacity",0);$("#tooltip").style.display="none"});
+    hit.addEventListener("pointerleave",()=>{cross.setAttribute("opacity",0);hideTooltip()});
     hit.addEventListener("click",ev=>{
       const di=idx.get(grid[slotAt(ev)]);
       if(di!=null)showStoriesFor(S,di,g.members);
     });
-    el.appendChild(svg);
+    // spike annotations (single combined chart only), after the hit rect so they stay clickable
+    // Two label rows; a label that would overlap on its row moves to the
+    // other, and is dropped if both are taken (labels are measured live).
+    const from=grid[0],rowsUsed=[[],[]],ROW_Y=[20,40];
+    for(const a of [...anns].sort((p,q)=>q.share-p.share)){ // biggest spikes claim rows first
+      const si=Math.round((S.ts[a.i]-from)/GRAN_SPAN[S.gran]);
+      const e=barExtents(S.combined[a.i]);
+      if(!e||si<0||si>=grid.length)continue;
+      const ax=x(si)+slotW/2,topY=y(e[1]);
+      const gEl=mk("g",{class:"anng"});
+      const t=mk("text",{x:0,y:0,"text-anchor":"middle",class:"ann",style:HALO},gEl);
+      const title=a.title.length>52?a.title.slice(0,51).replace(/\s\S*$/,"")+"…":a.title;
+      const s1=mk("tspan",{class:"t",style:"fill:var(--ink2);font-weight:600"},t);s1.textContent=title;
+      const s2=mk("tspan",{style:"fill:var(--muted)"},t);s2.textContent="  "+(a.share*100).toFixed(1)+"%";
+      const tw=t.getComputedTextLength();
+      const lx=Math.min(Math.max(ax,M.l+tw/2+2),w-M.r-tw/2),L=lx-tw/2-6,R=lx+tw/2+6;
+      const row=rowsUsed.findIndex(used=>!used.some(([a0,b0])=>L<b0&&R>a0));
+      if(row<0){gEl.remove();continue}
+      rowsUsed[row].push([L,R]);
+      const rowY=ROW_Y[row];
+      t.setAttribute("x",lx);t.setAttribute("y",rowY);
+      mk("path",{d:`M${lx} ${rowY+7} L${lx} ${topY-14} L${ax} ${topY-8}`,fill:"none",style:"stroke:var(--muted)","stroke-width":1,opacity:.6},gEl);
+      mk("circle",{cx:ax,cy:topY-4,r:2.5,style:"fill:var(--ink)"},gEl);
+      gEl.addEventListener("click",()=>showStoriesFor(S,a.i,g.members));
+    }
   });
   if(!S.ts.length){const d=document.createElement("div");d.className="empty";d.textContent="No data yet for this selection — the pipeline may have just started.";el.appendChild(d)}
 }
 
+function hideTooltip(){$("#tooltip").classList.remove("show")}
 function tooltip(ev,S,i,gi,approx){
   const tt=$("#tooltip");tt.innerHTML="";
   const p=S.points[i][gi];
   const t=document.createElement("div");t.className="tt-t";
   t.textContent=bucketLabel(S,i)+(S.groups.length>1?" — "+S.groups[gi].label:"");
   tt.appendChild(t);
-  const line=(label,val,swc)=>{
+  const line=(label,val,swVar)=>{
     const row=document.createElement("div");row.className="row";
-    if(swc){const sw=document.createElement("span");sw.className="sw";sw.style.cssText="width:10px;height:10px;border-radius:2px;background:"+swc;row.appendChild(sw)}
+    if(swVar){const sw=document.createElement("span");sw.className="sw";sw.style.background=`var(${swVar})`;row.appendChild(sw)}
     const lbl=document.createElement("span");lbl.textContent=label;
     const v=document.createElement("b");v.textContent=val;
     row.append(lbl,v);tt.appendChild(row);
@@ -564,28 +841,58 @@ function tooltip(ev,S,i,gi,approx){
   if(p.comp){
     const w0=p.comp.reduce((a,b)=>a+b,0);
     if(w0){
-      for(let k=4;k>=0;k--)if(p.comp[k]>0)line(DV_LABELS[k],(100*p.comp[k]/w0).toFixed(0)+"%",css(DV_KEYS[k]));
-      if(p.comp[5]>0)line("of which unscored",(100*p.comp[5]/w0).toFixed(0)+"%",css("--dv-u"));
+      for(let k=4;k>=0;k--)if(p.comp[k]>0)line(DV_LABELS[k],(100*p.comp[k]/w0).toFixed(0)+"%",DV_KEYS[k]);
+      if(p.comp[5]>0)line("of which unscored",(100*p.comp[5]/w0).toFixed(0)+"%","--dv-u");
     }
   }
   const hint=document.createElement("div");hint.className="tt-t";hint.style.marginTop="4px";
   hint.textContent=(approx?"≈ approximated composition · ":"")+(p.comp?"":"composition unknown · ")+"click for stories";
   tt.appendChild(hint);
-  tt.style.display="block";
+  tt.classList.add("show");
   const wr=$(".wrap").getBoundingClientRect();
   let lx=ev.clientX-wr.left+14,ly=ev.clientY-wr.top+14;
   if(lx+tt.offsetWidth>wr.width-8)lx-=tt.offsetWidth+28;
+  if(ly+tt.offsetHeight>wr.height-8)ly-=tt.offsetHeight+28;
   tt.style.left=lx+"px";tt.style.top=ly+"px";
 }
 
+/* ---------- info popover + legend ---------- */
+function infoPop(html){
+  const root=document.createElement("span");root.className="info";
+  const btn=document.createElement("button");btn.className="info-btn";btn.type="button";
+  btn.textContent="i";btn.setAttribute("aria-label","How to read this chart");
+  btn.setAttribute("aria-expanded","false");btn.setAttribute("aria-haspopup","dialog");
+  const pop=document.createElement("div");pop.className="info-pop";pop.hidden=true;pop.innerHTML=html;
+  btn.onclick=()=>togglePop(root,btn,pop);
+  root.append(btn,pop);return root;
+}
+function mountChartInfo(){
+  const since=META.comp_exact_since
+    ?new Date(META.comp_exact_since).toLocaleDateString(undefined,{month:"short",day:"numeric"}):null;
+  $("#chartInfo").appendChild(infoPop(
+    `<p><b>Bar height</b> = share of homepage prominence given to Israel-related headlines, averaged equally across the selected outlets.</p>
+     <p><b>Color</b> splits that attention by how each headline frames Israel — red hostile, blue sympathetic. The neutral band straddles the zero line, so a bar hanging below the line is critically framed on balance.</p>
+     <p>Fainter gray = headlines not yet scored.${since?` Composition before ${since} is approximated from the headline archive.`:""} Click any bar for its stories.</p>`));
+}
+function mainLegend(){
+  const el=$("#mainLegend");el.innerHTML="";
+  DV_KEYS.forEach((k,i)=>{
+    const s=document.createElement("span");s.className="li";
+    const sw=document.createElement("span");sw.className="sw";sw.style.background=`var(${k})`;
+    const t=document.createElement("span");t.textContent=DV_LABELS[i];
+    s.append(sw,t);el.appendChild(s);
+  });
+}
+
+/* ---------- stories ---------- */
 function scoreChip(s){
   const el=document.createElement("span");el.className="score";
   if(s==null){el.textContent="·";el.style.color="var(--muted)";el.style.background="var(--dv-u)"}
   else if(s===0){el.textContent="0";el.style.background="var(--dv-0)";el.style.color="var(--ink2)"}
   else{
     el.textContent=(s>0?"+":"")+s;
-    el.style.background=css(DV_KEYS[s+2])+"33";
-    el.style.color=css(s<0?"--dv-n2":"--dv-p2");
+    el.style.background=`color-mix(in srgb, var(${DV_KEYS[s+2]}) 22%, transparent)`;
+    el.style.color=`var(${s<0?"--dv-n2":"--dv-p2"})`;
   }
   return el;
 }
@@ -625,8 +932,9 @@ function groupByStory(list){
   return groups;
 }
 
-function renderStories(list,title,expanded){
+function renderStories(list,title,sub,expanded){
   $("#itemsTitle").textContent=title;
+  $("#itemsSub").textContent=sub;
   const el=$("#itemsList");el.innerHTML="";
   if(!list.length){el.innerHTML='<div class="empty">No headlines in this window.</div>';return}
   const groups=groupByStory(list);
@@ -643,9 +951,9 @@ function renderStories(list,title,expanded){
     rendered+=rows.length;
   }
   if(!expanded&&rendered<list.length){
-    const b=document.createElement("button");b.className="linklike";b.style.marginTop="10px";
+    const b=document.createElement("button");b.className="linklike";b.style.marginTop="12px";
     b.textContent=`Show all ${list.length} headlines`;
-    b.onclick=()=>renderStories(list,title,true);
+    b.onclick=()=>renderStories(list,title,sub,true);
     el.appendChild(b);
   }
 }
@@ -661,30 +969,11 @@ function showStoriesFor(S,i,members){
   const bucketMs=S.ts[i],span=GRAN_SPAN[S.gran];
   const list=ITEMS.filter(it=>members.has(it.src)&&parseTs(it.fs)<bucketMs+span&&parseTs(it.ls)>=bucketMs);
   const partial=bucketMs<Date.now()-ITEMS_KEPT_DAYS*864e5-6e4;
-  renderStories(list,"Stories on homepages — "+bucketLabel(S,i)
-    +(partial?" (headlines kept 7 days)":""),false);
-  $("#itemsPanel").scrollIntoView({behavior:"smooth",block:"nearest"});
+  renderStories(list,"Stories on homepages",bucketLabel(S,i)+(partial?" · headlines kept 7 days":""),false);
+  $("#itemsPanel").scrollIntoView({behavior:reducedMotion()?"auto":"smooth",block:"nearest"});
 }
 
-function mainLegend(){
-  const el=$("#mainLegend");el.innerHTML="";
-  const li=(color,label)=>{
-    const s=document.createElement("span");s.className="li";
-    const sw=document.createElement("span");sw.className="sw";
-    sw.style.cssText="width:11px;height:11px;border-radius:3px;background:"+color;
-    const t=document.createElement("span");t.textContent=label;
-    s.append(sw,t);el.appendChild(s);
-  };
-  DV_KEYS.forEach((k,i)=>li(css(k),DV_LABELS[i]));
-  li(css("--dv-u"),"unscored");
-  if(META.comp_exact_since){
-    const t=document.createElement("span");t.className="li";t.style.color="var(--muted)";
-    t.textContent="≈ approximated before "
-      +new Date(META.comp_exact_since).toLocaleDateString(undefined,{month:"short",day:"numeric"});
-    el.appendChild(t);
-  }
-}
-
+/* ---------- data table ---------- */
 function dataTable(S){
   const wrap=$("#tblWrap");wrap.innerHTML="";
   const tb=document.createElement("table");tb.className="data";
@@ -712,30 +1001,41 @@ function dataTable(S){
   wrap.appendChild(tb);
 }
 
+/* ---------- orchestration ---------- */
 function render(){
   const interval=resolveInterval();
   const gran=effectiveGran(interval);
   syncControls(interval,gran);
   const S=buildSeries(interval,gran);
-  tiles(S);
+  hero(S);
   mainLegend();
   drawStackedChart($("#mainChart"),S);
   const partial=interval.start<Date.now()-ITEMS_KEPT_DAYS*864e5-6e4;
   renderStories(
     ITEMS.filter(it=>S.selNames.has(it.src)&&parseTs(it.fs)<interval.end&&parseTs(it.ls)>=interval.start),
-    "Israel-related stories ("+PRESET_LABEL[state.preset]+")"
-      +(partial?" — headlines within last 7 days":""),false);
+    "Israel-related stories",
+    cap(PRESET_LABEL[state.preset])+" · grouped into cross-outlet stories"+(partial?" · headlines within the last 7 days":""),
+    false);
   dataTable(S);
 }
 
 $("#tblToggle").onclick=()=>{const w=$("#tblWrap");w.hidden=!w.hidden;
   $("#tblToggle").textContent=w.hidden?"Show data table":"Hide data table"};
+const openMethod=()=>{if(location.hash==="#method")$("#methodDetails").open=true};
+window.addEventListener("hashchange",openMethod);openMethod();
+$("#methodLink").addEventListener("click",()=>{$("#methodDetails").open=true});
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{if(META)render()});
 let lastW=window.innerWidth,rzT=null;
 window.addEventListener("resize",()=>{
   if(window.innerWidth===lastW)return;
   clearTimeout(rzT);rzT=setTimeout(()=>{lastW=window.innerWidth;render()},150);
 });
-boot().catch(e=>{document.body.insertAdjacentHTML("beforeend","<p style='padding:20px'>Failed to load data: "+String(e).replace(/</g,"&lt;")+"</p>")});
+boot().catch(e=>{
+  $("#mainChart").innerHTML="";
+  const p=document.createElement("p");p.className="empty";
+  p.textContent="Failed to load data: "+String(e);
+  $("#mainChart").appendChild(p);
+});
 </script>
 </body>
 </html>
