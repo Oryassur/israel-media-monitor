@@ -83,10 +83,10 @@ def extract_items(html: str, base_url: str, selector: str = None):
 def prominence_weight(rank: int, total: int = 0) -> int:
     """Method v2: attention is top-heavy, so weights follow a steep curve.
 
-    Rank 1 x10, 2-5 x5, 6-10 x3, 11-20 x1, 21+ x0. Weight-0 stories are still
-    captured, scored, and shown in the drill-down ("below fold"), but the
-    attention/sentiment indexes measure the top-20 window only — which also
-    makes the share denominator comparable across long and short homepages.
+    Rank 1 x10, 2-5 x5, 6-10 x3, 11-20 x1, 21+ x0. Only the top-20 window is
+    ingested as items; stories beyond it count toward total_items (parser
+    health) but nothing else — which also makes the share denominator
+    comparable across long and short homepages.
     """
     if rank == 1:
         return 10

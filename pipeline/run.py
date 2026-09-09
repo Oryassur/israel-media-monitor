@@ -45,11 +45,13 @@ def run(no_llm=False):
         total_weight = sum(prominence_weight(it["rank"], total) for it in extracted)
         present = []
         for it in extracted:
+            weight = prominence_weight(it["rank"], total)
+            if weight == 0:
+                continue  # below the top-20 window: counted above, never ingested
             kw = match_keyword(it["headline"], src["lang"])
             if not kw:
                 continue
             iid = item_id(name, it["headline"])
-            weight = prominence_weight(it["rank"], total)
             present.append((iid, weight))
             if iid in items_idx:
                 rec = items_idx[iid]
@@ -100,27 +102,36 @@ def run(no_llm=False):
         log(f"scoring skipped (--no-llm); {len(pending)} items pending")
 
     # Per-source hourly snapshot. Items the LLM rejected (related=false) are
-    # excluded; unscored candidates count toward volume but not sentiment.
+    # excluded; unscored candidates count toward volume (bucket w_u) but not
+    # sentiment. Invariant: w_n2+w_n1+w_0+w_p1+w_p2+w_u == israel_weight.
+    bucket_of = {-2: "w_n2", -1: "w_n1", 0: "w_0", 1: "w_p1", 2: "w_p2"}
     snaps = []
     for src in sources:
         name = src["name"]
         ps = per_source[name]
         isr_items, isr_weight, s_num, s_den = 0, 0, 0.0, 0
+        comp = {k: 0 for k in ("w_n2", "w_n1", "w_0", "w_p1", "w_p2", "w_u")}
         for iid, weight in ps["present"]:
             rec = items_idx[iid]
-            if rec.get("related") is False or weight == 0:
-                continue  # weight 0 = below top-20: tracked, but outside the index
+            if rec.get("related") is False:
+                continue
             isr_items += 1
             isr_weight += weight
             if rec.get("sentiment") is not None:
                 s_num += rec["sentiment"] * weight
                 s_den += weight
+                comp[bucket_of[rec["sentiment"]]] += weight
+            else:
+                comp["w_u"] += weight
+        if not ps["ok"]:
+            comp = {k: "" for k in comp}  # failed fetch: missing, never zero
         snaps.append({
             "ts": ts, "source": name, "fetch_ok": int(ps["ok"]),
             "total_items": ps["total_items"], "total_weight": ps["total_weight"],
             "israel_items": isr_items, "israel_weight": isr_weight,
             "attention_share": round(isr_weight / ps["total_weight"], 5) if ps["total_weight"] else "",
             "mean_sentiment": round(s_num / s_den, 3) if s_den else "",
+            **comp,
         })
 
     save_items(items_idx)

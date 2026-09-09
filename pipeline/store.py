@@ -5,6 +5,7 @@
 - data/snapshots/YYYY-MM.csv : one row per source per hourly run (append-only)
 """
 import csv
+import os
 from collections import defaultdict
 
 from .common import DATA, month_key, read_jsonl, write_jsonl
@@ -12,9 +13,12 @@ from .common import DATA, month_key, read_jsonl, write_jsonl
 ITEMS_DIR = DATA / "items"
 SNAPS_DIR = DATA / "snapshots"
 
+# w_n2..w_p2: Israel prominence weight in each sentiment bucket that run;
+# w_u: present but unscored (related not yet decided). Sum == israel_weight.
 SNAP_FIELDS = [
     "ts", "source", "fetch_ok", "total_items", "total_weight",
     "israel_items", "israel_weight", "attention_share", "mean_sentiment",
+    "w_n2", "w_n1", "w_0", "w_p1", "w_p2", "w_u",
 ]
 
 
@@ -37,9 +41,31 @@ def save_items(index):
         write_jsonl(ITEMS_DIR / f"{m}.jsonl", rows)
 
 
+def _ensure_snapshot_schema(path):
+    """One-time migration when SNAP_FIELDS grows: rewrite the month file with
+    the current header, blank-filling new columns. Idempotent (header check).
+    Older months are left as-is — consumers must read columns via row.get().
+    """
+    if not path.exists():
+        return
+    with open(path, newline="") as f:
+        if f.readline().rstrip("\r\n") == ",".join(SNAP_FIELDS):
+            return
+        f.seek(0)
+        rows = list(csv.DictReader(f))
+    tmp = path.with_suffix(".tmp")
+    with open(tmp, "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=SNAP_FIELDS)
+        w.writeheader()
+        for r in rows:
+            w.writerow({k: r.get(k, "") for k in SNAP_FIELDS})
+    os.replace(tmp, path)
+
+
 def append_snapshots(ts, rows):
     path = SNAPS_DIR / f"{month_key(ts)}.csv"
     path.parent.mkdir(parents=True, exist_ok=True)
+    _ensure_snapshot_schema(path)
     new_file = not path.exists()
     with open(path, "a", newline="") as f:
         w = csv.DictWriter(f, fieldnames=SNAP_FIELDS)
