@@ -5,6 +5,8 @@
 #   they cover; otherwise the widely documented characterization. Basis noted per source.
 # weight_profile: how homepage rank maps to prominence (see pipeline/extract.py)
 # selector: optional CSS scope for the main content area (falls back to full page)
+# home: the outlet's home scope for domestic-vs-international classification
+#   (defaults to country; pan-national outlets set it explicitly)
 
 sources:
   # --- United States ---
@@ -57,6 +59,21 @@ sources:
     lang: en
     lean: center  # AllSides: Center (March 2026 editorial review)
     type: magazine
+  - name: newsnation
+    display: NewsNation
+    url: https://www.newsnationnow.com
+    country: US
+    lang: en
+    lean: center  # AllSides: Center
+    type: broadcaster
+  - name: washexaminer
+    display: Washington Examiner
+    url: https://www.washingtonexaminer.com
+    country: US
+    lang: en
+    lean: right  # AllSides: Lean Right
+    type: digital
+    selector: main
 
   # --- United Kingdom ---
   - name: bbc
@@ -87,22 +104,31 @@ sources:
     lang: en
     lean: right  # AllSides: Right
     type: tabloid
+  - name: independent
+    display: The Independent
+    url: https://www.independent.co.uk
+    country: UK
+    lang: en
+    lean: left  # AllSides: Lean Left
+    type: digital
 
-  # --- Wires ---
+  # --- International ---
   - name: dw
     display: DW (Deutsche Welle)
     url: https://www.dw.com/en/
     country: INT
+    home: DE
     lang: en
     lean: center  # Ad Fontes: Middle
     type: broadcaster
-  - name: ap
-    display: Associated Press
-    url: https://apnews.com
+  - name: euronews
+    display: Euronews
+    url: https://www.euronews.com
     country: INT
+    home: EU
     lang: en
-    lean: left  # AllSides: Lean Left
-    type: wire
+    lean: center  # Ad Fontes: Middle
+    type: broadcaster
 
   # --- Continental Europe ---
   - name: lemonde
@@ -119,6 +145,13 @@ sources:
     lang: fr
     lean: right  # documented conservative/right
     type: broadsheet
+  - name: lacroix
+    display: La Croix
+    url: https://www.la-croix.com
+    country: FR
+    lang: fr
+    lean: center  # documented centrist
+    type: broadsheet
   - name: spiegel
     display: Der Spiegel
     url: https://www.spiegel.de
@@ -133,13 +166,29 @@ sources:
     lang: de
     lean: right  # documented right-leaning tabloid
     type: tabloid
-  - name: elpais
-    display: El País
-    url: https://elpais.com
+  - name: faz
+    display: Frankfurter Allgemeine
+    url: https://www.faz.net
+    country: DE
+    lang: de
+    lean: right  # documented centre-right
+    type: broadsheet
+    selector: main
+  - name: tagesschau
+    display: Tagesschau (ARD)
+    url: https://www.tagesschau.de
+    country: DE
+    lang: de
+    lean: center  # documented centrist public broadcaster
+    type: broadcaster
+  - name: elmundo
+    display: El Mundo
+    url: https://www.elmundo.es
     country: ES
     lang: es
-    lean: left  # documented centre-left
+    lean: right  # documented centre-right
     type: broadsheet
+    selector: main
   - name: corriere
     display: Corriere della Sera
     url: https://www.corriere.it
@@ -147,6 +196,14 @@ sources:
     lang: it
     lean: center  # documented centrist
     type: broadsheet
+  - name: ilgiornale
+    display: Il Giornale
+    url: https://www.ilgiornale.it
+    country: IT
+    lang: it
+    lean: right  # documented conservative
+    type: broadsheet
+    selector: main
 
   # --- Anglosphere ---
   - name: cbc
@@ -156,6 +213,13 @@ sources:
     lang: en
     lean: left  # documented centre-left public broadcaster
     type: broadcaster
+  - name: globeandmail
+    display: The Globe and Mail
+    url: https://www.theglobeandmail.com
+    country: CA
+    lang: en
+    lean: center  # documented centrist
+    type: broadsheet
   - name: abcau
     display: ABC News (Australia)
     url: https://www.abc.net.au/news
@@ -163,3 +227,11 @@ sources:
     lang: en
     lean: center  # documented centrist public broadcaster
     type: broadcaster
+  - name: smh
+    display: Sydney Morning Herald
+    url: https://www.smh.com.au
+    country: AU
+    lang: en
+    lean: left  # documented centre-left
+    type: broadsheet
+    selector: main
