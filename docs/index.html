@@ -40,8 +40,21 @@ header .sub a{color:inherit}
 .seg{display:inline-flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--surface)}
 .seg button{border:0;background:none;color:var(--ink2);padding:6px 11px;font:inherit;font-size:13px;cursor:pointer}
 .seg button[aria-pressed="true"]{background:var(--ink);color:var(--page);font-weight:600}
-select{font:inherit;font-size:13px;color:var(--ink);background:var(--surface);
-  border:1px solid var(--border);border-radius:8px;padding:6px 8px}
+.seg button:disabled{color:var(--muted);cursor:not-allowed;opacity:.55}
+#customRange{display:inline-flex;align-items:center;gap:4px;color:var(--muted);font-size:13px}
+#customRange[hidden]{display:none}
+#customRange input{font:inherit;font-size:13px;color:var(--ink);background:var(--surface);
+  border:1px solid var(--border);border-radius:8px;padding:4px 6px}
+.msel{position:relative;display:inline-block}
+.msel-btn{font:inherit;font-size:13px;color:var(--ink);background:var(--surface);
+  border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer}
+.msel-btn[aria-expanded="true"]{background:var(--ink);color:var(--page)}
+.msel-pop{position:absolute;top:calc(100% + 4px);left:0;z-index:20;min-width:180px;max-height:280px;
+  overflow-y:auto;background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  box-shadow:0 6px 20px rgba(0,0,0,.18);padding:6px}
+.msel-pop label{display:flex;align-items:center;gap:7px;padding:4px 6px;font-size:13px;
+  border-radius:6px;cursor:pointer;white-space:nowrap}
+.msel-pop label:hover{background:var(--grid)}
 .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:0 0 16px}
 .tile{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px}
 .tile .k{font-size:12px;color:var(--muted)}
@@ -89,11 +102,15 @@ footer a{color:inherit}
 
 <div class="controls" id="controls">
   <div class="seg" id="rangeSeg" role="group" aria-label="Time range"></div>
+  <span id="customRange" hidden>
+    <input type="date" id="dStart" aria-label="Start date">–<input type="date" id="dEnd" aria-label="End date">
+  </span>
+  <div class="seg" id="granSeg" role="group" aria-label="Granularity"></div>
   <div class="seg" id="splitSeg" role="group" aria-label="Split series"></div>
-  <select id="fCountry"><option value="">All countries</option></select>
-  <select id="fLean"><option value="">All leans</option></select>
-  <select id="fType"><option value="">All types</option></select>
-  <select id="fSource"><option value="">All sources</option></select>
+  <div class="msel" id="fCountry"></div>
+  <div class="msel" id="fLean"></div>
+  <div class="msel" id="fSource"></div>
+  <button class="linklike" id="resetBtn" hidden>Reset</button>
 </div>
 
 <div class="tiles" id="tiles"></div>
@@ -152,16 +169,44 @@ const SLOTS=["--s1","--s2","--s3","--s4","--s5"];
 const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 const LEAN_ORDER=["left","center","right"];
 const cap=s=>s?s[0].toUpperCase()+s.slice(1):s;
-const REGION=(c)=>c==="US"?"US":c==="UK"?"UK":["FR","DE","ES","IT"].includes(c)?"Europe":"Other";
+const REGION=(c)=>c==="US"?"US":c==="UK"?"UK":["FR","DE","ES","IT","INT"].includes(c)?"Europe":"Other";
 const REGION_ORDER=["US","UK","Europe","Other"];
-const RANGES=[["24h",1],["7d",7],["30d",30],["90d",90],["All",99999]];
+const PRESETS=[["24h","24h"],["7d","7d"],["30d","30d"],["90d","90d"],["All","all"],["Custom","custom"]];
+const PRESET_DAYS={"24h":1,"7d":7,"30d":30,"90d":90};
+const GRANS=[["Hourly","hourly"],["Daily","daily"],["Weekly","weekly"]];
 const SPLITS=[["Combined","none"],["By lean","lean"],["By region","region"]];
-const state={range:"7d",split:"none",country:"",lean:"",type:"",source:"",pinned:null};
+const HOURLY_KEPT_DAYS=14,ITEMS_KEPT_DAYS=7;
+const state={preset:"7d",start:null,end:null,gran:"hourly",granManual:false,
+  split:"none",countries:new Set(),leans:new Set(),sources:new Set()};
 let META,HOURLY,DAILY,ITEMS;
 
 const fmtPct=v=>v==null?"—":(v*100).toFixed(1)+"%";
 const fmtSent=v=>v==null?"—":(v>0?"+":"")+v.toFixed(2);
 const parseTs=t=>new Date(t).getTime();
+// bucket flooring (D6): hour / UTC day / ISO week (Monday, epoch math —
+// day 0, 1970-01-01, was a Thursday, hence the +3)
+const floorGran={
+  hourly:ms=>ms-ms%36e5,
+  daily:ms=>ms-ms%864e5,
+  weekly:ms=>{const d=Math.floor(ms/864e5);return (d-((d+3)%7))*864e5}
+};
+const GRAN_SPAN={hourly:36e5,daily:864e5,weekly:7*864e5};
+
+function resolveInterval(){
+  const now=Date.now();
+  if(state.preset==="custom"){
+    const s=state.start!=null?state.start:floorGran.daily(now-7*864e5);
+    return {start:s,end:state.end!=null?state.end:now};
+  }
+  if(state.preset==="all")return {start:0,end:now};
+  return {start:now-PRESET_DAYS[state.preset]*864e5,end:now};
+}
+function defaultGran(spanDays){return spanDays<=7?"hourly":spanDays<=180?"daily":"weekly"}
+function effectiveGran(interval){
+  // hourly detail only exists for the last HOURLY_KEPT_DAYS — coerce to daily
+  if(state.gran==="hourly"&&interval.start<Date.now()-HOURLY_KEPT_DAYS*864e5)return "daily";
+  return state.gran;
+}
 
 async function boot(){
   const [meta,hourly,daily,items]=await Promise.all(
@@ -173,8 +218,49 @@ async function boot(){
 }
 
 const segDefs=[];
-function updateSegs(){for(const [el,get] of segDefs)for(const b of el.children)b.setAttribute("aria-pressed",get()===b.dataset.val)}
+let openPop=null;
+function closePop(focusBtn){
+  if(!openPop)return;
+  openPop.pop.hidden=true;openPop.btn.setAttribute("aria-expanded","false");
+  if(focusBtn)openPop.btn.focus();
+  openPop=null;
+}
+document.addEventListener("pointerdown",e=>{if(openPop&&!openPop.root.contains(e.target))closePop(false)});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closePop(true)});
+
+function buildMultiSelect(el,label,opts,set){
+  el.innerHTML="";
+  const btn=document.createElement("button");
+  btn.type="button";btn.className="msel-btn";
+  btn.setAttribute("aria-haspopup","listbox");btn.setAttribute("aria-expanded","false");
+  const pop=document.createElement("div");
+  pop.className="msel-pop";pop.setAttribute("role","listbox");pop.hidden=true;
+  const sync=()=>{btn.textContent=set.size?`${label} · ${set.size}`:label};
+  for(const o of opts){
+    const lab=document.createElement("label");
+    const cb=document.createElement("input");
+    cb.type="checkbox";cb.value=o.v;cb.checked=set.has(o.v);
+    cb.onchange=()=>{cb.checked?set.add(o.v):set.delete(o.v);sync();render()};
+    lab.appendChild(cb);lab.appendChild(document.createTextNode(o.label));
+    pop.appendChild(lab);
+  }
+  sync();
+  btn.onclick=()=>{
+    if(openPop&&openPop.btn===btn){closePop(false);return}
+    closePop(false);
+    pop.hidden=false;btn.setAttribute("aria-expanded","true");
+    openPop={root:el,btn,pop};
+  };
+  el.appendChild(btn);el.appendChild(pop);
+}
+
+function syncCustomInputs(){
+  $("#dStart").value=state.start!=null?new Date(state.start).toISOString().slice(0,10):"";
+  $("#dEnd").value=state.end!=null?new Date(state.end-864e5).toISOString().slice(0,10):"";
+}
+
 function buildControls(){
+  segDefs.length=0;
   const seg=(el,opts,get,set)=>{
     el.innerHTML="";
     for(const [label,val] of opts){
@@ -184,23 +270,58 @@ function buildControls(){
     }
     segDefs.push([el,get]);
   };
-  seg($("#rangeSeg"),RANGES.map(r=>[r[0],r[0]]),()=>state.range,v=>state.range=v);
-  seg($("#splitSeg"),SPLITS.map(s=>[s[0],s[1]]),()=>state.split,v=>state.split=v);
-  const fill=(sel,vals,fmt)=>{for(const v of [...new Set(vals)]){const o=document.createElement("option");o.value=v;o.textContent=fmt?fmt(v):v;sel.appendChild(o)}};
-  fill($("#fCountry"),META.sources.map(s=>s.country));
-  fill($("#fLean"),LEAN_ORDER.filter(l=>META.sources.some(s=>s.lean===l)),cap);
-  fill($("#fType"),META.sources.map(s=>s.type));
-  for(const s of META.sources){const o=document.createElement("option");o.value=s.name;o.textContent=s.display;$("#fSource").appendChild(o)}
-  for(const [id,key] of [["#fCountry","country"],["#fLean","lean"],["#fType","type"],["#fSource","source"]])
-    $(id).onchange=e=>{state[key]=e.target.value;render()};
+  seg($("#rangeSeg"),PRESETS,()=>state.preset,v=>{
+    state.preset=v;state.granManual=false;
+    if(v==="custom"&&state.start==null)state.start=floorGran.daily(Date.now()-7*864e5);
+    const i=resolveInterval();
+    state.gran=defaultGran((i.end-i.start)/864e5);
+    syncCustomInputs();
+  });
+  seg($("#granSeg"),GRANS,()=>effectiveGran(resolveInterval()),v=>{state.gran=v;state.granManual=true});
+  seg($("#splitSeg"),SPLITS,()=>state.split,v=>state.split=v);
+  buildMultiSelect($("#fCountry"),"Country",
+    [...new Set(META.sources.map(s=>s.country))].map(v=>({v,label:v})),state.countries);
+  buildMultiSelect($("#fLean"),"Lean",
+    LEAN_ORDER.filter(l=>META.sources.some(s=>s.lean===l)).map(v=>({v,label:cap(v)})),state.leans);
+  buildMultiSelect($("#fSource"),"Source",
+    META.sources.map(s=>({v:s.name,label:s.display})),state.sources);
+  syncCustomInputs();
+}
+
+function afterDateChange(){
+  if(!state.granManual){
+    const i=resolveInterval();
+    state.gran=defaultGran((i.end-i.start)/864e5);
+  }
+  render();
+}
+$("#dStart").onchange=e=>{const v=e.target.value;state.start=v?Date.parse(v+"T00:00:00Z"):null;afterDateChange()};
+$("#dEnd").onchange=e=>{const v=e.target.value;state.end=v?Date.parse(v+"T00:00:00Z")+864e5:null;afterDateChange()};
+$("#resetBtn").onclick=()=>{
+  state.preset="7d";state.start=null;state.end=null;
+  state.gran="hourly";state.granManual=false;state.split="none";
+  state.countries.clear();state.leans.clear();state.sources.clear();
+  closePop(false);buildControls();render();
+};
+
+function syncControls(interval,gran){
+  for(const [el,get] of segDefs)
+    for(const b of el.children)b.setAttribute("aria-pressed",String(get()===b.dataset.val));
+  const hAvail=interval.start>=Date.now()-HOURLY_KEPT_DAYS*864e5;
+  for(const b of $("#granSeg").children)
+    if(b.dataset.val==="hourly"){b.disabled=!hAvail;b.title=hAvail?"":"Hourly detail kept for 14 days"}
+  $("#customRange").hidden=state.preset!=="custom";
+  const spanDays=(interval.end-interval.start)/864e5;
+  const nonDefault=state.preset!=="7d"||state.split!=="none"||state.gran!==defaultGran(spanDays)
+    ||state.countries.size>0||state.leans.size>0||state.sources.size>0;
+  $("#resetBtn").hidden=!nonDefault;
 }
 
 function selectedSources(){
   return META.sources.filter(s=>
-    (!state.country||s.country===state.country)&&
-    (!state.lean||s.lean===state.lean)&&
-    (!state.type||s.type===state.type)&&
-    (!state.source||s.name===state.source));
+    (!state.countries.size||state.countries.has(s.country))&&
+    (!state.leans.size||state.leans.has(s.lean))&&
+    (!state.sources.size||state.sources.has(s.name)));
 }
 
 function groupsFor(sources){
@@ -215,50 +336,79 @@ function groupsFor(sources){
   return [{key:"all",label:"All selected sources",slot:0,members:new Set(sources.map(s=>s.name))}];
 }
 
-// Build per-group time series from hourly or daily rows.
-function buildSeries(){
-  const days=RANGES.find(r=>r[0]===state.range)[1];
-  const useHourly=days<=7;
-  const cutoff=Date.now()-days*864e5;
+// Build per-group time series from hourly or daily rows, bucketed per the
+// granularity (weekly rolls up daily rows: share = mean of day shares,
+// sentiment items-weighted, comp summed). Always also fills a combined
+// accumulator over all selected sources, regardless of split.
+function buildSeries(interval,gran){
+  const sel=selectedSources();
+  const selNames=new Set(sel.map(s=>s.name));
+  const groups=groupsFor(sel);
+  const useHourly=gran==="hourly";
   const rows=useHourly?HOURLY:DAILY;
-  const groups=groupsFor(selectedSources());
-  const buckets=new Map(); // ts -> per-group accumulators
+  const floor=floorGran[gran];
+  const lo=floor(interval.start),hi=interval.end;
+  const mkAcc=()=>({sh:0,shn:0,sn:0,sd:0,items:0,comp:null});
+  const buckets=new Map(); // bucket ms -> {gs: per-group accs, all: combined acc}
   for(const r of rows){
-    const [t,src,share,sent,items]=useHourly?[r[0],r[1],r[2],r[3],r[4]]:[r[0],r[1],r[2],r[3],r[4]];
+    const src=r[1];
+    if(!selNames.has(src))continue;
     const ok=useHourly?r[5]===1:r[5]>0;
-    const ms=useHourly?parseTs(t):parseTs(t+"T00:00:00Z");
-    if(ms<cutoff||!ok)continue;
-    let b=buckets.get(ms);
-    if(!b){b=groups.map(()=>({sh:0,shn:0,sn:0,sd:0,items:0}));buckets.set(ms,b)}
-    groups.forEach((g,i)=>{
-      if(!g.members.has(src))return;
-      const a=b[i];
+    if(!ok)continue;
+    const ms=useHourly?parseTs(r[0]):parseTs(r[0]+"T00:00:00Z");
+    if(ms<lo||ms>=hi)continue;
+    const share=r[2],sent=r[3],items=r[4],comp=useHourly?r[6]:r[7];
+    const b=floor(ms);
+    let e=buckets.get(b);
+    if(!e){e={gs:groups.map(mkAcc),all:mkAcc()};buckets.set(b,e)}
+    const add=a=>{
       if(share!=null){a.sh+=share;a.shn++}
       if(sent!=null&&items>0){a.sn+=sent*items;a.sd+=items}
       a.items+=items||0;
-    });
+      if(comp)a.comp=a.comp?a.comp.map((v,k)=>v+comp[k]):comp.slice();
+    };
+    add(e.all);
+    groups.forEach((g,i)=>{if(g.members.has(src))add(e.gs[i])});
   }
   const ts=[...buckets.keys()].sort((a,b)=>a-b);
-  return {useHourly,groups,ts,points:ts.map(ms=>buckets.get(ms).map(a=>({
-    share:a.shn?a.sh/a.shn:null,
-    sent:a.sd?a.sn/a.sd:null,
-    items:a.items})))};
+  const fin=a=>({share:a.shn?a.sh/a.shn:null,sent:a.sd?a.sn/a.sd:null,items:a.items,comp:a.comp});
+  return {gran,interval,groups,ts,selNames,
+    points:ts.map(ms=>buckets.get(ms).gs.map(fin)),
+    combined:ts.map(ms=>fin(buckets.get(ms).all))};
 }
 
+const PRESET_LABEL={"24h":"last 24 hours","7d":"last 7 days","30d":"last 30 days",
+  "90d":"last 90 days","all":"all time","custom":"custom range"};
+
 function tiles(S){
-  const cut=Date.now()-864e5;
-  const last24=S.tsAll.filter(([ms])=>ms>=cut);
   let sh=0,shn=0,sn=0,sd=0;
-  for(const [,p] of last24){if(p.share!=null){sh+=p.share;shn++}if(p.sent!=null){sn+=p.sent*p.items;sd+=p.items}}
-  const nItems=ITEMS.filter(i=>S.selNames.has(i.src)).length;
+  for(const p of S.combined){
+    if(p.share!=null){sh+=p.share;shn++}
+    if(p.sent!=null&&p.items>0){sn+=p.sent*p.items;sd+=p.items}
+  }
+  const rl=PRESET_LABEL[state.preset];
+  const now=Date.now();
+  const itemsPartial=S.interval.start<now-ITEMS_KEPT_DAYS*864e5-6e4;
+  const nItems=ITEMS.filter(it=>S.selNames.has(it.src)
+    &&parseTs(it.fs)<S.interval.end&&parseTs(it.ls)>=S.interval.start).length;
+  // sources with at least one ok run inside the interval (D12)
+  const rep=new Set();
+  if(S.interval.start>=now-HOURLY_KEPT_DAYS*864e5){
+    for(const r of HOURLY){const ms=parseTs(r[0]);
+      if(ms>=S.interval.start&&ms<S.interval.end&&r[5]===1&&S.selNames.has(r[1]))rep.add(r[1])}
+  }else{
+    for(const r of DAILY){const ms=parseTs(r[0]+"T00:00:00Z");
+      if(ms>=floorGran.daily(S.interval.start)&&ms<S.interval.end&&r[5]>0&&S.selNames.has(r[1]))rep.add(r[1])}
+  }
   const el=$("#tiles");el.innerHTML="";
   const tile=(k,v,d)=>{const t=document.createElement("div");t.className="tile";
     t.innerHTML=`<div class="k"></div><div class="v"></div><div class="d"></div>`;
     t.children[0].textContent=k;t.children[1].textContent=v;t.children[2].textContent=d;el.appendChild(t)};
-  tile("Attention (last 24h)",fmtPct(shn?sh/shn:null),"share of homepage prominence");
-  tile("Sentiment (last 24h)",fmtSent(sd?sn/sd:null),"−2 hostile … +2 sympathetic");
-  tile("Headlines (7 days)",String(nItems),"unique Israel-related headlines");
-  tile("Sources reporting",S.okNow+" / "+S.selNames.size,"latest hourly cycle");
+  tile(`Attention (${rl})`,fmtPct(shn?sh/shn:null),"share of homepage prominence");
+  tile(`Sentiment (${rl})`,fmtSent(sd?sn/sd:null),"−2 hostile … +2 sympathetic");
+  tile("Headlines",String(nItems),
+    "unique Israel-related headlines"+(itemsPartial?" (within last 7 days)":""));
+  tile("Sources reporting",rep.size+" / "+S.selNames.size,"reported in selected range");
 }
 
 const M={t:14,r:14,b:26,l:46},H=230;
@@ -289,7 +439,7 @@ function drawChart(el,S,metric){
   for(let i=0;i<nx;i++){
     const ms=S.ts[Math.round(i*(S.ts.length-1)/Math.max(1,nx-1))]||S.ts[0];
     const d=new Date(ms);
-    const lbl=S.useHourly?d.toLocaleString(undefined,{weekday:"short",hour:"numeric"}):d.toLocaleDateString(undefined,{month:"short",day:"numeric"});
+    const lbl=S.gran==="hourly"?d.toLocaleString(undefined,{weekday:"short",hour:"numeric"}):d.toLocaleDateString(undefined,{month:"short",day:"numeric"});
     const t=mk("text",{x:x(ms),y:H-8,"text-anchor":"middle"});t.textContent=lbl;
   }
   // series
@@ -299,7 +449,7 @@ function drawChart(el,S,metric){
     if(!pts.length)return;
     // break the line where data is missing (e.g. skipped scheduler hours) —
     // drawing a straight line across a gap would fake data that isn't there
-    const gapMs=S.useHourly?2.5*36e5:2.5*864e5;
+    const gapMs=2.5*GRAN_SPAN[S.gran];
     const segs=[[pts[0]]];
     for(let i=1;i<pts.length;i++){
       if(pts[i].ms-pts[i-1].ms>gapMs)segs.push([]);
@@ -345,8 +495,7 @@ function drawChart(el,S,metric){
 function tooltip(ev,S,i,isSent){
   const tt=$("#tooltip");tt.innerHTML="";
   const t=document.createElement("div");t.className="tt-t";
-  const d=new Date(S.ts[i]);
-  t.textContent=S.useHourly?d.toLocaleString(undefined,{weekday:"short",month:"short",day:"numeric",hour:"numeric"}):d.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"});
+  t.textContent=bucketLabel(S,i);
   tt.appendChild(t);
   S.groups.forEach((g,gi)=>{
     const p=S.points[i][gi],v=isSent?p.sent:p.share;
@@ -399,13 +548,18 @@ function renderItems(list,title){
   }
 }
 
+function bucketLabel(S,i){
+  const d=new Date(S.ts[i]);
+  if(S.gran==="hourly")return d.toLocaleString(undefined,{weekday:"short",month:"short",day:"numeric",hour:"numeric"});
+  if(S.gran==="weekly")return "Week of "+d.toLocaleDateString(undefined,{month:"short",day:"numeric"});
+  return d.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"});
+}
+
 function showItemsFor(S,i){
-  const bucketMs=S.ts[i],span=S.useHourly?36e5:864e5;
-  const list=ITEMS.filter(it=>S.selNames.has(it.src)&&parseTs(it.fs)<parseTs(new Date(bucketMs+span).toISOString())&&parseTs(it.ls)>=bucketMs)
+  const bucketMs=S.ts[i],span=GRAN_SPAN[S.gran];
+  const list=ITEMS.filter(it=>S.selNames.has(it.src)&&parseTs(it.fs)<bucketMs+span&&parseTs(it.ls)>=bucketMs)
     .sort((a,b)=>(b.w-a.w)||(b.s!=null)-(a.s!=null));
-  const d=new Date(bucketMs);
-  const lbl=S.useHourly?d.toLocaleString(undefined,{month:"short",day:"numeric",hour:"numeric"}):d.toLocaleDateString(undefined,{month:"short",day:"numeric"});
-  renderItems(list,"Headlines on homepages — "+lbl);
+  renderItems(list,"Headlines on homepages — "+bucketLabel(S,i));
   $("#itemsPanel").scrollIntoView({behavior:"smooth",block:"nearest"});
 }
 
@@ -434,7 +588,7 @@ function dataTable(S){
   tb.appendChild(head);
   S.ts.forEach((ms,i)=>{
     const tr=document.createElement("tr");
-    const cells=[new Date(ms).toLocaleString(undefined,S.useHourly?{month:"short",day:"numeric",hour:"numeric"}:{month:"short",day:"numeric"})];
+    const cells=[bucketLabel(S,i)];
     for(const p of S.points[i])cells.push(fmtPct(p.share),fmtSent(p.sent),String(p.items));
     for(const c of cells){const td=document.createElement("td");td.textContent=c;tr.appendChild(td)}
     tb.appendChild(tr);
@@ -443,19 +597,10 @@ function dataTable(S){
 }
 
 function render(){
-  updateSegs();
-  const S=buildSeries();
-  const sel=selectedSources();S.selNames=new Set(sel.map(s=>s.name));
-  // all-hourly points for tiles (independent of range)
-  {
-    const saved=state.range,savedSplit=state.split;state.range="7d";state.split="none";
-    const T=buildSeries();state.range=saved;state.split=savedSplit;
-    // filter T to selected sources happens inside buildSeries via groupsFor(selectedSources())
-    S.tsAll=T.ts.map((ms,i)=>[ms,T.points[i][0]]);
-  }
-  // sources reporting in the latest cycle
-  const lastTs=HOURLY.length?HOURLY[HOURLY.length-1][0]:null;
-  S.okNow=lastTs?HOURLY.filter(r=>r[0]===lastTs&&r[5]===1&&S.selNames.has(r[1])).length:0;
+  const interval=resolveInterval();
+  const gran=effectiveGran(interval);
+  syncControls(interval,gran);
+  const S=buildSeries(interval,gran);
   tiles(S);
   legend($("#attLegend"),S);legend($("#sentLegend"),S);
   drawChart($("#attChart"),S,"share");
