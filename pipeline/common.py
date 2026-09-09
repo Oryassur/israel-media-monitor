@@ -18,6 +18,12 @@ RUBRIC_VERSION = "v2"  # calibrated against human QA 2026-09-01; scorer moved Ha
 RUBRIC_PATH = ROOT / "prompts" / f"sentiment_rubric_{RUBRIC_VERSION}.md"
 SCORING_MODEL = "claude-sonnet-5"
 
+# Story clustering (bumping CLUSTER_VERSION re-clusters items without
+# touching their sentiment scores)
+CLUSTER_VERSION = "c1"
+CLUSTER_MODEL = "claude-sonnet-5"
+CLUSTER_PROMPT_PATH = ROOT / "prompts" / f"cluster_v_{CLUSTER_VERSION}.md"
+
 # Retry scoring for unscored items this long after first_seen (hours)
 SCORE_RETRY_WINDOW_H = 48
 

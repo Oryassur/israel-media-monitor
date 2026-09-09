@@ -3,8 +3,8 @@ import json
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 
-from .common import DOCS_DATA, METHOD_VERSION, RUBRIC_VERSION, load_sources
-from .store import load_all_items, read_all_snapshots
+from .common import CLUSTER_VERSION, DOCS_DATA, METHOD_VERSION, RUBRIC_VERSION, load_sources
+from .store import load_all_items, load_all_stories, read_all_snapshots
 
 HOURLY_WINDOW_DAYS = 14
 ITEMS_WINDOW_DAYS = 7
@@ -111,17 +111,22 @@ def build():
     recent_items = [
         {"src": r["source"], "h": r["headline"], "ht": r.get("ht"), "u": r["url"],
          "fs": r["first_seen"], "ls": r["last_seen"], "w": r["best_weight"],
-         "s": r.get("sentiment"), "c": r.get("category")}
+         "s": r.get("sentiment"), "c": r.get("category"), "st": r.get("story")}
         for r in items
         if r["last_seen"] >= items_cut and r.get("related") is not False
         and r["best_weight"] > 0
     ]
     recent_items.sort(key=lambda r: r["fs"], reverse=True)
 
+    # titles for the stories the published items point at
+    used = {r["st"] for r in recent_items if r.get("st")}
+    story_titles = {s["id"]: s["title"] for s in load_all_stories() if s["id"] in used}
+
     _write("meta.json", {
         "generated": now.strftime("%Y-%m-%dT%H:%M:%SZ"),
         "rubric": RUBRIC_VERSION,
         "method": METHOD_VERSION,
+        "cluster": CLUSTER_VERSION,
         "hourly_cols": ["ts", "source", "share", "sentiment", "items", "ok", "comp"],
         "daily_cols": ["date", "source", "share", "sentiment", "items", "runs_ok", "runs", "comp"],
         # first snapshot with stored (not approximated) composition columns
@@ -135,6 +140,7 @@ def build():
     _write("hourly.json", hourly)
     _write("daily.json", daily)
     _write("items.json", recent_items)
+    _write("stories.json", story_titles)
 
 
 if __name__ == "__main__":

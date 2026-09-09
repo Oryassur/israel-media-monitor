@@ -9,11 +9,14 @@ import time
 from datetime import datetime, timedelta, timezone
 
 from . import publish
-from .common import LOGS, RUBRIC_VERSION, SCORE_RETRY_WINDOW_H, item_id, load_sources, month_key
+from .cluster import cluster_items
+from .common import (CLUSTER_VERSION, LOGS, RUBRIC_VERSION, SCORE_RETRY_WINDOW_H,
+                     item_id, load_sources, month_key)
 from .detect import match_keyword
 from .extract import extract_items, fetch_html, prominence_weight
 from .score import score_items
-from .store import append_snapshots, load_recent_items, save_items
+from .store import (append_snapshots, load_recent_items, load_recent_stories,
+                    save_items, save_stories)
 
 
 def log(msg):
@@ -100,6 +103,27 @@ def run(no_llm=False):
         log(f"scored {n}/{len(pending)} pending items ({len(fresh)} new this run)")
     elif pending:
         log(f"scoring skipped (--no-llm); {len(pending)} items pending")
+
+    # Cluster confirmed-related items into cross-outlet stories (retries within
+    # the same window as scoring; cluster_v mismatch re-clusters after a bump)
+    if not no_llm:
+        to_cluster = [
+            r for r in items_idx.values()
+            if r.get("related") is True and r["first_seen"] >= cutoff
+            and ("story" not in r or r.get("cluster_v") != CLUSTER_VERSION)
+        ]
+        if to_cluster:
+            stories_idx = load_recent_stories(months)
+            for r in to_cluster:
+                r["source_display"] = disp[r["source"]]
+            n = cluster_items(to_cluster, stories_idx, ts, log=log)
+            for r in to_cluster:
+                r.pop("source_display", None)
+                sid = r.get("story")
+                if sid in stories_idx:
+                    stories_idx[sid]["last_seen"] = ts
+            save_stories(stories_idx)
+            log(f"clustered {n}/{len(to_cluster)} items")
 
     # Per-source hourly snapshot. Items the LLM rejected (related=false) are
     # excluded; unscored candidates count toward volume (bucket w_u) but not
