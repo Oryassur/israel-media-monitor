@@ -14,7 +14,7 @@ DOCS_DATA = ROOT / "docs" / "data"
 LOGS = ROOT / "logs"
 
 METHOD_VERSION = "v2"  # prominence weighting: 10/5/3/1 over top-20, 0 beyond
-RUBRIC_VERSION = "v2"  # calibrated against human QA 2026-09-01; scorer moved Haiku -> Sonnet
+RUBRIC_VERSION = "v3"  # calibrated against blind QA round 2, 2026-09-09 (boycotts -1, critic-criticism +1, cues everywhere, analysis = opinion)
 RUBRIC_PATH = ROOT / "prompts" / f"sentiment_rubric_{RUBRIC_VERSION}.md"
 SCORING_MODEL = "claude-sonnet-5"
 
