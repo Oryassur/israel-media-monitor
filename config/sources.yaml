@@ -59,13 +59,14 @@ sources:
     lang: en
     lean: center  # AllSides: Center (March 2026 editorial review)
     type: magazine
-  - name: newsnation
-    display: NewsNation
-    url: https://www.newsnationnow.com
+  - name: csmonitor
+    display: Christian Science Monitor
+    url: https://www.csmonitor.com
     country: US
     lang: en
-    lean: center  # AllSides: Center
-    type: broadcaster
+    lean: center  # documented centrist
+    type: broadsheet
+    selector: main
   - name: washexaminer
     display: Washington Examiner
     url: https://www.washingtonexaminer.com
