@@ -8,7 +8,7 @@ import sys
 import time
 from datetime import datetime, timedelta, timezone
 
-from . import publish
+from . import intl, publish
 from .cluster import cluster_items
 from .common import (CLUSTER_VERSION, LOGS, RUBRIC_VERSION, SCORE_RETRY_WINDOW_H,
                      item_id, load_sources, month_key)
@@ -41,16 +41,19 @@ def run(no_llm=False):
             extracted = extract_items(html, src["url"], src.get("selector"))
         except Exception as e:  # noqa: BLE001 — one dead source must not kill the run
             log(f"FETCH FAIL {name}: {e}")
-            per_source[name] = {"ok": False, "present": [], "total_items": 0, "total_weight": 0}
+            per_source[name] = {"ok": False, "present": [], "top20": [],
+                                "total_items": 0, "total_weight": 0}
             continue
 
         total = len(extracted)
         total_weight = sum(prominence_weight(it["rank"], total) for it in extracted)
         present = []
+        top20 = []  # every top-20 headline, for the international benchmark
         for it in extracted:
             weight = prominence_weight(it["rank"], total)
             if weight == 0:
                 continue  # below the top-20 window: counted above, never ingested
+            top20.append((it["headline"], it["rank"], weight))
             kw = match_keyword(it["headline"], src["lang"])
             if not kw:
                 continue
@@ -73,7 +76,7 @@ def run(no_llm=False):
                 items_idx[iid] = rec
                 fresh.append(rec)
         per_source[name] = {
-            "ok": True, "present": present,
+            "ok": True, "present": present, "top20": top20,
             "total_items": total, "total_weight": total_weight,
         }
         log(f"{name}: {total} items, {len(present)} israel-candidates"
@@ -124,6 +127,14 @@ def run(no_llm=False):
                     stories_idx[sid]["last_seen"] = ts
             save_stories(stories_idx)
             log(f"clustered {n}/{len(to_cluster)} items")
+
+    # International benchmark (all top-20 headlines, aggregates only).
+    # Best-effort: nothing in it may ever fail the hourly run.
+    if not no_llm:
+        try:
+            intl.collect(sources, per_source, ts, months, log=log)
+        except Exception as e:  # noqa: BLE001
+            log(f"intl: collection failed ({e}); continuing")
 
     # Per-source hourly snapshot. Items the LLM rejected (related=false) are
     # excluded; unscored candidates count toward volume (bucket w_u) but not

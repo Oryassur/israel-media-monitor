@@ -5,8 +5,13 @@
 - data/snapshots/YYYY-MM.csv : one row per source per hourly run (append-only)
 - data/stories/YYYY-MM.jsonl : story cluster registry (partitioned/rewritten
   like items; rows never hold item lists — items point at stories)
+- data/allitems/YYYY-MM.jsonl : every top-20 headline, Israel-related or not,
+  for the international benchmark (partitioned/rewritten like items)
+- data/intl/YYYY-MM.jsonl : international-coverage aggregates, one row per
+  source per run (append-only)
 """
 import csv
+import json
 import os
 from collections import defaultdict
 
@@ -15,6 +20,8 @@ from .common import DATA, month_key, read_jsonl, write_jsonl
 ITEMS_DIR = DATA / "items"
 SNAPS_DIR = DATA / "snapshots"
 STORIES_DIR = DATA / "stories"
+ALLITEMS_DIR = DATA / "allitems"
+INTL_DIR = DATA / "intl"
 
 # w_n2..w_p2: Israel prominence weight in each sentiment bucket that run;
 # w_u: present but unscored (related not yet decided). Sum == israel_weight.
@@ -70,6 +77,33 @@ def load_all_stories():
     for path in sorted(STORIES_DIR.glob("*.jsonl")):
         out.extend(read_jsonl(path))
     return out
+
+
+def load_recent_allitems(months):
+    """Return {id: record} for the given YYYY-MM all-item partitions."""
+    idx = {}
+    for m in months:
+        for row in read_jsonl(ALLITEMS_DIR / f"{m}.jsonl"):
+            idx[row["id"]] = row
+    return idx
+
+
+def save_allitems(index):
+    """Write the all-item index back to its monthly partitions."""
+    by_month = defaultdict(list)
+    for row in index.values():
+        by_month[month_key(row["first_seen"])].append(row)
+    for m, rows in by_month.items():
+        rows.sort(key=lambda r: r["first_seen"])
+        write_jsonl(ALLITEMS_DIR / f"{m}.jsonl", rows)
+
+
+def append_intl(ts, rows):
+    path = INTL_DIR / f"{month_key(ts)}.jsonl"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "a") as f:
+        for r in rows:
+            f.write(json.dumps(r, ensure_ascii=False) + "\n")
 
 
 def _ensure_snapshot_schema(path):

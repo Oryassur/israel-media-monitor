@@ -24,6 +24,12 @@ CLUSTER_VERSION = "c1"
 CLUSTER_MODEL = "claude-sonnet-5"
 CLUSTER_PROMPT_PATH = ROOT / "prompts" / f"cluster_v_{CLUSTER_VERSION}.md"
 
+# International-coverage benchmark (domestic vs. international + topic)
+INTL_VERSION = "i1"
+INTL_MODEL = "claude-haiku-4-5-20251001"
+INTL_PROMPT_PATH = ROOT / "prompts" / f"intl_v_{INTL_VERSION}.md"
+MAX_INTL_ITEMS_PER_RUN = 600
+
 # Retry scoring for unscored items this long after first_seen (hours)
 SCORE_RETRY_WINDOW_H = 48
 
