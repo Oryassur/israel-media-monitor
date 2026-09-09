@@ -585,7 +585,7 @@ function hero(S){
   // number, counted up once on first load
   const num=$("#heroNum");
   if(cur==null)num.textContent="—";
-  else if(!heroAnimated&&!reducedMotion()){
+  else if(!heroAnimated&&!reducedMotion()&&document.visibilityState==="visible"){ // rAF stalls in background tabs
     const t0=performance.now(),dur=700;
     const step=t=>{const k=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-k,3);
       num.textContent=fmtPct(cur*e);if(k<1)requestAnimationFrame(step)};
