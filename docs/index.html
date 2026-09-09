@@ -210,8 +210,8 @@ footer p{margin:10px 0 0;max-width:72ch}
   <div id="more">
     <div class="ssel" id="granSel"></div>
     <div class="ssel" id="splitSel"></div>
-    <div class="msel" id="fRegion"></div>
     <div class="msel" id="fLean"></div>
+    <div class="msel" id="fRegion"></div>
     <div class="msel" id="fSource"></div>
     <button class="linklike" id="resetBtn" hidden>Reset</button>
   </div>
@@ -282,8 +282,8 @@ const $=s=>document.querySelector(s);
 const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 const LEAN_ORDER=["left","center","right"];
 const cap=s=>s?s[0].toUpperCase()+s.slice(1):s;
-const REGION=(c)=>c==="US"?"US":c==="UK"?"UK":["FR","DE","ES","IT","INT"].includes(c)?"Europe":"Other";
-const REGION_ORDER=["US","UK","Europe","Other"];
+const REGION=(c)=>c==="US"?"US":c==="UK"?"UK":["FR","DE","ES","IT","INT"].includes(c)?"EU":"Other";
+const REGION_ORDER=["US","UK","EU","Other"];
 const PRESETS=[["24h","24h"],["7d","7d"],["30d","30d"],["90d","90d"],["All","all"],["Custom","custom"]];
 const PRESET_DAYS={"24h":1,"7d":7,"30d":30,"90d":90};
 const GRANS=[["Hourly","hourly"],["Daily","daily"],["Weekly","weekly"]];
@@ -434,12 +434,9 @@ function buildControls(){
   buildSingleSelect($("#granSel"),GRANS,()=>effectiveGran(resolveInterval()),
     v=>{state.gran=v;state.granManual=true},()=>state.granManual);
   buildSingleSelect($("#splitSel"),SPLITS,()=>state.split,v=>state.split=v,()=>state.split!=="none");
-  // regions mirror the "By region" split; each option lists the countries it covers
+  // regions mirror the "By region" split
   buildMultiSelect($("#fRegion"),"Region",
-    REGION_ORDER.filter(r=>META.sources.some(s=>REGION(s.country)===r)).map(r=>{
-      const cs=[...new Set(META.sources.filter(s=>REGION(s.country)===r).map(s=>s.country))];
-      return {v:r,label:cs.length===1&&cs[0]===r?r:`${r} · ${cs.join(" ")}`};
-    }),state.regions);
+    REGION_ORDER.filter(r=>META.sources.some(s=>REGION(s.country)===r)).map(r=>({v:r,label:r})),state.regions);
   buildMultiSelect($("#fLean"),"Lean",
     LEAN_ORDER.filter(l=>META.sources.some(s=>s.lean===l)).map(v=>({v,label:cap(v)})),state.leans);
   buildMultiSelect($("#fSource"),"Source",
