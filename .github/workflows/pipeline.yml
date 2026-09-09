@@ -23,6 +23,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # A queued run's checkout is frozen at queue time; if the run ahead of it
+      # in the concurrency group pushed data meanwhile, compute on that, not on
+      # the stale snapshot — shrinks the end-of-run push race to seconds.
+      - name: Sync to latest data
+        run: git pull --rebase origin main
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -44,5 +50,13 @@ jobs:
             echo "no changes"; exit 0
           fi
           git commit -m "data: $(date -u +'%Y-%m-%d %H:%M') UTC"
-          git pull --rebase origin main
+          # A concurrent run may have pushed a conflicting rewrite of the data
+          # files (they are regenerated whole each cycle, so git cannot merge
+          # them). That run's data is equivalent — drop ours instead of failing;
+          # the next cycle recomputes everything from live homepages anyway.
+          if ! git pull --rebase origin main; then
+            git rebase --abort
+            echo "concurrent run already pushed conflicting data — skipping this run's commit"
+            exit 0
+          fi
           git push
