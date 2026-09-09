@@ -96,10 +96,11 @@ def run(no_llm=False):
             ))
         )
     ]
+    # .get: items from retired sources may still sit inside the retry window
     disp = {s["name"]: s["display"] for s in sources}
     if pending and not no_llm:
         for r in pending:
-            r["source_display"] = disp[r["source"]]
+            r["source_display"] = disp.get(r["source"], r["source"])
         n = score_items(pending, log=log)
         for r in pending:
             r.pop("source_display", None)
@@ -118,7 +119,7 @@ def run(no_llm=False):
         if to_cluster:
             stories_idx = load_recent_stories(months)
             for r in to_cluster:
-                r["source_display"] = disp[r["source"]]
+                r["source_display"] = disp.get(r["source"], r["source"])
             n = cluster_items(to_cluster, stories_idx, ts, log=log)
             for r in to_cluster:
                 r.pop("source_display", None)

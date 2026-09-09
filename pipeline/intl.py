@@ -149,7 +149,9 @@ def collect(sources, per_source, ts, months, log=print):
 
     cutoff = (datetime.strptime(ts, "%Y-%m-%dT%H:%M:%SZ")
               - timedelta(hours=INTL_RETRY_WINDOW_H)).strftime("%Y-%m-%dT%H:%M:%SZ")
-    pending = [r for r in allidx.values() if "intl" not in r and r["first_seen"] >= cutoff]
+    # retired sources drop out (their home scope is gone with their config)
+    pending = [r for r in allidx.values()
+               if "intl" not in r and r["first_seen"] >= cutoff and r["source"] in src_by_name]
     pending = pending[:MAX_INTL_ITEMS_PER_RUN]
     if pending:
         in_use = [t for t, _ in Counter(
