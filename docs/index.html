@@ -210,7 +210,7 @@ footer p{margin:10px 0 0;max-width:72ch}
   <div id="more">
     <div class="ssel" id="granSel"></div>
     <div class="ssel" id="splitSel"></div>
-    <div class="msel" id="fCountry"></div>
+    <div class="msel" id="fRegion"></div>
     <div class="msel" id="fLean"></div>
     <div class="msel" id="fSource"></div>
     <button class="linklike" id="resetBtn" hidden>Reset</button>
@@ -290,7 +290,7 @@ const GRANS=[["Hourly","hourly"],["Daily","daily"],["Weekly","weekly"]];
 const SPLITS=[["Combined","none"],["By lean","lean"],["By region","region"]];
 const HOURLY_KEPT_DAYS=14,ITEMS_KEPT_DAYS=7;
 const state={preset:"7d",start:null,end:null,gran:"hourly",granManual:false,
-  split:"none",countries:new Set(),leans:new Set(),sources:new Set()};
+  split:"none",regions:new Set(),leans:new Set(),sources:new Set()};
 let META,HOURLY,DAILY,ITEMS,STORIES,DISPN;
 
 const fmtPct=v=>v==null?"—":(v*100).toFixed(1)+"%";
@@ -434,8 +434,12 @@ function buildControls(){
   buildSingleSelect($("#granSel"),GRANS,()=>effectiveGran(resolveInterval()),
     v=>{state.gran=v;state.granManual=true},()=>state.granManual);
   buildSingleSelect($("#splitSel"),SPLITS,()=>state.split,v=>state.split=v,()=>state.split!=="none");
-  buildMultiSelect($("#fCountry"),"Country",
-    [...new Set(META.sources.map(s=>s.country))].map(v=>({v,label:v})),state.countries);
+  // regions mirror the "By region" split; each option lists the countries it covers
+  buildMultiSelect($("#fRegion"),"Region",
+    REGION_ORDER.filter(r=>META.sources.some(s=>REGION(s.country)===r)).map(r=>{
+      const cs=[...new Set(META.sources.filter(s=>REGION(s.country)===r).map(s=>s.country))];
+      return {v:r,label:cs.length===1&&cs[0]===r?r:`${r} · ${cs.join(" ")}`};
+    }),state.regions);
   buildMultiSelect($("#fLean"),"Lean",
     LEAN_ORDER.filter(l=>META.sources.some(s=>s.lean===l)).map(v=>({v,label:cap(v)})),state.leans);
   buildMultiSelect($("#fSource"),"Source",
@@ -455,7 +459,7 @@ $("#dEnd").onchange=e=>{const v=e.target.value;state.end=v?Date.parse(v+"T00:00:
 $("#resetBtn").onclick=()=>{
   state.preset="7d";state.start=null;state.end=null;
   state.gran="hourly";state.granManual=false;state.split="none";
-  state.countries.clear();state.leans.clear();state.sources.clear();
+  state.regions.clear();state.leans.clear();state.sources.clear();
   closePop(false);buildControls();render();
 };
 $("#filtersBtn").onclick=()=>{
@@ -473,17 +477,17 @@ function syncControls(interval,gran){
   }
   $("#customRange").hidden=state.preset!=="custom";
   const spanDays=(interval.end-interval.start)/864e5;
-  const nFilters=state.countries.size+state.leans.size+state.sources.size
+  const nFilters=state.regions.size+state.leans.size+state.sources.size
     +(state.split!=="none"?1:0)+(state.granManual&&state.gran!==defaultGran(spanDays)?1:0);
   const nonDefault=state.preset!=="7d"||state.split!=="none"||state.gran!==defaultGran(spanDays)
-    ||state.countries.size>0||state.leans.size>0||state.sources.size>0;
+    ||state.regions.size>0||state.leans.size>0||state.sources.size>0;
   $("#resetBtn").hidden=!nonDefault;
   ghostLabel($("#filtersBtn"),"Filters",nFilters);
 }
 
 function selectedSources(){
   return META.sources.filter(s=>
-    (!state.countries.size||state.countries.has(s.country))&&
+    (!state.regions.size||state.regions.has(REGION(s.country)))&&
     (!state.leans.size||state.leans.has(s.lean))&&
     (!state.sources.size||state.sources.has(s.name)));
 }
@@ -570,7 +574,7 @@ function hero(S){
   }
   const cur=shn?sh/shn:null,sent=sd?sn/sd:null;
   $("#heroKicker").textContent=PRESET_LABEL[state.preset];
-  const filtered=state.countries.size||state.leans.size||state.sources.size;
+  const filtered=state.regions.size||state.leans.size||state.sources.size;
   const scope=filtered?`the ${S.selNames.size} selected outlets'`:"western";
   const v=$("#heroVerdict");v.innerHTML="";
   if(cur==null){
