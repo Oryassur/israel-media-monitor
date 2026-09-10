@@ -980,7 +980,7 @@ function srcBadge(name){
 }
 function logoEl(src){
   const l=document.createElement("span");l.className="logo";
-  if(src.logo){const im=document.createElement("img");im.src=src.logo;im.alt="";im.loading="lazy";
+  if(src.logo){const im=document.createElement("img");im.src=src.logo;im.alt="";im.decoding="async";
     im.onerror=()=>{im.remove();l.textContent=monogram(src.display)};l.appendChild(im)}
   else l.textContent=monogram(src.display);
   return l;
@@ -1043,7 +1043,7 @@ function imageBox(cls,it,src){
   const box=document.createElement("div");box.className=cls;
   const fallback=()=>{box.innerHTML="";box.classList.add("noimg");box.appendChild(logoEl(src))};
   if(it.img){
-    const im=document.createElement("img");im.alt="";im.loading="lazy";im.referrerPolicy="no-referrer";
+    const im=document.createElement("img");im.alt="";im.loading=cls==="img"?"eager":"lazy";im.decoding="async";im.referrerPolicy="no-referrer";
     im.onerror=fallback;im.src=it.img;box.appendChild(im);
   }else fallback();
   return box;
