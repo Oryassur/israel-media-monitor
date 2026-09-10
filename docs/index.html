@@ -1051,7 +1051,7 @@ function imageBox(cls,it,src){
   const box=document.createElement("div");box.className=cls;
   const fallback=()=>{box.innerHTML="";box.classList.add("noimg");box.appendChild(logoEl(src))};
   if(it.img){
-    const im=document.createElement("img");im.alt="";im.loading=cls==="img"?"eager":"lazy";im.decoding="async";im.referrerPolicy="no-referrer";
+    const im=document.createElement("img");im.alt="";im.loading="eager";im.decoding="async";im.referrerPolicy="no-referrer";
     im.onerror=fallback;im.src=it.img;box.appendChild(im);
   }else fallback();
   return box;
