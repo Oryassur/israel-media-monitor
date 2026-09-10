@@ -3,14 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Israel in Western Media</title>
+<title>The Israel Monitor</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%231e293b'/%3E%3Crect%20x='8'%20y='30.5'%20width='48'%20height='3'%20rx='1.5'%20fill='%23475569'/%3E%3Crect%20x='10'%20y='12'%20width='9'%20height='20'%20rx='2'%20fill='%233987e5'/%3E%3Crect%20x='23'%20y='20'%20width='9'%20height='12'%20rx='2'%20fill='%233987e5'/%3E%3Crect%20x='36'%20y='32'%20width='9'%20height='16'%20rx='2'%20fill='%23e66767'/%3E%3Crect%20x='49'%20y='32'%20width='9'%20height='10'%20rx='2'%20fill='%23e66767'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&display=swap" rel="stylesheet">
 <style>
 :root{
   color-scheme: light;
+  --font-masthead:"UnifrakturCook",Georgia,"Times New Roman",serif;
   --font-display:"Fraunces",Georgia,"Times New Roman",serif;
   --font-ui:system-ui,-apple-system,"Segoe UI",sans-serif;
   --page:#faf7f1; --surface:#fffdf8; --ink:#1a1712; --ink2:#57534a; --muted:#8a857a;
@@ -42,22 +43,25 @@ body{margin:0;background:var(--page);color:var(--ink);font:15px/1.5 var(--font-u
 .wrap{max-width:1060px;margin:0 auto;padding:26px 20px 60px;position:relative}
 a{color:inherit}
 
-/* masthead */
-header{border-bottom:1px solid var(--grid);padding-bottom:16px;margin-bottom:20px}
-header h1{font:600 34px/1.1 var(--font-display);margin:0 0 5px;letter-spacing:-.3px}
-header .sub{color:var(--muted);font-size:12.5px;margin:0}
-header .sub a{color:var(--ink2)}
+/* masthead + filters: one band, pinned while the page scrolls */
+.top{position:sticky;top:0;z-index:40;background:var(--page);padding-top:6px;margin-top:-6px}
+.mast{text-align:center;padding:4px 0 8px}
+.mast h1{font:700 60px/1 var(--font-masthead);margin:0;letter-spacing:.005em}
+.mast .tagline{font:italic 400 17px/1.3 var(--font-display);color:var(--ink2);margin:8px 0 0}
+.rule{border-top:3px solid var(--ink);border-bottom:1px solid var(--ink);height:5px;margin:12px 0}
 .live{color:var(--ok);font-weight:600}
 .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--ok);
   margin-right:5px;animation:pulse 2.4s ease-in-out infinite}
 @keyframes pulse{50%{opacity:.3}}
 
-/* controls — soft track/thumb segmented for the timeframe, quiet ghost dropdowns for the rest */
-.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 18px}
+/* controls — soft track/thumb segmented for the timeframe, quiet ghost dropdowns for the rest,
+   live line right-aligned on the same row */
+.controls{display:flex;flex-wrap:nowrap;gap:7px;align-items:center;margin:0;padding-bottom:14px;
+  border-bottom:1px solid var(--grid)}
 .ctl-row,#more{display:contents}
 .seg{display:inline-flex;gap:2px;background:color-mix(in srgb,var(--ink) 5%,transparent);
-  border-radius:9px;padding:3px}
-.seg button{border:0;background:none;color:var(--ink2);padding:5px 11px;font:inherit;font-size:13px;
+  border-radius:9px;padding:3px;flex:0 0 auto}
+.seg button{border:0;background:none;color:var(--ink2);padding:5px 9px;font:inherit;font-size:13px;
   border-radius:6px;cursor:pointer;transition:background-color .15s ease,color .15s ease}
 .seg button:hover{color:var(--ink)}
 .seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);font-weight:600;
@@ -69,8 +73,8 @@ header .sub a{color:var(--ink2)}
   border:1px solid var(--border);border-radius:8px;padding:4px 6px}
 .ctl-sep{width:1px;height:20px;background:var(--grid);margin:0 2px}
 .ghost{font:inherit;font-size:13px;color:var(--ink2);background:none;border:1px solid var(--border);
-  border-radius:8px;padding:6px 10px;cursor:pointer;transition:background-color .15s ease,color .15s ease,border-color .15s ease;
-  display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+  border-radius:8px;padding:6px 9px;cursor:pointer;transition:background-color .15s ease,color .15s ease,border-color .15s ease;
+  display:inline-flex;align-items:center;gap:5px;white-space:nowrap;flex:0 0 auto}
 .ghost:hover{color:var(--ink);border-color:var(--muted)}
 .ghost .cv{color:var(--muted);font-size:10px}
 .ghost.on{color:var(--ink);border-color:transparent;background:color-mix(in srgb,var(--ink) 7%,transparent)}
@@ -92,27 +96,79 @@ header .sub a{color:var(--ink2)}
 .linklike{border:0;background:none;color:var(--ink2);font:inherit;font-size:12.5px;cursor:pointer;
   text-decoration:underline;padding:0;transition:color .15s ease}
 .linklike:hover{color:var(--ink)}
+.livebar{margin-left:auto;font-size:12px;color:var(--muted);display:inline-flex;align-items:center;gap:4px;
+  white-space:nowrap;flex:0 0 auto}
+.livebar a{color:var(--ink2)}
 
-/* hero */
-.hero{margin:2px 0 4px}
-.hero-kicker{font-size:10.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
-  color:var(--muted);margin:0 0 8px}
-.hero-main{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap}
-.hero-num{font:600 60px/1 var(--font-display);letter-spacing:-.015em;
-  font-variant-numeric:lining-nums tabular-nums}
-.hero-verdict{font:400 19px/1.35 var(--font-display);color:var(--ink2);margin:0;flex:1 1 300px}
-.hero-verdict b{font-weight:600;color:var(--ink)}
-.hero-verdict b.neg{color:var(--dv-n2)}
-.hero-verdict b.pos{color:var(--dv-p2)}
-.hero-delta{display:inline-flex;align-items:baseline;gap:6px;font-size:15px;margin:14px 0 0;
-  color:var(--ink2);padding:4px 12px 5px;border-radius:999px;background:color-mix(in srgb,var(--ink) 5%,transparent)}
-.hero-delta[hidden]{display:none}
-.hero-delta.up{background:color-mix(in srgb,var(--dv-p2) 11%,transparent)}
-.hero-delta.down{background:color-mix(in srgb,var(--dv-n2) 11%,transparent)}
-.hero-delta .v{font-weight:600;font-size:16px}
-.hero-delta.up .v{color:var(--dv-p2)}
-.hero-delta.down .v{color:var(--dv-n2)}
-.hero-delta .lbl{font-size:13px;color:var(--ink2)}
+/* front page: data card | lead story | stories 2–4 */
+.front{display:grid;grid-template-columns:228px minmax(0,1fr) 300px;gap:24px;align-items:stretch;margin-top:20px}
+.kicker{font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 14px 16px;
+  display:flex;flex-direction:column;justify-content:space-between;align-items:center;text-align:center;gap:10px}
+.kpi .att{display:flex;flex-direction:column;align-items:center;max-width:100%}
+.kpi .kicker{margin-bottom:4px}
+.kpi .num{font:600 94px/.9 var(--font-display);letter-spacing:-.045em;font-variant-numeric:lining-nums tabular-nums}
+.kpi .num.long{font-size:74px}
+.delta{display:inline-flex;align-items:baseline;gap:5px;font-size:13px;margin:12px 0 0;color:var(--ink2);
+  padding:4px 11px 5px;border-radius:999px;background:color-mix(in srgb,var(--ink) 5%,transparent);
+  white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.delta[hidden]{display:none}
+.delta .v{font-weight:600;font-size:14px}
+.delta .lbl{overflow:hidden;text-overflow:ellipsis}
+.delta.up{background:color-mix(in srgb,var(--dv-p2) 11%,transparent)}
+.delta.down{background:color-mix(in srgb,var(--dv-n2) 11%,transparent)}
+.delta.up .v{color:var(--dv-p2)}
+.delta.down .v{color:var(--dv-n2)}
+.kpi .sent{width:100%;border-top:1px solid var(--grid);padding-top:16px}
+.kpi .sv{font:600 60px/.95 var(--font-display);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.kpi .sv.neg{color:var(--dv-n2)}
+.kpi .sv.pos{color:var(--dv-p2)}
+.kpi .sv.none{color:var(--muted)}
+
+.lead{min-width:0}
+.img{aspect-ratio:16/9;border-radius:8px;background:var(--grid);overflow:hidden;display:flex;align-items:center;justify-content:center}
+.img img{width:100%;height:100%;object-fit:cover;display:block}
+.img.noimg{background:color-mix(in srgb,var(--dv-n1) 16%,var(--grid))}
+.img.noimg .logo{width:44px;height:44px;border-radius:10px;font-size:15px}
+.skick{font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--dv-n2);margin:12px 0 4px}
+.hl{font:600 27px/1.15 var(--font-display);margin:0 0 8px;text-wrap:balance}
+.hl a{text-decoration:none}
+.hl a:hover{text-decoration:underline}
+.dek{font-size:14.5px;color:var(--ink2);margin:0 0 10px;line-height:1.45;max-width:62ch}
+.dek.orig{font-style:italic}
+.meta{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.meta .l,.meta .r{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;min-width:0}
+.meta .src{color:var(--ink2);overflow:hidden;text-overflow:ellipsis}
+.badge{display:inline-flex;align-items:center;gap:4px;flex:0 0 auto}
+.logo{width:16px;height:16px;border-radius:4px;background:#fff;border:1px solid var(--border);color:#1a1712;
+  font:700 8px/1 var(--font-ui);display:inline-flex;align-items:center;justify-content:center;letter-spacing:-.02em;
+  overflow:hidden;flex:0 0 auto}
+.logo img{width:100%;height:100%;object-fit:contain;display:block}
+.flag{font-size:13px;line-height:1}
+.chip{display:inline-block;font-weight:600;font-size:11px;padding:1px 6px;border-radius:6px;font-variant-numeric:tabular-nums}
+.chip.n{background:color-mix(in srgb,var(--dv-n2) 22%,transparent);color:var(--dv-n2)}
+.chip.z{background:var(--dv-0);color:var(--ink2)}
+.chip.p{background:color-mix(in srgb,var(--dv-p2) 22%,transparent);color:var(--dv-p2)}
+.chip.u{background:var(--dv-u);color:var(--muted)}
+.more{border:0;background:none;font:inherit;font-size:12px;color:var(--ink2);cursor:pointer;padding:0;
+  text-decoration:underline;text-decoration-color:var(--baseline);text-underline-offset:2px;white-space:nowrap}
+.more:hover{color:var(--ink)}
+.bundle{grid-column:2/-1;border-top:1px solid var(--grid);margin-top:-6px}
+.bundle[hidden]{display:none}
+.bundle .storyhead{margin-top:12px}
+
+.side{min-width:0}
+.srow{display:grid;grid-template-columns:72px minmax(0,1fr);gap:11px;padding:10px 0;border-top:1px solid var(--grid)}
+.srow:first-child{border-top:0;padding-top:0}
+.th{width:72px;height:72px;border-radius:6px;background:var(--grid);overflow:hidden;display:flex;align-items:center;justify-content:center}
+.th img{width:100%;height:100%;object-fit:cover;display:block}
+.th.noimg{background:color-mix(in srgb,var(--dv-n1) 16%,var(--grid))}
+.th.noimg .logo{width:28px;height:28px;border-radius:7px;font-size:10px}
+.srow .skick{margin:0 0 3px;font-size:9.5px}
+.srow .hl{font-size:15px;line-height:1.25;margin:0 0 5px}
+.srow .meta{font-size:11px;gap:5px}
+.srow .meta .chip{font-size:10px}
+.front .empty{grid-column:2/-1}
 
 /* chart section */
 .section{border-top:1px solid var(--grid);padding:20px 0 6px;margin-top:20px;position:relative}
@@ -149,7 +205,7 @@ svg text.ann{font-size:11px}
 .tooltip .row b{margin-left:auto;font-variant-numeric:tabular-nums}
 
 /* stories */
-.items{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-top:22px}
+.items{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-top:22px;scroll-margin-top:210px}
 .items h2{font:600 20px/1.2 var(--font-display);margin:0 0 4px}
 .items .sub{font-size:12.5px;color:var(--muted);margin:0 0 12px}
 .storyhead{font:600 15px/1.3 var(--font-display);margin:16px 0 3px;color:var(--ink)}
@@ -157,6 +213,8 @@ svg text.ann{font-size:11px}
 .storyhead .m{font:400 12px var(--font-ui);color:var(--muted)}
 .item{display:flex;gap:11px;align-items:baseline;padding:7px 0;border-top:1px solid var(--grid)}
 .item .score{flex:0 0 34px;text-align:center;font-weight:600;font-size:12px;border-radius:6px;padding:2px 0}
+.item .h{min-width:0}
+.item .h .badge{vertical-align:-3px;margin-right:4px}
 .item .h a{color:var(--ink);text-decoration:none}
 .item .h a:hover{text-decoration:underline}
 .item .m{font-size:12px;color:var(--muted)}
@@ -164,19 +222,17 @@ svg text.ann{font-size:11px}
 table.data{border-collapse:collapse;font-size:12.5px;width:100%}
 table.data th,table.data td{padding:5px 10px;text-align:right;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums}
 table.data th:first-child,table.data td:first-child{text-align:left}
-footer{color:var(--muted);font-size:12px;margin-top:26px;border-top:1px solid var(--grid);padding-top:14px}
+footer{color:var(--muted);font-size:12px;margin-top:26px;border-top:1px solid var(--grid);padding-top:14px;scroll-margin-top:210px}
 footer #provenance{margin:0 0 10px;color:var(--muted)}
 footer summary{font-size:13px;font-weight:600;color:var(--ink2);cursor:pointer}
 footer p{margin:10px 0 0;max-width:72ch}
 .empty{color:var(--muted);font-size:13px;padding:24px 0;text-align:center}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 @media (max-width:680px){
-  .wrap{padding:18px 14px 44px}
-  header h1{font-size:26px}
-  .hero-num{font-size:44px}
-  .hero-verdict{font-size:16.5px;flex-basis:100%}
-  .hero-delta{font-size:14px}
-  .controls{display:block;margin:0 0 14px}
+  .wrap{padding:16px 14px 44px}
+  .mast h1{font-size:38px}
+  .mast .tagline{font-size:14px}
+  .controls{display:block;padding-bottom:10px}
   .ctl-row{display:flex;flex-wrap:nowrap;gap:8px;align-items:center;overflow-x:auto;scrollbar-width:none;
     margin:0 -14px;padding:0 14px 4px;-webkit-overflow-scrolling:touch}
   .ctl-row::-webkit-scrollbar{display:none}
@@ -185,6 +241,21 @@ footer p{margin:10px 0 0;max-width:72ch}
   .filtersBtn{display:inline-flex;flex:0 0 auto}
   #more{display:none}
   #more.open{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 0 2px}
+  .livebar{display:flex;margin:6px 0 0;white-space:normal;font-size:11.5px}
+  .front{grid-template-columns:1fr;gap:18px;margin-top:16px}
+  .bundle{grid-column:1/-1}
+  .kpi{display:grid;grid-template-columns:1fr 1fr;gap:0 14px;align-items:start;padding:14px}
+  .kpi .att,.kpi .sent{display:flex;flex-direction:column;align-items:center;align-self:stretch}
+  .kpi .kicker{margin:0 0 8px}
+  .kpi .num{font-size:62px}
+  .kpi .num.long{font-size:50px}
+  .kpi .sv{font-size:44px;margin-top:8px}
+  .kpi .sent{border-top:0;border-left:1px solid var(--grid);margin:0;padding:0 0 0 14px}
+  .hl{font-size:23px}
+  .srow .hl{font-size:15px}
+  .srow{grid-template-columns:64px minmax(0,1fr)}
+  .th{width:64px;height:64px}
+  .items,footer{scroll-margin-top:170px}
   .legend{gap:10px;font-size:11.5px}
   .items{padding:14px}
 }
@@ -192,11 +263,12 @@ footer p{margin:10px 0 0;max-width:72ch}
 </head>
 <body>
 <div class="wrap">
-<header>
-  <h1>Israel in Western Media</h1>
-  <p class="sub"><span class="live"><span class="dot" aria-hidden="true"></span>Live</span> — updated <span id="updated">…</span> ·
-    hourly homepage monitoring of <span id="nsources">30</span> western outlets · <a href="#method" id="methodLink">Methodology</a></p>
+<div class="top" id="top">
+<header class="mast">
+  <h1>The Israel Monitor</h1>
+  <p class="tagline">Why are you so obsessed with me?</p>
 </header>
+<div class="rule"></div>
 
 <div class="controls" id="controls">
   <div class="ctl-row">
@@ -205,7 +277,7 @@ footer p{margin:10px 0 0;max-width:72ch}
       <input type="date" id="dStart" aria-label="Start date">–<input type="date" id="dEnd" aria-label="End date">
     </span>
     <span class="ctl-sep"></span>
-    <button class="ghost filtersBtn" id="filtersBtn" type="button" aria-expanded="false">Filters <span class="cv">▾</span></button>
+    <button class="ghost filtersBtn" id="filtersBtn" type="button" aria-expanded="false" aria-controls="more">Filters <span class="cv">▾</span></button>
   </div>
   <div id="more">
     <div class="ssel" id="granSel"></div>
@@ -213,17 +285,27 @@ footer p{margin:10px 0 0;max-width:72ch}
     <div class="msel" id="fLean"></div>
     <div class="msel" id="fRegion"></div>
     <div class="msel" id="fSource"></div>
-    <button class="linklike" id="resetBtn" hidden>Reset</button>
+    <button class="linklike" id="resetBtn" type="button" hidden>Reset</button>
   </div>
+  <span class="livebar"><span class="live"><span class="dot" aria-hidden="true"></span>Live</span> · updated
+    <span id="updated">…</span> · <a href="#method" id="methodLink">Methodology</a></span>
+</div>
 </div>
 
-<section class="hero" id="hero" aria-live="polite">
-  <p class="hero-kicker" id="heroKicker">Last 7 days</p>
-  <div class="hero-main">
-    <span class="hero-num" id="heroNum">—</span>
-    <p class="hero-verdict" id="heroVerdict"></p>
+<section class="front" id="front" aria-live="polite">
+  <div class="kpi">
+    <div class="att">
+      <p class="kicker">Attention</p>
+      <div class="num" id="heroNum">—</div>
+      <div style="max-width:100%"><span class="delta" id="heroDelta" hidden><span class="v"></span><span class="lbl"></span></span></div>
+    </div>
+    <div class="sent">
+      <p class="kicker">Sentiment</p>
+      <div class="sv none" id="heroSent">—</div>
+    </div>
   </div>
-  <p class="hero-delta" id="heroDelta" hidden></p>
+  <div class="lead" id="lead"></div>
+  <div class="side" id="side"></div>
 </section>
 
 <div class="section" id="mainCard">
@@ -268,8 +350,14 @@ footer p{margin:10px 0 0;max-width:72ch}
       <a href="https://adfontesmedia.com" rel="noopener">Ad Fontes Media</a> for international outlets they
       cover, and the widely documented characterization otherwise; the per-outlet basis is noted in
       <a href="https://github.com/Oryassur/israel-media-monitor/blob/main/config/sources.yaml" rel="noopener">config/sources.yaml</a>.
-      Headline drill-down covers the most recent 7 days.</p>
-    <p>On 2026-09-09 the panel expanded from 20 to 30 outlets; Associated Press and El País were retired
+      Headline drill-down covers the most recent 30 days.</p>
+    <p>The front page shows the four <i>story bundles</i> with the most prominence-weighted attention in the
+      selected period and outlets. Each card leads with the bundle's best-placed headline (the most recent one
+      on ties), its image and standfirst taken from the article page's own metadata where the outlet publishes
+      them, the outlet's logo and home-country flag, and the bundle's prominence-weighted mean sentiment;
+      "and N more" opens the rest of the bundle. Bundles without a usable image render as text.</p>
+    <p>V2.0 (2026-09-11): front-page layout — masthead, top-story cards, outlet logos and flags, 30-day
+      headline window, article-page enrichment. On 2026-09-09 the panel expanded from 20 to 30 outlets; Associated Press and El País were retired
       at the same time (persistent fetch failures) — their history remains in the daily series.
       Source code &amp; data: <a href="https://github.com/Oryassur/israel-media-monitor">GitHub</a>.</p>
   </details>
@@ -288,10 +376,10 @@ const PRESETS=[["24h","24h"],["7d","7d"],["30d","30d"],["90d","90d"],["All","all
 const PRESET_DAYS={"24h":1,"7d":7,"30d":30,"90d":90};
 const GRANS=[["Hourly","hourly"],["Daily","daily"],["Weekly","weekly"]];
 const SPLITS=[["Combined","none"],["By lean","lean"],["By region","region"]];
-const HOURLY_KEPT_DAYS=14,ITEMS_KEPT_DAYS=7;
+const HOURLY_KEPT_DAYS=14;let ITEMS_KEPT_DAYS=30;
 const state={preset:"7d",start:null,end:null,gran:"hourly",granManual:false,
   split:"none",regions:new Set(),leans:new Set(),sources:new Set()};
-let META,HOURLY,DAILY,ITEMS,STORIES,DISPN;
+let META,HOURLY,DAILY,ITEMS,STORIES,DISPN,SRC;
 
 const fmtPct=v=>v==null?"—":(v*100).toFixed(1)+"%";
 const fmtSent=v=>v==null?"—":v<0?"−"+(-v).toFixed(2):(v>0?"+":"")+v.toFixed(2);
@@ -327,11 +415,12 @@ async function boot(){
     ["meta.json","hourly.json","daily.json","items.json","stories.json"].map(f=>fetch("data/"+f).then(r=>r.json())));
   META=meta;HOURLY=hourly;DAILY=daily;ITEMS=items;STORIES=stories;
   DISPN=Object.fromEntries(meta.sources.map(s=>[s.name,s.display]));
+  SRC=Object.fromEntries(meta.sources.map(s=>[s.name,s]));
+  ITEMS_KEPT_DAYS=meta.items_window_days||30;
   const gen=new Date(meta.generated);
   $("#updated").textContent=gen.toDateString()===new Date().toDateString()
     ?gen.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"})
     :gen.toLocaleString(undefined,{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});
-  $("#nsources").textContent=meta.sources.length;
   mountChartInfo();
   buildControls();render();
 }
@@ -570,47 +659,34 @@ function hero(S){
     if(p.sent!=null&&p.items>0){sn+=p.sent*p.items;sd+=p.items}
   }
   const cur=shn?sh/shn:null,sent=sd?sn/sd:null;
-  $("#heroKicker").textContent=PRESET_LABEL[state.preset];
-  const filtered=state.regions.size||state.leans.size||state.sources.size;
-  const scope=filtered?`the ${S.selNames.size} selected outlets'`:"western";
-  const v=$("#heroVerdict");v.innerHTML="";
-  if(cur==null){
-    v.textContent="No attention data for this selection.";
-  }else{
-    const w=sentWord(sent);
-    v.append(document.createTextNode(`of ${scope} front-page attention went to Israel — framed `));
-    const b=document.createElement("b");
-    if(w){b.className=w[1];b.textContent=w[0];v.append(b,document.createTextNode(` (${fmtSent(sent)}).`))}
-    else{b.style.color="var(--muted)";b.textContent="not yet scored";v.append(b,document.createTextNode("."))}
-  }
-  // number, counted up once on first load
+  // attention number, counted up once on first load
   const num=$("#heroNum");
+  const txt=fmtPct(cur);num.classList.toggle("long",txt.length>=5);
   if(cur==null)num.textContent="—";
   else if(!heroAnimated&&!reducedMotion()&&document.visibilityState==="visible"){ // rAF stalls in background tabs
     const t0=performance.now(),dur=700;
     const step=t=>{const k=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-k,3);
       num.textContent=fmtPct(cur*e);if(k<1)requestAnimationFrame(step)};
     requestAnimationFrame(step);
-  }else num.textContent=fmtPct(cur);
+  }else num.textContent=txt;
   heroAnimated=true;
-  // delta vs the previous equal-length window
-  const d=$("#heroDelta");d.hidden=true;d.className="hero-delta";
+  // previous equal-length window: its actual share, arrow + tint for the direction
+  const d=$("#heroDelta");d.hidden=true;d.className="delta";
   if(state.preset!=="all"&&cur!=null){
     const span=S.interval.end-S.interval.start;
     const prev=windowShare(S.interval.start-span,S.interval.start,S.selNames);
     if(prev!=null){
-      const spanDays=span/864e5;
-      const phrase=state.preset==="custom"?`${Math.round(spanDays)} days`:PRESET_LABEL[state.preset].replace(/^last /,"");
-      const delta=(cur-prev)*100;
-      d.innerHTML="";
-      const val=document.createElement("span");val.className="v";
-      const lbl=document.createElement("span");lbl.className="lbl";
-      if(Math.abs(delta)<.05){val.textContent="≈ level";lbl.textContent=`with the previous ${phrase}`}
-      else{d.classList.add(delta>0?"up":"down");
-        val.textContent=(delta>0?"▲ ":"▼ ")+Math.abs(delta).toFixed(1)+"pt";lbl.textContent=`vs the previous ${phrase}`}
-      d.append(val,lbl);d.hidden=false;
+      const delta=(cur-prev)*100,dir=Math.abs(delta)<.05?"":delta>0?"up":"down";
+      if(dir)d.classList.add(dir);
+      d.querySelector(".v").textContent=(dir==="up"?"▲ ":dir==="down"?"▼ ":"= ")+fmtPct(prev);
+      d.querySelector(".lbl").textContent="in previous period";
+      d.hidden=false;
     }
   }
+  // sentiment: the signed number alone, colored by sign
+  const sv=$("#heroSent");sv.className="sv";
+  if(cur==null||sent==null){sv.textContent="—";sv.classList.add("none");sv.title=cur==null?"":"not yet scored"}
+  else{sv.textContent=fmtSent(sent);sv.classList.add(sent<=-.05?"neg":sent>=.05?"pos":"zero");sv.title=(sentWord(sent)||[""])[0]}
   // provenance line lives in the footer
   const now=Date.now();
   const itemsPartial=S.interval.start<now-ITEMS_KEPT_DAYS*864e5-6e4;
@@ -625,7 +701,7 @@ function hero(S){
       if(ms>=floorGran.daily(S.interval.start)&&ms<S.interval.end&&r[5]>0&&S.selNames.has(r[1]))rep.add(r[1])}
   }
   $("#provenance").textContent=`${PRESET_LABEL[state.preset]}: ${nItems} unique Israel-related headline${nItems===1?"":"s"}`
-    +(itemsPartial?" (within the last 7 days)":"")+` · ${rep.size} of ${S.selNames.size} sources reporting.`;
+    +(itemsPartial?` (within the last ${ITEMS_KEPT_DAYS} days)`:"")+` · ${rep.size} of ${S.selNames.size} sources reporting.`;
 }
 
 /* ---------- chart ---------- */
@@ -696,7 +772,7 @@ function computeAnnotations(S){
     }
     let best=null,bw=0;for(const [st,ww] of w)if(ww>bw){bw=ww;best=st}
     if(!best||seen.has(best))continue;
-    seen.add(best);picked.push({i:c.i,share:c.v,title:STORIES[best]||"",st:best});
+    seen.add(best);picked.push({i:c.i,share:c.v,title:storyTitle(best),st:best});
   }
   return picked;
 }
@@ -885,22 +961,45 @@ function mainLegend(){
   });
 }
 
-/* ---------- stories ---------- */
-function scoreChip(s){
-  const el=document.createElement("span");el.className="score";
-  if(s==null){el.textContent="·";el.style.color="var(--muted)";el.style.background="var(--dv-u)"}
-  else if(s===0){el.textContent="0";el.style.background="var(--dv-0)";el.style.color="var(--ink2)"}
-  else{
-    el.textContent=(s>0?"+":"")+s;
-    el.style.background=`color-mix(in srgb, var(${DV_KEYS[s+2]}) 22%, transparent)`;
-    el.style.color=`var(${s<0?"--dv-n2":"--dv-p2"})`;
-  }
+/* ---------- source badges ---------- */
+const FLAG_CC={US:"US",UK:"GB",DE:"DE",FR:"FR",IT:"IT",ES:"ES",CA:"CA",AU:"AU",EU:"EU"};
+function flagOf(code){
+  const cc=FLAG_CC[code]||code||"";
+  if(!/^[A-Z]{2}$/.test(cc))return "🌐";
+  return String.fromCodePoint(...[...cc].map(c=>0x1F1E6+c.charCodeAt(0)-65));
+}
+const monogram=name=>(name||"?").replace(/\(.*?\)/g,"").split(/\s+/).filter(w=>/^[A-Za-z]/.test(w)&&!/^(the|of|and|des|de|la|le|il|der|die|das|el)$/i.test(w)).map(w=>w[0]).join("").slice(0,3).toUpperCase()||name.slice(0,2).toUpperCase();
+// logo (committed favicon, monogram fallback) + country flag; flag first so the row reads flag · logo · name
+function srcBadge(name){
+  const src=SRC[name]||{display:name,country:"",home:""};
+  const b=document.createElement("span");b.className="badge";b.title=src.display;
+  const f=document.createElement("span");f.className="flag";f.setAttribute("aria-hidden","true");
+  f.textContent=flagOf(src.home||src.country);
+  b.appendChild(f);b.appendChild(logoEl(src));
+  return b;
+}
+function logoEl(src){
+  const l=document.createElement("span");l.className="logo";
+  if(src.logo){const im=document.createElement("img");im.src=src.logo;im.alt="";im.loading="lazy";
+    im.onerror=()=>{im.remove();l.textContent=monogram(src.display)};l.appendChild(im)}
+  else l.textContent=monogram(src.display);
+  return l;
+}
+const storyTitle=st=>(STORIES[st]&&STORIES[st].t)||"";
+const fmtSent1=v=>v<0?"−"+(-v).toFixed(1):(v>0?"+":"")+v.toFixed(1);
+// sentiment chip: per-headline integer score, or a bundle mean (1 decimal)
+function sentChip(v,mean){
+  const el=document.createElement("span");el.className="chip";
+  if(v==null){el.textContent="·";el.classList.add("u");el.title="not yet scored";return el}
+  el.textContent=mean?fmtSent1(v):(v>0?"+":"")+v;
+  el.classList.add(Math.abs(v)<.15?"z":v<0?"n":"p");
   return el;
 }
 
+/* ---------- stories ---------- */
 function makeItemRow(it){
   const row=document.createElement("div");row.className="item";
-  row.appendChild(scoreChip(it.s));
+  const sc=sentChip(it.s);sc.classList.add("score");row.appendChild(sc);
   const h=document.createElement("div");h.className="h";
   const a=document.createElement("a");a.href=it.u;a.target="_blank";a.rel="noopener";a.textContent=it.h;
   let tr=null;
@@ -908,10 +1007,123 @@ function makeItemRow(it){
     tr.style.color="var(--ink2)";tr.textContent="→ "+it.ht}
   const m=document.createElement("div");m.className="m";
   m.textContent=`${DISPN[it.src]||it.src} · ${new Date(it.fs).toLocaleString(undefined,{month:"short",day:"numeric",hour:"numeric"})}`
-    +(it.c?` · ${it.c.replaceAll("_"," ")}`:"")
-    +(it.w>=10?" · top story":it.w>=5?" · top 5":it.w>=3?" · top 10":" · top 20");
-  h.append(a);if(tr)h.append(tr);h.append(m);row.appendChild(h);
+    +(it.c?` · ${it.c.replaceAll("_"," ")}`:"");
+  h.append(srcBadge(it.src),a);if(tr)h.append(tr);h.append(m);row.appendChild(h);
   return row;
+}
+
+// Rank order inside a bundle: best placement first, then best rank, then newest.
+const byRank=(a,b)=>(b.w-a.w)||((a.r==null?99:a.r)-(b.r==null?99:b.r))||(b.fs<a.fs?-1:b.fs>a.fs?1:0);
+
+// Story bundles for the front page: clustered items only, ranked by summed
+// prominence weight. Each carries its lead headline (best placement, newest on
+// ties), the card item (first in rank order with an image, else the lead) and
+// the bundle's prominence-weighted mean sentiment.
+function topBundles(list,n){
+  const by=new Map();
+  for(const it of list){
+    if(!it.st)continue;
+    let b=by.get(it.st);
+    if(!b){b={st:it.st,items:[],score:0,sn:0,sd:0,srcs:new Set()};by.set(it.st,b)}
+    b.items.push(it);b.score+=it.w;b.srcs.add(it.src);
+    if(it.s!=null){b.sn+=it.s*it.w;b.sd+=it.w}
+  }
+  const bundles=[...by.values()];
+  for(const b of bundles){
+    b.title=storyTitle(b.st)||"Untitled story";
+    b.items.sort(byRank);
+    b.lead=b.items[0];b.card=b.items.find(it=>it.img)||b.lead;
+    b.sent=b.sd?b.sn/b.sd:null;b.nSources=b.srcs.size;
+  }
+  bundles.sort((a,b)=>(b.score-a.score)||(b.items.length-a.items.length));
+  return bundles.slice(0,n);
+}
+
+function imageBox(cls,it,src){
+  const box=document.createElement("div");box.className=cls;
+  const fallback=()=>{box.innerHTML="";box.classList.add("noimg");box.appendChild(logoEl(src))};
+  if(it.img){
+    const im=document.createElement("img");im.alt="";im.loading="lazy";im.referrerPolicy="no-referrer";
+    im.onerror=fallback;im.src=it.img;box.appendChild(im);
+  }else fallback();
+  return box;
+}
+
+// meta row: [flag · logo · outlet · "and N more…"]  …  [date · bundle sentiment]
+// "and N more…" opens the rest of the bundle in the shared expansion row under the unit.
+const expand={el:null,open:null,btns:new Map()};
+function bundleMeta(b,withTime){
+  const meta=document.createElement("div");meta.className="meta";
+  const l=document.createElement("span");l.className="l";
+  const src=SRC[b.card.src]||{display:b.card.src};
+  l.appendChild(srcBadge(b.card.src));
+  const nm=document.createElement("span");nm.className="src";nm.textContent=src.display;l.appendChild(nm);
+  const rest=b.items.filter(it=>it!==b.card);
+  if(rest.length){
+    const btn=document.createElement("button");btn.type="button";btn.className="more";
+    btn.textContent=`and ${rest.length} more… ▾`;btn.setAttribute("aria-expanded","false");
+    btn.setAttribute("aria-controls","frontExpand");
+    expand.btns.set(b.st,{btn,rest});
+    btn.onclick=()=>toggleBundle(b);
+    l.appendChild(btn);
+  }
+  const r=document.createElement("span");r.className="r";
+  r.append(document.createTextNode(new Date(b.card.fs).toLocaleString(undefined,
+    withTime?{month:"short",day:"numeric",hour:"numeric"}:{month:"short",day:"numeric"})));
+  r.appendChild(sentChip(b.sent,true));
+  meta.append(l,r);
+  return meta;
+}
+function toggleBundle(b){
+  const el=expand.el;
+  for(const [st,{btn,rest}] of expand.btns){
+    const on=st===b.st&&expand.open!==b.st;
+    btn.textContent=`and ${rest.length} more… ${on?"▴":"▾"}`;btn.setAttribute("aria-expanded",String(on));
+  }
+  if(expand.open===b.st){el.hidden=true;expand.open=null;return}
+  el.innerHTML="";
+  const head=document.createElement("div");head.className="storyhead";
+  const tt=document.createElement("span");tt.textContent=b.title;
+  const n=document.createElement("span");n.className="m";
+  n.textContent=` · ${b.items.length} headlines · ${b.nSources} outlet${b.nSources>1?"s":""}`;
+  head.append(tt,n);el.appendChild(head);
+  for(const it of expand.btns.get(b.st).rest)el.appendChild(makeItemRow(it));
+  el.hidden=false;expand.open=b.st;
+}
+
+function headlineEl(b,href){
+  const p=document.createElement("p");p.className="hl";
+  const a=document.createElement("a");a.href=b.card.u;a.target="_blank";a.rel="noopener";
+  a.textContent=b.card.ht||b.card.h;p.appendChild(a);return p;
+}
+function kickerEl(b){const k=document.createElement("p");k.className="skick";k.textContent=b.title;return k}
+
+function renderFront(list){
+  const lead=$("#lead"),side=$("#side");lead.innerHTML="";side.innerHTML="";
+  if(!expand.el){expand.el=document.createElement("div");expand.el.className="bundle";expand.el.id="frontExpand";
+    expand.el.hidden=true;$("#front").appendChild(expand.el)}
+  expand.el.hidden=true;expand.open=null;expand.btns.clear();
+  const bundles=topBundles(list,4);
+  if(!bundles.length){
+    const e=document.createElement("div");e.className="empty";
+    e.textContent="No clustered stories for this selection yet.";lead.appendChild(e);side.hidden=true;return;
+  }
+  side.hidden=false;
+  const b=bundles[0],src=SRC[b.card.src]||{display:b.card.src};
+  lead.appendChild(imageBox("img",b.card,src));
+  lead.appendChild(kickerEl(b));
+  lead.appendChild(headlineEl(b));
+  if(b.card.d){const d=document.createElement("p");d.className="dek";d.textContent=b.card.d;lead.appendChild(d)}
+  else if(b.card.ht){const d=document.createElement("p");d.className="dek orig";d.textContent=b.card.h;lead.appendChild(d)}
+  lead.appendChild(bundleMeta(b,true));
+  for(const sb of bundles.slice(1)){
+    const row=document.createElement("div");row.className="srow";
+    row.appendChild(imageBox("th",sb.card,SRC[sb.card.src]||{display:sb.card.src}));
+    const body=document.createElement("div");
+    body.appendChild(kickerEl(sb));body.appendChild(headlineEl(sb));
+    body.appendChild(bundleMeta(sb,false));
+    row.appendChild(body);side.appendChild(row);
+  }
 }
 
 // Cluster the drill-down by story: multi-article stories first (count desc,
@@ -925,7 +1137,8 @@ function groupByStory(list){
   }
   const groups=[];
   for(const [st,items] of by){
-    if(items.length>1)groups.push({title:STORIES[st]||"Untitled story",items:items.sort((a,b)=>b.w-a.w)});
+    if(items.length>1)groups.push({title:storyTitle(st)||"Untitled story",items:items.sort(byRank),
+      nSources:new Set(items.map(i=>i.src)).size});
     else other.push(items[0]);
   }
   groups.sort((a,b)=>(b.items.length-a.items.length)||(b.items[0].w-a.items[0].w));
@@ -945,7 +1158,7 @@ function renderStories(list,title,sub,expanded){
     const head=document.createElement("div");head.className="storyhead";
     const tt=document.createElement("span");tt.textContent=g.title;
     const n=document.createElement("span");n.className="m";
-    n.textContent=` · ${g.items.length} headline${g.items.length>1?"s":""}`;
+    n.textContent=` · ${g.items.length} headline${g.items.length>1?"s":""}`+(g.nSources?` · ${g.nSources} outlet${g.nSources>1?"s":""}`:"");
     head.append(tt,n);el.appendChild(head);
     const rows=expanded?g.items:g.items.slice(0,3);
     for(const it of rows)el.appendChild(makeItemRow(it));
@@ -970,7 +1183,7 @@ function showStoriesFor(S,i,members){
   const bucketMs=S.ts[i],span=GRAN_SPAN[S.gran];
   const list=ITEMS.filter(it=>members.has(it.src)&&parseTs(it.fs)<bucketMs+span&&parseTs(it.ls)>=bucketMs);
   const partial=bucketMs<Date.now()-ITEMS_KEPT_DAYS*864e5-6e4;
-  renderStories(list,"Stories on homepages",bucketLabel(S,i)+(partial?" · headlines kept 7 days":""),false);
+  renderStories(list,"Stories on homepages",bucketLabel(S,i)+(partial?` · headlines kept ${ITEMS_KEPT_DAYS} days`:""),false);
   $("#itemsPanel").scrollIntoView({behavior:reducedMotion()?"auto":"smooth",block:"nearest"});
 }
 
@@ -1012,10 +1225,10 @@ function render(){
   mainLegend();
   drawStackedChart($("#mainChart"),S);
   const partial=interval.start<Date.now()-ITEMS_KEPT_DAYS*864e5-6e4;
-  renderStories(
-    ITEMS.filter(it=>S.selNames.has(it.src)&&parseTs(it.fs)<interval.end&&parseTs(it.ls)>=interval.start),
-    "Israel-related stories",
-    cap(PRESET_LABEL[state.preset])+" · grouped into cross-outlet stories"+(partial?" · headlines within the last 7 days":""),
+  const list=ITEMS.filter(it=>S.selNames.has(it.src)&&parseTs(it.fs)<interval.end&&parseTs(it.ls)>=interval.start);
+  renderFront(list);
+  renderStories(list,"Israel-related stories",
+    cap(PRESET_LABEL[state.preset])+" · grouped into cross-outlet stories"+(partial?` · headlines within the last ${ITEMS_KEPT_DAYS} days`:""),
     false);
   dataTable(S);
 }

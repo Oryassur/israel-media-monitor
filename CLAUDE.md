@@ -22,16 +22,19 @@ prompts/sentiment_rubric_v3.1.md the scoring rubric (versioned — see below; ol
 prompts/cluster_v_c1.md    story-clustering rubric (versioned via CLUSTER_VERSION)
 prompts/intl_v_i1.md       domestic-vs-international rubric (versioned via INTL_VERSION)
 pipeline/                  the whole pipeline (plain Python, no agent in the loop)
-  run.py                   hourly cycle: fetch → extract → detect → score → cluster → intl → store → publish
+  run.py                   hourly cycle: fetch → extract → detect → score → cluster → intl → enrich → store → publish
   extract.py               homepage HTML → ranked headlines; prominence weights v2 (rank1 ×10, 2–5 ×5, 6–10 ×3, 11–20 ×1, 21+ ×0)
   detect.py                keyword matching per language
   score.py                 LLM sentiment (backends: anthropic API / claude CLI); batch, cached per headline
   cluster.py               LLM story clustering: related items → cross-outlet stories (claude-sonnet-5, "c1")
   intl.py                  LLM international benchmark over ALL top-20 headlines (claude-haiku-4-5-20251001, "i1")
+  enrich.py                article-page og:image + description for related top-10 items (no LLM; best-effort)
   store.py                 data/items + data/stories + data/allitems (monthly jsonl, rewritten) ·
                            data/snapshots (monthly csv, append-only) · data/intl (monthly jsonl, append-only)
-  publish.py               builds docs/data/*.json (incl. stories.json) for the dashboard
-docs/                      GitHub Pages dashboard (vanilla JS/SVG, self-contained)
+  publish.py               builds docs/data/*.json for the dashboard (items 30d w/ img+desc; stories {id:{t,fs,ls}};
+                           meta.sources w/ home, domain, logo)
+scripts/fetch_logos.py     one-off: outlet favicons → docs/logos/<name>.<ext> (committed by hand; re-run on source swaps)
+docs/                      GitHub Pages dashboard "The Israel Monitor" (vanilla JS/SVG, self-contained) + docs/logos/
 .github/workflows/pipeline.yml   hourly cron on GitHub Actions (secret: ANTHROPIC_API_KEY)
 ```
 
@@ -63,18 +66,31 @@ docs/                      GitHub Pages dashboard (vanilla JS/SVG, self-containe
   it must never fail the hourly run.
 - Every new LLM pass follows score.py's pattern: per-batch try/except, log,
   retry next run; model + prompt version recorded on each record.
+- **Enrichment** (V2, 2026-09-11): items with `related` and `best_weight ≥ 3` get
+  one article-page fetch per run slot (≤40/run, 120 s budget, ≤3 attempts, retries
+  only within 48 h of first_seen) storing `img` (hotlinked https URL, never
+  downloaded), `desc` (≤300 chars), `enr`, `enr_n`. Best-effort — must never fail
+  the hourly run. NYT article pages 403 from everywhere; expected to give up.
 - Blocked sources (401/402/403) get swapped for an equivalent outlet, preserving
   country/lean balance — WSJ, WaPo, Reuters, Telegraph, Sky, France24, Politico
   are known-blocked (plus, from runner IPs: The Hill, news.com.au, Ouest-France,
   NewsNation).
 - Dashboard reads only `docs/data/*.json`; keep it dependency-free (the one
   external resource is the Fraunces display font from Google Fonts, with a
-  Georgia fallback) and light/dark-safe — three CSS token blocks (light,
+  Georgia fallback, plus UnifrakturCook for the masthead) and light/dark-safe — three CSS token blocks (light,
   prefers-dark guarded, `[data-theme=dark]`) that must stay in sync; SVG fills
   use `var(--token)` so theme flips never leave stale colors. Editorial layout
-  order is masthead → controls → hero verdict → chart → stories; spike
-  annotations come from story clusters (combined view, 7-day items window,
+  order is a sticky band (masthead → subtitle → rule → filters + live line) →
+  front unit (attention card | lead story | stories 2–4, with a shared
+  expansion row for "and N more") → chart → stories list; spike annotations come
+  from story clusters (combined view, items window = meta.items_window_days,
   one per distinct story, measured after the svg is in the DOM).
+- **Front-page bundles** are computed client-side from items.json: clustered
+  items only, ranked by Σ prominence weight within the selected period + filters;
+  card headline = best placement (ties → best rank → newest) that has an image,
+  else the lead text-only; bundle sentiment = prominence-weighted mean. Every
+  headline row shows flag (country, or `home` for INT outlets) + logo (committed
+  favicon, monogram fallback). No "top story / top N" placement labels in the UI.
 
 ## Retired: bibi monitor
 
