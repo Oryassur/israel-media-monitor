@@ -33,8 +33,9 @@ pipeline/                  the whole pipeline (plain Python, no agent in the loo
                            data/snapshots (monthly csv, append-only) · data/intl (monthly jsonl, append-only)
   publish.py               builds docs/data/*.json for the dashboard (items 30d w/ img+desc; stories {id:{t,fs,ls}};
                            meta.sources w/ home, domain, logo)
-scripts/fetch_logos.py     one-off: outlet favicons → docs/logos/<name>.<ext> (committed by hand; re-run on source swaps)
-docs/                      GitHub Pages dashboard "The Israel Monitor" (vanilla JS/SVG, self-contained) + docs/logos/
+scripts/fetch_wordmarks.py one-off: outlet wordmark logos (Wikipedia infobox, header <img> fallback) → docs/logos/<name>.svg|png
+                           (committed by hand; re-run on source swaps; fetch_logos.py is the square-favicon fallback)
+docs/                      GitHub Pages dashboard "The Israel Monitor" (vanilla JS/SVG, self-contained) + docs/logos/ + docs/fonts/
 .github/workflows/pipeline.yml   hourly cron on GitHub Actions (secret: ANTHROPIC_API_KEY)
 ```
 
@@ -77,7 +78,7 @@ docs/                      GitHub Pages dashboard "The Israel Monitor" (vanilla 
   NewsNation).
 - Dashboard reads only `docs/data/*.json`; keep it dependency-free (the one
   external resource is the Fraunces display font from Google Fonts, with a
-  Georgia fallback, plus UnifrakturCook for the masthead) and light/dark-safe — three CSS token blocks (light,
+  Georgia fallback; the masthead uses the self-hosted "Old London" TTF in docs/fonts/) and light/dark-safe — three CSS token blocks (light,
   prefers-dark guarded, `[data-theme=dark]`) that must stay in sync; SVG fills
   use `var(--token)` so theme flips never leave stale colors. Editorial layout
   order is a sticky band (masthead → subtitle → rule → filters + live line) →
@@ -89,8 +90,11 @@ docs/                      GitHub Pages dashboard "The Israel Monitor" (vanilla 
   items only, ranked by Σ prominence weight within the selected period + filters;
   card headline = best placement (ties → best rank → newest) that has an image,
   else the lead text-only; bundle sentiment = prominence-weighted mean. Every
-  headline row shows flag (country, or `home` for INT outlets) + logo (committed
-  favicon, monogram fallback). No "top story / top N" placement labels in the UI.
+  headline row shows flag (country, or `home` for INT outlets) + the outlet's
+  wordmark on a white chip (so it reads in dark mode; uppercase-name fallback) —
+  the outlet name is never repeated as text. Headlines truncate at 100 chars,
+  the lead standfirst at 150; date + hour and the sentiment chip sit right-aligned
+  on every card. No "top story / top N" placement labels in the UI.
 
 ## Retired: bibi monitor
 

@@ -7,11 +7,12 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%231e293b'/%3E%3Crect%20x='8'%20y='30.5'%20width='48'%20height='3'%20rx='1.5'%20fill='%23475569'/%3E%3Crect%20x='10'%20y='12'%20width='9'%20height='20'%20rx='2'%20fill='%233987e5'/%3E%3Crect%20x='23'%20y='20'%20width='9'%20height='12'%20rx='2'%20fill='%233987e5'/%3E%3Crect%20x='36'%20y='32'%20width='9'%20height='16'%20rx='2'%20fill='%23e66767'/%3E%3Crect%20x='49'%20y='32'%20width='9'%20height='10'%20rx='2'%20fill='%23e66767'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&display=swap" rel="stylesheet">
 <style>
+@font-face{font-family:"Old London";src:url(fonts/OldLondon.ttf) format("truetype");font-weight:400;font-display:swap}
 :root{
   color-scheme: light;
-  --font-masthead:"UnifrakturCook",Georgia,"Times New Roman",serif;
+  --font-masthead:"Old London",Georgia,"Times New Roman",serif;
   --font-display:"Fraunces",Georgia,"Times New Roman",serif;
   --font-ui:system-ui,-apple-system,"Segoe UI",sans-serif;
   --page:#faf7f1; --surface:#fffdf8; --ink:#1a1712; --ink2:#57534a; --muted:#8a857a;
@@ -46,7 +47,7 @@ a{color:inherit}
 /* masthead + filters: one band, pinned while the page scrolls */
 .top{position:sticky;top:0;z-index:40;background:var(--page);padding-top:6px;margin-top:-6px}
 .mast{text-align:center;padding:4px 0 8px}
-.mast h1{font:700 60px/1 var(--font-masthead);margin:0;letter-spacing:.005em}
+.mast h1{font:400 64px/1 var(--font-masthead);margin:0;letter-spacing:.01em}
 .mast .tagline{font:italic 400 17px/1.3 var(--font-display);color:var(--ink2);margin:8px 0 0}
 .rule{border-top:3px solid var(--ink);border-bottom:1px solid var(--ink);height:5px;margin:12px 0}
 .live{color:var(--ok);font-weight:600}
@@ -129,7 +130,8 @@ a{color:inherit}
 .img{aspect-ratio:16/9;border-radius:8px;background:var(--grid);overflow:hidden;display:flex;align-items:center;justify-content:center}
 .img img{width:100%;height:100%;object-fit:cover;display:block}
 .img.noimg{background:color-mix(in srgb,var(--dv-n1) 16%,var(--grid))}
-.img.noimg .logo{width:44px;height:44px;border-radius:10px;font-size:15px}
+.img.noimg .logo{height:40px;max-width:70%;padding:6px 14px;border-radius:10px;font-size:15px}
+.img.noimg .logo img{max-width:100%}
 .skick{font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--dv-n2);margin:12px 0 4px}
 .hl{font:600 27px/1.15 var(--font-display);margin:0 0 8px;text-wrap:balance}
 .hl a{text-decoration:none}
@@ -138,12 +140,15 @@ a{color:inherit}
 .dek.orig{font-style:italic}
 .meta{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px;color:var(--muted);flex-wrap:wrap}
 .meta .l,.meta .r{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;min-width:0}
+.meta .r{margin-left:auto}
 .meta .src{color:var(--ink2);overflow:hidden;text-overflow:ellipsis}
 .badge{display:inline-flex;align-items:center;gap:4px;flex:0 0 auto}
-.logo{width:16px;height:16px;border-radius:4px;background:#fff;border:1px solid var(--border);color:#1a1712;
-  font:700 8px/1 var(--font-ui);display:inline-flex;align-items:center;justify-content:center;letter-spacing:-.02em;
-  overflow:hidden;flex:0 0 auto}
-.logo img{width:100%;height:100%;object-fit:contain;display:block}
+.logo{height:22px;min-width:22px;max-width:130px;border-radius:4px;background:#fff;border:1px solid var(--border);color:#1a1712;
+  font:700 9px/1 var(--font-ui);display:inline-flex;align-items:center;justify-content:center;letter-spacing:.02em;
+  overflow:hidden;flex:0 0 auto;padding:2px 5px;box-sizing:border-box}
+.logo img{height:100%;width:auto;max-width:118px;object-fit:contain;display:block}
+.item .logo{height:18px;max-width:100px;padding:2px 4px}
+.item .logo img{max-width:90px}
 .flag{font-size:13px;line-height:1}
 .chip{display:inline-block;font-weight:600;font-size:11px;padding:1px 6px;border-radius:6px;font-variant-numeric:tabular-nums}
 .chip.n{background:color-mix(in srgb,var(--dv-n2) 22%,transparent);color:var(--dv-n2)}
@@ -163,7 +168,8 @@ a{color:inherit}
 .th{width:72px;height:72px;border-radius:6px;background:var(--grid);overflow:hidden;display:flex;align-items:center;justify-content:center}
 .th img{width:100%;height:100%;object-fit:cover;display:block}
 .th.noimg{background:color-mix(in srgb,var(--dv-n1) 16%,var(--grid))}
-.th.noimg .logo{width:28px;height:28px;border-radius:7px;font-size:10px}
+.th.noimg .logo{height:22px;max-width:64px;padding:3px 5px;border-radius:6px;font-size:9px}
+.th.noimg .logo img{max-width:54px}
 .srow .skick{margin:0 0 3px;font-size:9.5px}
 .srow .hl{font-size:15px;line-height:1.25;margin:0 0 5px}
 .srow .meta{font-size:11px;gap:5px}
@@ -230,7 +236,7 @@ footer p{margin:10px 0 0;max-width:72ch}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 @media (max-width:680px){
   .wrap{padding:16px 14px 44px}
-  .mast h1{font-size:38px}
+  .mast h1{font-size:40px}
   .mast .tagline{font-size:14px}
   .controls{display:block;padding-bottom:10px}
   .ctl-row{display:flex;flex-wrap:nowrap;gap:8px;align-items:center;overflow-x:auto;scrollbar-width:none;
@@ -968,7 +974,7 @@ function flagOf(code){
   if(!/^[A-Z]{2}$/.test(cc))return "🌐";
   return String.fromCodePoint(...[...cc].map(c=>0x1F1E6+c.charCodeAt(0)-65));
 }
-const monogram=name=>(name||"?").replace(/\(.*?\)/g,"").split(/\s+/).filter(w=>/^[A-Za-z]/.test(w)&&!/^(the|of|and|des|de|la|le|il|der|die|das|el)$/i.test(w)).map(w=>w[0]).join("").slice(0,3).toUpperCase()||name.slice(0,2).toUpperCase();
+const monogram=name=>(name||"?").replace(/\(.*?\)/g,"").trim().toUpperCase().slice(0,18);
 // logo (committed favicon, monogram fallback) + country flag; flag first so the row reads flag · logo · name
 function srcBadge(name){
   const src=SRC[name]||{display:name,country:"",home:""};
@@ -986,6 +992,8 @@ function logoEl(src){
   return l;
 }
 const storyTitle=st=>(STORIES[st]&&STORIES[st].t)||"";
+// cut at a word boundary, "…" marks the cut
+const trunc=(s,n)=>{s=(s||"").trim();if(s.length<=n)return s;const c=s.slice(0,n-1);const i=c.lastIndexOf(" ");return (i>n*.6?c.slice(0,i):c).replace(/[\s,;:—–-]+$/,"")+"…"};
 const fmtSent1=v=>v<0?"−"+(-v).toFixed(1):(v>0?"+":"")+v.toFixed(1);
 // sentiment chip: per-headline integer score, or a bundle mean (1 decimal)
 function sentChip(v,mean){
@@ -1001,12 +1009,12 @@ function makeItemRow(it){
   const row=document.createElement("div");row.className="item";
   const sc=sentChip(it.s);sc.classList.add("score");row.appendChild(sc);
   const h=document.createElement("div");h.className="h";
-  const a=document.createElement("a");a.href=it.u;a.target="_blank";a.rel="noopener";a.textContent=it.h;
+  const a=document.createElement("a");a.href=it.u;a.target="_blank";a.rel="noopener";a.textContent=trunc(it.h,100);a.title=it.h;
   let tr=null;
   if(it.ht){tr=document.createElement("div");tr.className="m";tr.style.fontStyle="italic";
-    tr.style.color="var(--ink2)";tr.textContent="→ "+it.ht}
+    tr.style.color="var(--ink2)";tr.textContent="→ "+trunc(it.ht,100)}
   const m=document.createElement("div");m.className="m";
-  m.textContent=`${DISPN[it.src]||it.src} · ${new Date(it.fs).toLocaleString(undefined,{month:"short",day:"numeric",hour:"numeric"})}`
+  m.textContent=new Date(it.fs).toLocaleString(undefined,{month:"short",day:"numeric",hour:"numeric"})
     +(it.c?` · ${it.c.replaceAll("_"," ")}`:"");
   h.append(srcBadge(it.src),a);if(tr)h.append(tr);h.append(m);row.appendChild(h);
   return row;
@@ -1055,9 +1063,7 @@ const expand={el:null,open:null,btns:new Map()};
 function bundleMeta(b,withTime){
   const meta=document.createElement("div");meta.className="meta";
   const l=document.createElement("span");l.className="l";
-  const src=SRC[b.card.src]||{display:b.card.src};
   l.appendChild(srcBadge(b.card.src));
-  const nm=document.createElement("span");nm.className="src";nm.textContent=src.display;l.appendChild(nm);
   const rest=b.items.filter(it=>it!==b.card);
   if(rest.length){
     const btn=document.createElement("button");btn.type="button";btn.className="more";
@@ -1068,8 +1074,7 @@ function bundleMeta(b,withTime){
     l.appendChild(btn);
   }
   const r=document.createElement("span");r.className="r";
-  r.append(document.createTextNode(new Date(b.card.fs).toLocaleString(undefined,
-    withTime?{month:"short",day:"numeric",hour:"numeric"}:{month:"short",day:"numeric"})));
+  r.append(document.createTextNode(new Date(b.card.fs).toLocaleString(undefined,{month:"short",day:"numeric",hour:"numeric"})));
   r.appendChild(sentChip(b.sent,true));
   meta.append(l,r);
   return meta;
@@ -1094,7 +1099,7 @@ function toggleBundle(b){
 function headlineEl(b,href){
   const p=document.createElement("p");p.className="hl";
   const a=document.createElement("a");a.href=b.card.u;a.target="_blank";a.rel="noopener";
-  a.textContent=b.card.ht||b.card.h;p.appendChild(a);return p;
+  const full=b.card.ht||b.card.h;a.textContent=trunc(full,100);a.title=full;p.appendChild(a);return p;
 }
 function kickerEl(b){const k=document.createElement("p");k.className="skick";k.textContent=b.title;return k}
 
@@ -1113,8 +1118,8 @@ function renderFront(list){
   lead.appendChild(imageBox("img",b.card,src));
   lead.appendChild(kickerEl(b));
   lead.appendChild(headlineEl(b));
-  if(b.card.d){const d=document.createElement("p");d.className="dek";d.textContent=b.card.d;lead.appendChild(d)}
-  else if(b.card.ht){const d=document.createElement("p");d.className="dek orig";d.textContent=b.card.h;lead.appendChild(d)}
+  if(b.card.d){const d=document.createElement("p");d.className="dek";d.textContent=trunc(b.card.d,150);lead.appendChild(d)}
+  else if(b.card.ht){const d=document.createElement("p");d.className="dek orig";d.textContent=trunc(b.card.h,150);lead.appendChild(d)}
   lead.appendChild(bundleMeta(b,true));
   for(const sb of bundles.slice(1)){
     const row=document.createElement("div");row.className="srow";
