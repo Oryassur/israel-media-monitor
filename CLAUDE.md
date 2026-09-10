@@ -18,7 +18,7 @@ archive rather than re-fetching.
 ```
 config/sources.yaml        30 outlets: url, country, lang, lean (3-way: left/center/right, from AllSides / Ad Fontes ratings — basis commented per source), type, optional home scope + selector
 config/keywords.yaml       multilingual Israel keyword pre-filter (en/fr/de/es/it)
-prompts/sentiment_rubric_v2.md   the scoring rubric (versioned — see below)
+prompts/sentiment_rubric_v3.1.md the scoring rubric (versioned — see below; older versions kept for history)
 prompts/cluster_v_c1.md    story-clustering rubric (versioned via CLUSTER_VERSION)
 prompts/intl_v_i1.md       domestic-vs-international rubric (versioned via INTL_VERSION)
 pipeline/                  the whole pipeline (plain Python, no agent in the loop)
