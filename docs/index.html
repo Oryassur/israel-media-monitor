@@ -418,7 +418,7 @@ function effectiveGran(interval){
 
 async function boot(){
   const [meta,hourly,daily,items,stories]=await Promise.all(
-    ["meta.json","hourly.json","daily.json","items.json","stories.json"].map(f=>fetch("data/"+f).then(r=>r.json())));
+    ["meta.json","hourly.json","daily.json","items.json","stories.json"].map(f=>fetch("data/"+f,{cache:"no-cache"}).then(r=>r.json())));
   META=meta;HOURLY=hourly;DAILY=daily;ITEMS=items;STORIES=stories;
   DISPN=Object.fromEntries(meta.sources.map(s=>[s.name,s.display]));
   SRC=Object.fromEntries(meta.sources.map(s=>[s.name,s]));
@@ -986,11 +986,12 @@ function srcBadge(name){
 }
 function logoEl(src){
   const l=document.createElement("span");l.className="logo";
-  if(src.logo){const im=document.createElement("img");im.src=src.logo;im.alt="";im.decoding="async";
+  if(src.logo){const im=document.createElement("img");im.src=src.logo+"?v="+LOGO_V;im.alt="";im.decoding="async";
     im.onerror=()=>{im.remove();l.textContent=monogram(src.display)};l.appendChild(im)}
   else l.textContent=monogram(src.display);
   return l;
 }
+const LOGO_V="2"; // bump when docs/logos/ files are replaced under the same name (Pages caches 10 min)
 const storyTitle=st=>(STORIES[st]&&STORIES[st].t)||"";
 // cut at a word boundary, "…" marks the cut
 const trunc=(s,n)=>{s=(s||"").trim();if(s.length<=n)return s;const c=s.slice(0,n-1);const i=c.lastIndexOf(" ");return (i>n*.6?c.slice(0,i):c).replace(/[\s,;:—–-]+$/,"")+"…"};
