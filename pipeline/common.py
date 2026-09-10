@@ -33,6 +33,15 @@ MAX_INTL_ITEMS_PER_RUN = 600
 # Retry scoring for unscored items this long after first_seen (hours)
 SCORE_RETRY_WINDOW_H = 48
 
+# Article enrichment (og:image + description) for prominent related items.
+# Best-effort, hotlinked URLs only; see pipeline/enrich.py.
+ENRICH_MIN_WEIGHT = 3        # only headlines that reached a homepage top-10
+ENRICH_MAX_PER_RUN = 40      # article pages fetched per hourly run
+ENRICH_MAX_ATTEMPTS = 3      # then give up on that item
+ENRICH_BUDGET_S = 120        # hard wall-clock stop for the whole pass
+ENRICH_FETCH_TIMEOUT = 12
+ENRICH_HOST_GAP_S = 1.0      # politeness gap between fetches to one host
+
 
 def load_sources():
     with open(CONFIG / "sources.yaml") as f:

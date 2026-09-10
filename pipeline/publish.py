@@ -2,12 +2,16 @@
 import json
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
+from urllib.parse import urlparse
 
-from .common import CLUSTER_VERSION, DOCS_DATA, METHOD_VERSION, RUBRIC_VERSION, load_sources
+from .common import (CLUSTER_VERSION, DOCS_DATA, ENRICH_MIN_WEIGHT, METHOD_VERSION, ROOT,
+                     RUBRIC_VERSION, load_sources)
 from .store import load_all_items, load_all_stories, read_all_snapshots
 
 HOURLY_WINDOW_DAYS = 14
-ITEMS_WINDOW_DAYS = 7
+ITEMS_WINDOW_DAYS = 30
+LOGOS_DIR = ROOT / "docs" / "logos"
 
 COMP_KEYS = ("w_n2", "w_n1", "w_0", "w_p1", "w_p2", "w_u")
 
@@ -53,6 +57,22 @@ def _row_comp(s, by_src):
         if fs <= ts <= ls:
             acc[5 if sent is None else sent + 2] += w
     return _scale_to(acc, iw)
+
+
+def _source_meta(s, logos_dir: Path):
+    """Dashboard-facing descriptor of one source (no URL; domain + logo path)."""
+    domain = urlparse(s["url"]).netloc
+    if domain.startswith("www."):
+        domain = domain[4:]
+    logo = None
+    for p in sorted(Path(logos_dir).glob(f"{s['name']}.*")):
+        logo = f"logos/{p.name}"
+        break
+    return {
+        "name": s["name"], "display": s["display"], "country": s["country"],
+        "home": s.get("home", s["country"]), "lang": s["lang"], "lean": s["lean"],
+        "type": s["type"], "domain": domain, "logo": logo,
+    }
 
 
 def build():
@@ -107,20 +127,27 @@ def build():
         for (date, src), d in sorted(day_acc.items())
     ]
 
-    # recent items for the drill-down panel (confirmed related, or still unscored)
+    # recent items for the front page + drill-down (confirmed related, or still
+    # unscored). Every key is always present (null when absent) so the client
+    # stays branch-free.
     recent_items = [
-        {"src": r["source"], "h": r["headline"], "ht": r.get("ht"), "u": r["url"],
-         "fs": r["first_seen"], "ls": r["last_seen"], "w": r["best_weight"],
-         "s": r.get("sentiment"), "c": r.get("category"), "st": r.get("story")}
+        {"id": r["id"], "src": r["source"], "h": r["headline"], "ht": r.get("ht"),
+         "u": r["url"], "fs": r["first_seen"], "ls": r["last_seen"],
+         "w": r["best_weight"], "r": r.get("best_rank"),
+         "s": r.get("sentiment"), "c": r.get("category"), "st": r.get("story"),
+         "img": r.get("img"), "d": r.get("desc")}
         for r in items
         if r["last_seen"] >= items_cut and r.get("related") is not False
         and r["best_weight"] > 0
     ]
     recent_items.sort(key=lambda r: r["fs"], reverse=True)
 
-    # titles for the stories the published items point at
+    # registry entries for the stories the published items point at
     used = {r["st"] for r in recent_items if r.get("st")}
-    story_titles = {s["id"]: s["title"] for s in load_all_stories() if s["id"] in used}
+    stories = {
+        s["id"]: {"t": s["title"], "fs": s["first_seen"], "ls": s["last_seen"]}
+        for s in load_all_stories() if s["id"] in used
+    }
 
     _write("meta.json", {
         "generated": now.strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -131,16 +158,14 @@ def build():
         "daily_cols": ["date", "source", "share", "sentiment", "items", "runs_ok", "runs", "comp"],
         # first snapshot with stored (not approximated) composition columns
         "comp_exact_since": min((s["ts"] for s in snaps if s.get("w_n2", "") != ""), default=None),
-        "sources": [
-            {"name": s["name"], "display": s["display"], "country": s["country"],
-             "lang": s["lang"], "lean": s["lean"], "type": s["type"]}
-            for s in sources
-        ],
+        "items_window_days": ITEMS_WINDOW_DAYS,
+        "enrich_min_weight": ENRICH_MIN_WEIGHT,
+        "sources": [_source_meta(s, LOGOS_DIR) for s in sources],
     })
     _write("hourly.json", hourly)
     _write("daily.json", daily)
     _write("items.json", recent_items)
-    _write("stories.json", story_titles)
+    _write("stories.json", stories)
 
 
 if __name__ == "__main__":

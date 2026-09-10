@@ -1,14 +1,16 @@
-"""One full pipeline cycle: fetch -> extract -> detect -> score -> store -> publish.
+"""One full pipeline cycle: fetch -> extract -> detect -> score -> cluster -> intl
+-> enrich -> store -> publish.
 
-Run:  python -m pipeline.run            (normal hourly cycle)
-      python -m pipeline.run --no-llm   (skip sentiment scoring)
+Run:  python -m pipeline.run              (normal hourly cycle)
+      python -m pipeline.run --no-llm     (skip the LLM passes)
+      python -m pipeline.run --no-enrich  (skip article-page enrichment)
 """
 import argparse
 import sys
 import time
 from datetime import datetime, timedelta, timezone
 
-from . import intl, publish
+from . import enrich, intl, publish
 from .cluster import cluster_items
 from .common import (CLUSTER_VERSION, LOGS, RUBRIC_VERSION, SCORE_RETRY_WINDOW_H,
                      item_id, load_sources, month_key)
@@ -23,7 +25,7 @@ def log(msg):
     print(msg, flush=True)
 
 
-def run(no_llm=False):
+def run(no_llm=False, no_enrich=False):
     now = datetime.now(timezone.utc)
     ts = now.strftime("%Y-%m-%dT%H:%M:%SZ")
     sources = load_sources()
@@ -137,6 +139,16 @@ def run(no_llm=False):
         except Exception as e:  # noqa: BLE001
             log(f"intl: collection failed ({e}); continuing")
 
+    # Article-page enrichment (og:image + description) for prominent related
+    # items. Best-effort like intl: never fails the run, retried next cycle.
+    if not no_enrich:
+        try:
+            n, m = enrich.enrich_items(items_idx, ts, log=log)
+            if m:
+                log(f"enriched {n}/{m} items")
+        except Exception as e:  # noqa: BLE001
+            log(f"enrich: pass failed ({e}); continuing")
+
     # Per-source hourly snapshot. Items the LLM rejected (related=false) are
     # excluded; unscored candidates count toward volume (bucket w_u) but not
     # sentiment. Invariant: w_n2+w_n1+w_0+w_p1+w_p2+w_u == israel_weight.
@@ -185,6 +197,7 @@ def run(no_llm=False):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--no-llm", action="store_true", help="skip sentiment scoring")
+    ap.add_argument("--no-llm", action="store_true", help="skip the LLM passes")
+    ap.add_argument("--no-enrich", action="store_true", help="skip article-page enrichment")
     args = ap.parse_args()
-    sys.exit(run(no_llm=args.no_llm))
+    sys.exit(run(no_llm=args.no_llm, no_enrich=args.no_enrich))
