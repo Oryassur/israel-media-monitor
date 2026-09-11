@@ -130,8 +130,7 @@ a{color:inherit}
 .img{aspect-ratio:16/9;border-radius:8px;background:var(--grid);overflow:hidden;display:flex;align-items:center;justify-content:center}
 .img img{width:100%;height:100%;object-fit:cover;display:block}
 .img.noimg{background:color-mix(in srgb,var(--dv-n1) 16%,var(--grid))}
-.img.noimg .logo{height:40px;max-width:70%;font-size:15px;opacity:.7}
-.img.noimg .logo img{max-width:100%}
+.img.noimg .logo{width:60%;height:44px;font-size:15px;opacity:.7}
 .skick{font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--dv-n2);margin:12px 0 4px}
 .hl{font:600 27px/1.15 var(--font-display);margin:0 0 8px;text-wrap:balance}
 .hl a{text-decoration:none}
@@ -143,13 +142,13 @@ a{color:inherit}
 .meta .r{margin-left:auto}
 .meta .src{color:var(--ink2);overflow:hidden;text-overflow:ellipsis}
 .badge{display:inline-flex;align-items:center;gap:4px;flex:0 0 auto}
-/* outlet wordmarks sit directly on the page (no chip). Dark mode: text-only wordmarks are
-   inverted (hue kept) so black lettering reads; logos with their own colored field are left alone. */
-.logo{height:20px;max-width:130px;color:var(--ink2);font:700 9px/1 var(--font-ui);display:inline-flex;align-items:center;
-  letter-spacing:.02em;overflow:hidden;flex:0 0 auto;box-sizing:border-box}
-.logo img{height:100%;width:auto;max-width:130px;object-fit:contain;display:block}
-.item .logo{height:16px;max-width:100px}
-.item .logo img{max-width:100px}
+/* outlet wordmarks sit in a fixed, invisible frame (transparent background, no outline) so every
+   logo occupies the same box and lines up. Dark mode: text-only wordmarks are inverted (hue kept)
+   so black lettering reads; logos with their own colored field are left alone. */
+.logo{width:104px;height:24px;color:var(--ink2);font:700 9px/1 var(--font-ui);display:inline-flex;align-items:center;
+  justify-content:center;text-align:center;letter-spacing:.02em;overflow:hidden;flex:0 0 auto;box-sizing:border-box}
+.logo img{width:100%;height:100%;object-fit:contain;object-position:center;display:block}
+.item .logo{width:84px;height:18px}
 @media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])) .logo img:not(.field){filter:invert(1) hue-rotate(180deg)}}
 :root[data-theme="dark"] .logo img:not(.field){filter:invert(1) hue-rotate(180deg)}
 .flag{font-size:13px;line-height:1}
@@ -171,8 +170,7 @@ a{color:inherit}
 .th{width:72px;height:72px;border-radius:6px;background:var(--grid);overflow:hidden;display:flex;align-items:center;justify-content:center}
 .th img{width:100%;height:100%;object-fit:cover;display:block}
 .th.noimg{background:color-mix(in srgb,var(--dv-n1) 16%,var(--grid))}
-.th.noimg .logo{height:18px;max-width:58px;font-size:9px;opacity:.7}
-.th.noimg .logo img{max-width:58px}
+.th.noimg .logo{width:60px;height:20px;font-size:9px;opacity:.7}
 .srow .skick{margin:0 0 3px;font-size:9.5px}
 .srow .hl{font-size:15px;line-height:1.25;margin:0 0 5px}
 .srow .meta{font-size:11px;gap:5px}
