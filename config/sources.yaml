@@ -197,6 +197,7 @@ sources:
     lang: it
     lean: center  # documented centrist
     type: broadsheet
+    selector: main  # 2026-09-11: without it the columnist boxes ("Voci dal vicino Oriente di …") outrank every headline
   - name: ilgiornale
     display: Il Giornale
     url: https://www.ilgiornale.it

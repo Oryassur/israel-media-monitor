@@ -80,6 +80,10 @@ docs/                      GitHub Pages dashboard "The Israel Monitor" (vanilla 
   only within 48 h of first_seen) storing `img` (hotlinked https URL, never
   downloaded), `desc` (≤300 chars), `enr`, `enr_n`. Best-effort — must never fail
   the hourly run. NYT article pages 403 from everywhere; expected to give up.
+- Parser health: Corriere needed `selector: main` (fixed 2026-09-11; its rows from
+  2026-09-09 to 2026-09-11 07:45 UTC counted columnist boxes as headlines — attention 0,
+  intl 0 — and are not recoverable). When a source's Israel share is flat zero, check
+  its extracted headlines before trusting it.
 - Blocked sources (401/402/403) get swapped for an equivalent outlet, preserving
   country/lean balance — WSJ, WaPo, Reuters, Telegraph, Sky, France24, Politico
   are known-blocked (plus, from runner IPs: The Hill, news.com.au, Ouest-France,
