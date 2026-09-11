@@ -68,7 +68,10 @@ docs/                      GitHub Pages dashboard "The Israel Monitor" (vanilla 
   ({ts,source,total_w,intl_w,uncl_w,topics,iv}). Bumping `INTL_VERSION`
   re-classifies whatever is on a homepage first (older-version records count
   as unclassified in that run's row), so no row mixes rubric versions; rows
-  before the bump keep their old `iv` — split by it when comparing. The whole
+  before the bump keep their old `iv` unless backfilled with
+  `scripts/backfill_intl.py` (re-classifies every all-item, then rebuilds old
+  rows approximately — headline present at best_weight between first/last seen,
+  scaled to the run's exact total_w — and marks them `approx: true`). The whole
   pass is best-effort — it must never fail the hourly run.
 - Every new LLM pass follows score.py's pattern: per-batch try/except, log,
   retry next run; model + prompt version recorded on each record.

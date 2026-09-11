@@ -88,6 +88,15 @@ def load_recent_allitems(months):
     return idx
 
 
+def load_all_allitems():
+    """Return {id: record} over every all-item partition."""
+    idx = {}
+    for path in sorted(ALLITEMS_DIR.glob("*.jsonl")):
+        for row in read_jsonl(path):
+            idx[row["id"]] = row
+    return idx
+
+
 def save_allitems(index):
     """Write the all-item index back to its monthly partitions."""
     by_month = defaultdict(list)
