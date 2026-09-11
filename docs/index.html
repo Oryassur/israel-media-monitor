@@ -104,10 +104,12 @@ a{color:inherit}
 /* front page: data card | lead story | stories 2–4 */
 .front{display:grid;grid-template-columns:228px minmax(0,1fr) 300px;gap:24px;align-items:stretch;margin-top:20px}
 .kicker{font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+/* card section titles vs. their subtitles */
+.kpi .ttl{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);margin:0 0 10px}
+.kpi .kicker{font-size:10px;letter-spacing:.08em;color:var(--muted);margin:0 0 4px}
 .kpi{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 14px 16px;
   display:flex;flex-direction:column;justify-content:space-between;align-items:center;text-align:center;gap:10px}
 .kpi .att{display:flex;flex-direction:column;align-items:center;max-width:100%}
-.kpi .kicker{margin-bottom:4px}
 .kpi .num{font:600 94px/.9 var(--font-display);letter-spacing:-.045em;font-variant-numeric:lining-nums tabular-nums}
 .kpi .num.long{font-size:74px}
 .kpi .sub{margin-top:16px}
@@ -257,7 +259,8 @@ footer p{margin:10px 0 0;max-width:72ch}
   .bundle{grid-column:1/-1}
   .kpi{display:grid;grid-template-columns:1fr 1fr;gap:0 14px;align-items:start;padding:14px}
   .kpi .att,.kpi .sent{display:flex;flex-direction:column;align-items:center;align-self:stretch}
-  .kpi .kicker{margin:0 0 8px}
+  .kpi .ttl{margin:0 0 8px}
+  .kpi .kicker{margin:0 0 4px}
   .kpi .num{font-size:62px}
   .kpi .num.long{font-size:50px}
   .kpi .sv{font-size:44px;margin-top:8px}
@@ -308,6 +311,7 @@ footer p{margin:10px 0 0;max-width:72ch}
 <section class="front" id="front" aria-live="polite">
   <div class="kpi">
     <div class="att">
+      <p class="ttl">Attention</p>
       <p class="kicker">Of international news</p>
       <div class="num" id="heroNum" title="Israel-related front-page weight as a share of the international front-page weight on the selected outlets">—</div>
       <div style="max-width:100%"><span class="delta" id="heroDelta" hidden><span class="v"></span><span class="lbl"></span></span></div>
@@ -317,7 +321,7 @@ footer p{margin:10px 0 0;max-width:72ch}
       </div>
     </div>
     <div class="sent">
-      <p class="kicker">Sentiment</p>
+      <p class="ttl">Sentiment</p>
       <div class="sv none" id="heroSent">—</div>
     </div>
   </div>
