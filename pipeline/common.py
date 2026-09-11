@@ -24,8 +24,10 @@ CLUSTER_VERSION = "c1"
 CLUSTER_MODEL = "claude-sonnet-5"
 CLUSTER_PROMPT_PATH = ROOT / "prompts" / f"cluster_v_{CLUSTER_VERSION}.md"
 
-# International-coverage benchmark (domestic vs. international + topic)
-INTL_VERSION = "i1"
+# International-coverage benchmark (domestic vs. international + topic).
+# i2 (2026-09-11): any story with another country as a subject is international,
+# including bilateral ones; Israel-as-party stories always get israel-gaza.
+INTL_VERSION = "i2"
 INTL_MODEL = "claude-haiku-4-5-20251001"
 INTL_PROMPT_PATH = ROOT / "prompts" / f"intl_v_{INTL_VERSION}.md"
 MAX_INTL_ITEMS_PER_RUN = 600

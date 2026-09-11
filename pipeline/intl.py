@@ -121,6 +121,29 @@ def classify_items(items, in_use, backend=None, log=print):
     return done
 
 
+def pending_classification(allidx, per_source, ts, src_by_name):
+    """Items to (re)classify this run: never-classified ones inside the retry
+    window, plus anything currently on a homepage that was classified under an
+    older INTL_VERSION — so a run's aggregate row is never a mix of versions.
+    Retired sources drop out (their home scope is gone with their config)."""
+    cutoff = (datetime.strptime(ts, "%Y-%m-%dT%H:%M:%SZ")
+              - timedelta(hours=INTL_RETRY_WINDOW_H)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    visible = {item_id(name, h) for name, ps in per_source.items() if ps.get("ok")
+               for h, _, _ in ps.get("top20", ())}
+    pending = []
+    for r in allidx.values():
+        if r["source"] not in src_by_name:
+            continue
+        if "intl" not in r:
+            if r["first_seen"] >= cutoff:
+                pending.append(r)
+        elif r.get("iv") != INTL_VERSION and r["id"] in visible:
+            pending.append(r)
+    # what is on a homepage right now first, so this run's row is consistent
+    pending.sort(key=lambda r: (r["id"] not in visible, r["first_seen"]), reverse=False)
+    return pending[:MAX_INTL_ITEMS_PER_RUN]
+
+
 def collect(sources, per_source, ts, months, log=print):
     """The full benchmark pass for one run: upsert all-item records for every
     fetched top-20 headline, classify what's still unclassified, then append
@@ -147,12 +170,7 @@ def collect(sources, per_source, ts, months, log=print):
                     "best_rank": rank, "best_weight": weight,
                 }
 
-    cutoff = (datetime.strptime(ts, "%Y-%m-%dT%H:%M:%SZ")
-              - timedelta(hours=INTL_RETRY_WINDOW_H)).strftime("%Y-%m-%dT%H:%M:%SZ")
-    # retired sources drop out (their home scope is gone with their config)
-    pending = [r for r in allidx.values()
-               if "intl" not in r and r["first_seen"] >= cutoff and r["source"] in src_by_name]
-    pending = pending[:MAX_INTL_ITEMS_PER_RUN]
+    pending = pending_classification(allidx, per_source, ts, src_by_name)
     if pending:
         in_use = [t for t, _ in Counter(
             r["topic"] for r in allidx.values() if r.get("topic")
@@ -178,13 +196,14 @@ def collect(sources, per_source, ts, months, log=print):
         for headline, rank, weight in ps["top20"]:
             rec = allidx[item_id(name, headline)]
             total_w += weight
-            if "intl" not in rec:
-                uncl_w += weight
+            if "intl" not in rec or rec.get("iv") != INTL_VERSION:
+                uncl_w += weight  # unclassified, or classified under an older rubric
             elif rec["intl"]:
                 intl_w += weight
                 topics[rec["topic"]] = topics.get(rec["topic"], 0) + weight
         rows.append({"ts": ts, "source": name, "total_w": total_w,
-                     "intl_w": intl_w, "uncl_w": uncl_w, "topics": topics})
+                     "intl_w": intl_w, "uncl_w": uncl_w, "topics": topics,
+                     "iv": INTL_VERSION})
 
     save_allitems(allidx)
     append_intl(ts, rows)

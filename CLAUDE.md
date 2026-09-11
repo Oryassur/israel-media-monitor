@@ -20,14 +20,15 @@ config/sources.yaml        30 outlets: url, country, lang, lean (3-way: left/cen
 config/keywords.yaml       multilingual Israel keyword pre-filter (en/fr/de/es/it)
 prompts/sentiment_rubric_v3.1.md the scoring rubric (versioned — see below; older versions kept for history)
 prompts/cluster_v_c1.md    story-clustering rubric (versioned via CLUSTER_VERSION)
-prompts/intl_v_i1.md       domestic-vs-international rubric (versioned via INTL_VERSION)
+prompts/intl_v_i2.md       domestic-vs-international rubric (versioned via INTL_VERSION; i2 = any story with another
+                           country as a subject is intl, incl. bilateral; Israel-as-party ⇒ israel-gaza)
 pipeline/                  the whole pipeline (plain Python, no agent in the loop)
   run.py                   hourly cycle: fetch → extract → detect → score → cluster → intl → enrich → store → publish
   extract.py               homepage HTML → ranked headlines; prominence weights v2 (rank1 ×10, 2–5 ×5, 6–10 ×3, 11–20 ×1, 21+ ×0)
   detect.py                keyword matching per language
   score.py                 LLM sentiment (backends: anthropic API / claude CLI); batch, cached per headline
   cluster.py               LLM story clustering: related items → cross-outlet stories (claude-sonnet-5, "c1")
-  intl.py                  LLM international benchmark over ALL top-20 headlines (claude-haiku-4-5-20251001, "i1")
+  intl.py                  LLM international benchmark over ALL top-20 headlines (claude-haiku-4-5-20251001, "i2")
   enrich.py                article-page og:image + description for related top-10 items (no LLM; best-effort)
   store.py                 data/items + data/stories + data/allitems (monthly jsonl, rewritten) ·
                            data/snapshots (monthly csv, append-only) · data/intl (monthly jsonl, append-only)
@@ -64,8 +65,11 @@ docs/                      GitHub Pages dashboard "The Israel Monitor" (vanilla 
 - **International benchmark**: every top-20 headline is recorded in
   data/allitems/ and classified (intl/topic/iv/model) against the outlet's
   `home` scope; per-run aggregates append to data/intl/
-  ({ts,source,total_w,intl_w,uncl_w,topics}). The whole pass is best-effort —
-  it must never fail the hourly run.
+  ({ts,source,total_w,intl_w,uncl_w,topics,iv}). Bumping `INTL_VERSION`
+  re-classifies whatever is on a homepage first (older-version records count
+  as unclassified in that run's row), so no row mixes rubric versions; rows
+  before the bump keep their old `iv` — split by it when comparing. The whole
+  pass is best-effort — it must never fail the hourly run.
 - Every new LLM pass follows score.py's pattern: per-batch try/except, log,
   retry next run; model + prompt version recorded on each record.
 - **Enrichment** (V2, 2026-09-11): items with `related` and `best_weight ≥ 3` get
