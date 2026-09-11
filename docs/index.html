@@ -110,7 +110,7 @@ a{color:inherit}
 .kpi .kicker{margin-bottom:4px}
 .kpi .num{font:600 94px/.9 var(--font-display);letter-spacing:-.045em;font-variant-numeric:lining-nums tabular-nums}
 .kpi .num.long{font-size:74px}
-.kpi .intl{margin-top:16px}
+.kpi .sub{margin-top:16px}
 .kpi .inum{font:600 40px/1 var(--font-display);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .kpi .inum.none{color:var(--muted)}
 .delta{display:inline-flex;align-items:baseline;gap:5px;font-size:13px;margin:12px 0 0;color:var(--ink2);
@@ -261,7 +261,7 @@ footer p{margin:10px 0 0;max-width:72ch}
   .kpi .num{font-size:62px}
   .kpi .num.long{font-size:50px}
   .kpi .sv{font-size:44px;margin-top:8px}
-  .kpi .intl{margin-top:12px}
+  .kpi .sub{margin-top:12px}
   .kpi .inum{font-size:30px}
   .kpi .sent{border-top:0;border-left:1px solid var(--grid);margin:0;padding:0 0 0 14px}
   .hl{font-size:23px}
@@ -308,12 +308,12 @@ footer p{margin:10px 0 0;max-width:72ch}
 <section class="front" id="front" aria-live="polite">
   <div class="kpi">
     <div class="att">
-      <p class="kicker">Attention</p>
-      <div class="num" id="heroNum">—</div>
+      <p class="kicker">Of international news</p>
+      <div class="num" id="heroNum" title="Israel-related front-page weight as a share of the international front-page weight on the selected outlets">—</div>
       <div style="max-width:100%"><span class="delta" id="heroDelta" hidden><span class="v"></span><span class="lbl"></span></span></div>
-      <div class="intl">
-        <p class="kicker">Of international news</p>
-        <div class="inum" id="heroIntl" title="Israel-related front-page weight as a share of the international front-page weight on the selected outlets">—</div>
+      <div class="sub">
+        <p class="kicker">Of all front-page news</p>
+        <div class="inum" id="heroAll" title="Israel-related weight as a share of all front-page weight on the selected outlets">—</div>
       </div>
     </div>
     <div class="sent">
@@ -373,8 +373,8 @@ footer p{margin:10px 0 0;max-width:72ch}
       on ties), its image and standfirst taken from the article page's own metadata where the outlet publishes
       them, the outlet's logo and home-country flag, and the bundle's prominence-weighted mean sentiment;
       "and N more" opens the rest of the bundle. Bundles without a usable image render as text.</p>
-    <p><i>Of international news</i> divides the same Israel-related front-page weight by the weight of all
-      international headlines on the selected outlets over the same runs (a language model classifies every
+    <p>The lead figure, <i>of international news</i>, divides the Israel-related front-page weight by the weight
+      of all international headlines on the selected outlets over the same runs (a language model classifies every
       top-20 headline as domestic or international relative to the outlet's home country — any story with
       another country as a subject counts as international; classifier version recorded per headline).
       Both figures are pooled over the period and the selected outlets.</p>
@@ -657,20 +657,6 @@ const PRESET_LABEL={"24h":"last 24 hours","7d":"last 7 days","30d":"last 30 days
   "90d":"last 90 days","all":"all time","custom":"custom range"};
 
 /* ---------- hero ---------- */
-// Mean attention share over an arbitrary window (used for the previous-period delta).
-function windowShare(lo,hi,selNames){
-  const useHourly=lo>=Date.now()-HOURLY_KEPT_DAYS*864e5;
-  const rows=useHourly?HOURLY:DAILY;
-  let sh=0,shn=0;
-  for(const r of rows){
-    if(!selNames.has(r[1]))continue;
-    if(!(useHourly?r[5]===1:r[5]>0))continue;
-    const ms=useHourly?parseTs(r[0]):parseTs(r[0]+"T00:00:00Z");
-    if(ms<lo||ms>=hi)continue;
-    if(r[2]!=null){sh+=r[2];shn++}
-  }
-  return shn?sh/shn:null;
-}
 const sentWord=s=>s==null?null:s<=-.6?["sharply negative","neg"]:s<=-.15?["negative on balance","neg"]
   :s<.15?["broadly neutral",""]:s<.6?["positive on balance","pos"]:["strongly positive","pos"];
 // Israel-related weight as a share of international weight, pooled over the window and
@@ -697,33 +683,33 @@ function hero(S){
     if(p.sent!=null&&p.items>0){sn+=p.sent*p.items;sd+=p.items}
   }
   const cur=shn?sh/shn:null,sent=sd?sn/sd:null;
-  // attention number, counted up once on first load
+  // top figure: share of international coverage, counted up once on first load
+  const ish=cur==null?null:intlShare(S);
   const num=$("#heroNum");
-  const txt=fmtPct(cur);num.classList.toggle("long",txt.length>=5);
-  if(cur==null)num.textContent="—";
+  const txt=fmtPct(ish);num.classList.toggle("long",txt.length>=5);
+  if(ish==null)num.textContent="—";
   else if(!heroAnimated&&!reducedMotion()&&document.visibilityState==="visible"){ // rAF stalls in background tabs
     const t0=performance.now(),dur=700;
     const step=t=>{const k=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-k,3);
-      num.textContent=fmtPct(cur*e);if(k<1)requestAnimationFrame(step)};
+      num.textContent=fmtPct(ish*e);if(k<1)requestAnimationFrame(step)};
     requestAnimationFrame(step);
   }else num.textContent=txt;
   heroAnimated=true;
-  // previous equal-length window: its actual share, arrow + tint for the direction
+  // previous equal-length window: its share of international coverage, arrow + tint for the direction
   const d=$("#heroDelta");d.hidden=true;d.className="delta";
-  if(state.preset!=="all"&&cur!=null){
+  if(state.preset!=="all"&&ish!=null){
     const span=S.interval.end-S.interval.start;
-    const prev=windowShare(S.interval.start-span,S.interval.start,S.selNames);
+    const prev=intlShare({interval:{start:S.interval.start-span,end:S.interval.start},selNames:S.selNames});
     if(prev!=null){
-      const delta=(cur-prev)*100,dir=Math.abs(delta)<.05?"":delta>0?"up":"down";
+      const delta=(ish-prev)*100,dir=Math.abs(delta)<.05?"":delta>0?"up":"down";
       if(dir)d.classList.add(dir);
       d.querySelector(".v").textContent=(dir==="up"?"▲ ":dir==="down"?"▼ ":"= ")+fmtPct(prev);
       d.querySelector(".lbl").textContent="in previous period";
       d.hidden=false;
     }
   }
-  // share of international coverage
-  const iv=$("#heroIntl"),ish=cur==null?null:intlShare(S);
-  iv.textContent=ish==null?"—":fmtPct(ish);iv.classList.toggle("none",ish==null);
+  // secondary figure: share of all front-page weight
+  const av=$("#heroAll");av.textContent=cur==null?"—":fmtPct(cur);av.classList.toggle("none",cur==null);
   // sentiment: the signed number alone, colored by sign
   const sv=$("#heroSent");sv.className="sv";
   if(cur==null||sent==null){sv.textContent="—";sv.classList.add("none");sv.title=cur==null?"":"not yet scored"}
