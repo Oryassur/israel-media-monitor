@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Israel Monitor</title>
+<title>The Israel Mirror</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%231e293b'/%3E%3Crect%20x='8'%20y='30.5'%20width='48'%20height='3'%20rx='1.5'%20fill='%23475569'/%3E%3Crect%20x='10'%20y='12'%20width='9'%20height='20'%20rx='2'%20fill='%233987e5'/%3E%3Crect%20x='23'%20y='20'%20width='9'%20height='12'%20rx='2'%20fill='%233987e5'/%3E%3Crect%20x='36'%20y='32'%20width='9'%20height='16'%20rx='2'%20fill='%23e66767'/%3E%3Crect%20x='49'%20y='32'%20width='9'%20height='10'%20rx='2'%20fill='%23e66767'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -110,6 +110,9 @@ a{color:inherit}
 .kpi .kicker{margin-bottom:4px}
 .kpi .num{font:600 94px/.9 var(--font-display);letter-spacing:-.045em;font-variant-numeric:lining-nums tabular-nums}
 .kpi .num.long{font-size:74px}
+.kpi .intl{margin-top:16px}
+.kpi .inum{font:600 40px/1 var(--font-display);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi .inum.none{color:var(--muted)}
 .delta{display:inline-flex;align-items:baseline;gap:5px;font-size:13px;margin:12px 0 0;color:var(--ink2);
   padding:4px 11px 5px;border-radius:999px;background:color-mix(in srgb,var(--ink) 5%,transparent);
   white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
@@ -145,10 +148,11 @@ a{color:inherit}
 /* outlet wordmarks sit in a fixed, invisible frame (transparent background, no outline) so every
    logo occupies the same box and lines up. Dark mode: text-only wordmarks are inverted (hue kept)
    so black lettering reads; logos with their own colored field are left alone. */
-.logo{width:104px;height:24px;color:var(--ink2);font:700 9px/1 var(--font-ui);display:inline-flex;align-items:center;
+.logo{width:80px;height:18px;color:var(--ink2);font:700 9px/1 var(--font-ui);display:inline-flex;align-items:center;
   justify-content:center;text-align:center;letter-spacing:.02em;overflow:hidden;flex:0 0 auto;box-sizing:border-box}
 .logo img{width:100%;height:100%;object-fit:contain;object-position:center;display:block}
-.item .logo{width:84px;height:18px}
+.lead .logo{width:92px;height:20px}
+.item .logo{width:66px;height:14px}
 @media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])) .logo img:not(.field){filter:invert(1) hue-rotate(180deg)}}
 :root[data-theme="dark"] .logo img:not(.field){filter:invert(1) hue-rotate(180deg)}
 .flag{font-size:13px;line-height:1}
@@ -257,6 +261,8 @@ footer p{margin:10px 0 0;max-width:72ch}
   .kpi .num{font-size:62px}
   .kpi .num.long{font-size:50px}
   .kpi .sv{font-size:44px;margin-top:8px}
+  .kpi .intl{margin-top:12px}
+  .kpi .inum{font-size:30px}
   .kpi .sent{border-top:0;border-left:1px solid var(--grid);margin:0;padding:0 0 0 14px}
   .hl{font-size:23px}
   .srow .hl{font-size:15px}
@@ -272,7 +278,7 @@ footer p{margin:10px 0 0;max-width:72ch}
 <div class="wrap">
 <div class="top" id="top">
 <header class="mast">
-  <h1>The Israel Monitor</h1>
+  <h1>The Israel Mirror</h1>
   <p class="tagline">Why are you so obsessed with me?</p>
 </header>
 <div class="rule"></div>
@@ -305,6 +311,10 @@ footer p{margin:10px 0 0;max-width:72ch}
       <p class="kicker">Attention</p>
       <div class="num" id="heroNum">—</div>
       <div style="max-width:100%"><span class="delta" id="heroDelta" hidden><span class="v"></span><span class="lbl"></span></span></div>
+      <div class="intl">
+        <p class="kicker">Of international news</p>
+        <div class="inum" id="heroIntl" title="Israel-related front-page weight as a share of the international front-page weight on the selected outlets">—</div>
+      </div>
     </div>
     <div class="sent">
       <p class="kicker">Sentiment</p>
@@ -363,6 +373,11 @@ footer p{margin:10px 0 0;max-width:72ch}
       on ties), its image and standfirst taken from the article page's own metadata where the outlet publishes
       them, the outlet's logo and home-country flag, and the bundle's prominence-weighted mean sentiment;
       "and N more" opens the rest of the bundle. Bundles without a usable image render as text.</p>
+    <p><i>Of international news</i> divides the same Israel-related front-page weight by the weight of all
+      international headlines on the selected outlets over the same runs (a language model classifies every
+      top-20 headline as domestic or international relative to the outlet's home country — any story with
+      another country as a subject counts as international; classifier version recorded per headline).
+      Both figures are pooled over the period and the selected outlets.</p>
     <p>V2.0 (2026-09-11): front-page layout — masthead, top-story cards, outlet logos and flags, 30-day
       headline window, article-page enrichment. On 2026-09-09 the panel expanded from 20 to 30 outlets; Associated Press and El País were retired
       at the same time (persistent fetch failures) — their history remains in the daily series.
@@ -386,7 +401,7 @@ const SPLITS=[["Combined","none"],["By lean","lean"],["By region","region"]];
 const HOURLY_KEPT_DAYS=14;let ITEMS_KEPT_DAYS=30;
 const state={preset:"7d",start:null,end:null,gran:"hourly",granManual:false,
   split:"none",regions:new Set(),leans:new Set(),sources:new Set()};
-let META,HOURLY,DAILY,ITEMS,STORIES,DISPN,SRC;
+let META,HOURLY,DAILY,ITEMS,STORIES,INTL,DISPN,SRC;
 
 const fmtPct=v=>v==null?"—":(v*100).toFixed(1)+"%";
 const fmtSent=v=>v==null?"—":v<0?"−"+(-v).toFixed(2):(v>0?"+":"")+v.toFixed(2);
@@ -418,9 +433,9 @@ function effectiveGran(interval){
 }
 
 async function boot(){
-  const [meta,hourly,daily,items,stories]=await Promise.all(
-    ["meta.json","hourly.json","daily.json","items.json","stories.json"].map(f=>fetch("data/"+f,{cache:"no-cache"}).then(r=>r.json())));
-  META=meta;HOURLY=hourly;DAILY=daily;ITEMS=items;STORIES=stories;
+  const [meta,hourly,daily,items,stories,intl]=await Promise.all(
+    ["meta.json","hourly.json","daily.json","items.json","stories.json","intl.json"].map(f=>fetch("data/"+f,{cache:"no-cache"}).then(r=>r.json())));
+  META=meta;HOURLY=hourly;DAILY=daily;ITEMS=items;STORIES=stories;INTL=intl;
   DISPN=Object.fromEntries(meta.sources.map(s=>[s.name,s.display]));
   SRC=Object.fromEntries(meta.sources.map(s=>[s.name,s]));
   ITEMS_KEPT_DAYS=meta.items_window_days||30;
@@ -658,6 +673,22 @@ function windowShare(lo,hi,selNames){
 }
 const sentWord=s=>s==null?null:s<=-.6?["sharply negative","neg"]:s<=-.15?["negative on balance","neg"]
   :s<.15?["broadly neutral",""]:s<.6?["positive on balance","pos"]:["strongly positive","pos"];
+// Israel-related weight as a share of international weight, pooled over the window and
+// the selected outlets (same numerator as the attention share; denominator from the
+// international benchmark). null when no classified rows fall in the window.
+function intlShare(S){
+  const useHourly=S.interval.start>=Date.now()-HOURLY_KEPT_DAYS*864e5;
+  const rows=useHourly?INTL.hourly:INTL.daily;
+  const lo=useHourly?S.interval.start:floorGran.daily(S.interval.start);
+  let isr=0,intl=0;
+  for(const r of rows){
+    if(!S.selNames.has(r[1]))continue;
+    const ms=useHourly?parseTs(r[0]):parseTs(r[0]+"T00:00:00Z");
+    if(ms<lo||ms>=S.interval.end)continue;
+    intl+=r[3];isr+=r[5];
+  }
+  return intl?Math.min(1,isr/intl):null;
+}
 let heroAnimated=false;
 function hero(S){
   let sh=0,shn=0,sn=0,sd=0;
@@ -690,6 +721,9 @@ function hero(S){
       d.hidden=false;
     }
   }
+  // share of international coverage
+  const iv=$("#heroIntl"),ish=cur==null?null:intlShare(S);
+  iv.textContent=ish==null?"—":fmtPct(ish);iv.classList.toggle("none",ish==null);
   // sentiment: the signed number alone, colored by sign
   const sv=$("#heroSent");sv.className="sv";
   if(cur==null||sent==null){sv.textContent="—";sv.classList.add("none");sv.title=cur==null?"":"not yet scored"}

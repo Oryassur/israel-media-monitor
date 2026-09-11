@@ -37,7 +37,7 @@ pipeline/                  the whole pipeline (plain Python, no agent in the loo
 scripts/fetch_wordmarks.py one-off: outlet wordmark logos (Wikipedia infobox, header <img> fallback) → docs/logos/<name>.svg|png
                            (committed by hand; re-run on source swaps; foxnews.svg + bbc.svg are hand-placed variants;
                            fetch_logos.py is the square-favicon fallback)
-docs/                      GitHub Pages dashboard "The Israel Monitor" (vanilla JS/SVG, self-contained) + docs/logos/ + docs/fonts/
+docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla JS/SVG, self-contained) + docs/logos/ + docs/fonts/
 .github/workflows/pipeline.yml   hourly cron on GitHub Actions (secret: ANTHROPIC_API_KEY)
 ```
 

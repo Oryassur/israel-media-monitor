@@ -5,8 +5,8 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import urlparse
 
-from .common import (CLUSTER_VERSION, DOCS_DATA, ENRICH_MIN_WEIGHT, METHOD_VERSION, ROOT,
-                     RUBRIC_VERSION, load_sources)
+from .common import (CLUSTER_VERSION, DATA, DOCS_DATA, ENRICH_MIN_WEIGHT, METHOD_VERSION, ROOT,
+                     RUBRIC_VERSION, load_sources, read_jsonl)
 from .store import load_all_items, load_all_stories, read_all_snapshots
 
 HOURLY_WINDOW_DAYS = 14
@@ -57,6 +57,28 @@ def _row_comp(s, by_src):
         if fs <= ts <= ls:
             acc[5 if sent is None else sent + 2] += w
     return _scale_to(acc, iw)
+
+
+def _intl_series(snaps, hourly_cut):
+    """International-benchmark rows for the dashboard: per run (hourly window) and per
+    day (full history), each [when, source, total_w, intl_w, uncl_w, israel_w] where
+    israel_w is the main pipeline's Israel-related weight for that run — the same
+    numerator as the attention share, so "share of international coverage" =
+    israel_w / intl_w. Only classified rows (iv present) are used."""
+    isr = {(r["ts"], r["source"]): int(r["israel_weight"] or 0)
+           for r in snaps if r["fetch_ok"] in ("1", 1) and r["israel_weight"] != ""}
+    rows = []
+    for path in sorted((DATA / "intl").glob("*.jsonl")):
+        rows.extend(r for r in read_jsonl(path) if r.get("iv") and (r["ts"], r["source"]) in isr)
+    hourly = [[r["ts"], r["source"], r["total_w"], r["intl_w"], r.get("uncl_w", 0), isr[(r["ts"], r["source"])]]
+              for r in rows if r["ts"] >= hourly_cut]
+    acc = defaultdict(lambda: [0, 0, 0, 0])
+    for r in rows:
+        d = acc[(r["ts"][:10], r["source"])]
+        d[0] += r["total_w"]; d[1] += r["intl_w"]; d[2] += r.get("uncl_w", 0); d[3] += isr[(r["ts"], r["source"])]
+    daily = [[date, src, *v] for (date, src), v in sorted(acc.items())]
+    return {"cols": ["when", "source", "total_w", "intl_w", "uncl_w", "israel_w"],
+            "hourly": hourly, "daily": daily}
 
 
 def _source_meta(s, logos_dir: Path):
@@ -162,6 +184,7 @@ def build():
         "enrich_min_weight": ENRICH_MIN_WEIGHT,
         "sources": [_source_meta(s, LOGOS_DIR) for s in sources],
     })
+    _write("intl.json", _intl_series(snaps, hourly_cut))
     _write("hourly.json", hourly)
     _write("daily.json", daily)
     _write("items.json", recent_items)
