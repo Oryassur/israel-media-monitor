@@ -242,6 +242,10 @@ footer{color:var(--muted);font-size:12px;margin-top:26px;border-top:1px solid va
 footer #provenance{margin:0 0 10px;color:var(--muted)}
 footer summary{font-size:13px;font-weight:600;color:var(--ink2);cursor:pointer}
 footer p{margin:10px 0 0;max-width:72ch}
+footer h3{font:600 14px/1.3 var(--font-display);color:var(--ink);margin:18px 0 4px}
+footer ul{margin:0;padding-left:18px;max-width:72ch}
+footer li{margin:4px 0;line-height:1.5}
+footer li b{color:var(--ink2);font-weight:600}
 .empty{color:var(--muted);font-size:13px;padding:24px 0;text-align:center}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 @media (max-width:680px){
@@ -355,44 +359,121 @@ footer p{margin:10px 0 0;max-width:72ch}
   <p id="provenance"></p>
   <details id="methodDetails">
     <summary>Methodology &amp; changelog</summary>
-    <p>Every hour, the pipeline captures the headlines on each outlet's homepage. Each headline gets a
-      prominence weight reflecting how top-heavy reader attention is: the lead story ×10, slots 2–5 ×5,
-      6–10 ×3, 11–20 ×1. <i>Attention</i> is the Israel-related share of the top-20 window's total weight,
-      averaged equally across the selected outlets (only the top-20 window is ingested as of 2026-09-09;
-      stories below it are counted for parser health but not tracked). Hours where an outlet failed to
-      respond are excluded, not counted as zero.</p>
-    <p><i>Sentiment</i> scores each Israel-related headline's framing toward Israel on a fixed rubric
-      (−2 hostile … +2 sympathetic) using a language model; scores are cached per headline and record the
-      model + rubric version. The chart is a diverging stacked bar: bar height is the attention share, its
-      colored segments split that attention by headline sentiment, and the neutral band — including
-      still-unscored headlines in fainter gray — straddles the zero baseline. For runs before the
-      composition columns existed the split is approximated from the headline archive.</p>
-    <p>Headlines are grouped into cross-outlet <i>stories</i> by a language model (clustering model +
-      version recorded per assignment; story titles are model-written). The chart labels the largest
-      attention spikes with the story that dominated them. Political lean (Left / Center / Right) is
-      assigned mechanically from published ratings —
-      <a href="https://www.allsides.com/media-bias/media-bias-chart" rel="noopener">AllSides Media Bias Ratings</a>
-      where the outlet is rated (Lean&nbsp;Left/Left → Left, Center → Center, Lean&nbsp;Right/Right → Right),
-      <a href="https://adfontesmedia.com" rel="noopener">Ad Fontes Media</a> for international outlets they
-      cover, and the widely documented characterization otherwise; the per-outlet basis is noted in
-      <a href="https://github.com/Oryassur/israel-media-monitor/blob/main/config/sources.yaml" rel="noopener">config/sources.yaml</a>.
-      Headline drill-down covers the most recent 30 days.</p>
-    <p>The front page shows the four <i>story bundles</i> with the most prominence-weighted attention in the
-      selected period and outlets. Each card leads with the bundle's best-placed headline (the most recent one
-      on ties), its image and standfirst taken from the article page's own metadata where the outlet publishes
-      them, the outlet's logo and home-country flag, and the bundle's prominence-weighted mean sentiment;
-      "and N more" opens the rest of the bundle. Bundles without a usable image render as text.</p>
-    <p>The lead figure, <i>of international news</i>, divides the Israel-related front-page weight by the weight
-      of all international headlines on the selected outlets over the same runs (a language model classifies every
-      top-20 headline as domestic or international relative to the outlet's home country — any story with
-      another country as a subject counts as international; classifier version recorded per headline).
-      Both figures are pooled over the period and the selected outlets. The population comparison divides the
-      front-page share by Israel's share of world population (8.27 billion / 10.15 million, 2026 estimates from
-      the UN World Population Prospects and Israel's Central Bureau of Statistics).</p>
-    <p>V2.0 (2026-09-11): front-page layout — masthead, top-story cards, outlet logos and flags, 30-day
-      headline window, article-page enrichment. On 2026-09-09 the panel expanded from 20 to 30 outlets; Associated Press and El País were retired
-      at the same time (persistent fetch failures) — their history remains in the daily series.
-      Source code &amp; data: <a href="https://github.com/Oryassur/israel-media-monitor">GitHub</a>.</p>
+
+    <h3>What this page measures</h3>
+    <ul>
+      <li>How much of the front-page attention of 30 major western news outlets goes to Israel, and how those
+        headlines frame Israel. Everything is derived from homepage headlines, captured every hour.</li>
+      <li>Outlets are equal partners: every aggregate weights each outlet the same, regardless of its size or
+        how many headlines it shows.</li>
+    </ul>
+
+    <h3>How the data is collected (every hour)</h3>
+    <ul>
+      <li><b>Capture.</b> The pipeline loads each outlet's homepage and records its headlines in reading order.
+        Only the top 20 count; anything below is ignored (it is tallied for parser health only).</li>
+      <li><b>Prominence weight.</b> Each headline gets a weight for where it sits, a proxy for how top-heavy
+        reader attention is: the lead story ×10, positions 2–5 ×5, positions 6–10 ×3, positions 11–20 ×1.</li>
+      <li><b>Israel-related?</b> A multilingual keyword filter (English, French, German, Spanish, Italian)
+        flags candidates; a language model then confirms whether each candidate is actually about Israel and
+        scores its framing (see Sentiment). Each headline is scored once and the verdict is cached.</li>
+      <li><b>Domestic or international?</b> A second model pass classifies every top-20 headline, Israel-related
+        or not, as domestic or international from the outlet's own point of view, and gives international ones
+        a topic. Any story in which another country is a subject counts as international, including bilateral
+        ones (a UK sanction on Israel is international for a UK outlet).</li>
+      <li><b>Stories.</b> Israel-related headlines are grouped into cross-outlet stories by a language model;
+        story titles are written by the model.</li>
+      <li><b>Article details.</b> For headlines that reached an outlet's top 10, the article page is fetched once
+        for its image and standfirst (the outlet's own metadata). If an outlet blocks this, the card renders
+        without a picture.</li>
+      <li><b>Missing hours.</b> When an outlet fails to respond, that hour is recorded as missing for it, never
+        as zero.</li>
+      <li><b>Versioning.</b> Every model verdict records the model and rubric version used. Changing a rubric
+        means a new version number; old and new verdicts are never mixed silently.</li>
+    </ul>
+
+    <h3>Why these outlets</h3>
+    <ul>
+      <li>30 outlets across the US, UK, Canada, Australia, France, Germany, Spain, Italy and two pan-European
+        broadcasters, balanced 10 / 10 / 10 across Left, Center and Right.</li>
+      <li>Political lean is assigned mechanically from published ratings:
+        <a href="https://www.allsides.com/media-bias/media-bias-chart" rel="noopener">AllSides</a> where the
+        outlet is rated (Lean&nbsp;Left/Left → Left, Center → Center, Lean&nbsp;Right/Right → Right),
+        <a href="https://adfontesmedia.com" rel="noopener">Ad Fontes Media</a> for international outlets they
+        cover, and the widely documented characterization otherwise. The basis for each outlet is noted in
+        <a href="https://github.com/Oryassur/israel-media-monitor/blob/main/config/sources.yaml" rel="noopener">the source list</a>.</li>
+      <li>Outlets that block automated access (for example the Wall Street Journal, the Washington Post and
+        Reuters) were swapped for comparable outlets of the same country and lean.</li>
+    </ul>
+
+    <h3>The figures on the card</h3>
+    <ul>
+      <li><b>Attention, of international news</b> (the lead figure): the prominence weight of Israel-related
+        headlines divided by the prominence weight of all international headlines on the selected outlets over
+        the same hours, pooled over the selected period. It answers: of the foreign news these front pages
+        carried, how much was about Israel?</li>
+      <li><b>Attention, of all front-page news:</b> for each outlet and hour, Israel-related weight divided by
+        the total weight of the top-20 window; then averaged across hours and across the selected outlets.</li>
+      <li><b>Previous period:</b> the lead figure computed for the window of equal length immediately before
+        the selected one. The arrow shows the direction of change.</li>
+      <li><b>Share of world population:</b> the front-page share divided by Israel's share of humanity
+        (8.27 billion / 10.15 million, 2026 estimates from the UN World Population Prospects and Israel's
+        Central Bureau of Statistics).</li>
+      <li><b>Sentiment:</b> the average framing score of the Israel-related headlines in the window, from −2
+        (hostile) to +2 (sympathetic), each hour weighted by how many such headlines it had. Framing toward
+        Israel is what is scored, not general positivity: a report of Israeli casualties can score positive, a
+        report of an Israeli success can score negative. Rubric v3.1; headlines not yet scored are excluded
+        here and shown in gray on the chart.</li>
+    </ul>
+
+    <h3>The top stories</h3>
+    <ul>
+      <li>The four story bundles with the most summed prominence weight in the selected period and outlets.</li>
+      <li>Each card shows the bundle's best-placed headline (the most recent one on ties); if that headline has
+        no image, the next best-placed one with an image takes the card, and the bundle renders as text when
+        none has one.</li>
+      <li>The kicker is the bundle title, the flag is the outlet's home country, the logo is the outlet, the
+        chip is the bundle's prominence-weighted mean sentiment, and "and N more" opens the rest of the bundle.</li>
+    </ul>
+
+    <h3>The chart</h3>
+    <ul>
+      <li>A diverging stacked bar per hour (or day, or week). Bar height is the attention share; its colored
+        segments split that attention by headline sentiment; the neutral band, including still-unscored
+        headlines in fainter gray, straddles the zero line.</li>
+      <li>The largest attention spikes are labeled with the story that dominated them. Click any bar to list
+        the headlines on the homepages at that time.</li>
+      <li>For hours before the composition columns existed (2026-09-09) the sentiment split is approximated
+        from the headline archive.</li>
+    </ul>
+
+    <h3>Filters and breakdowns</h3>
+    <ul>
+      <li><b>Period:</b> 24 hours, 7, 30 or 90 days, all time, or a custom range. Every figure, the top
+        stories and the headline list recompute for the selection.</li>
+      <li><b>Granularity:</b> hourly (kept for 14 days), daily or weekly bars.</li>
+      <li><b>Breakdown:</b> combined, by lean (Left / Center / Right) or by region (US, UK, EU, Other) as
+        small multiples. EU covers France, Germany, Spain, Italy and the pan-European broadcasters; Other is
+        Canada and Australia.</li>
+      <li><b>Lean, Region, Source:</b> restrict every figure to a subset of outlets. The card then reads,
+        for example, Israel's share of the international coverage on right-leaning US front pages.</li>
+      <li>Headlines and top stories cover the most recent 30 days; the benchmark of international coverage
+        exists since 2026-09-09, so the lead figure and its previous-period chip only cover dates from then.</li>
+    </ul>
+
+    <h3>Changelog</h3>
+    <ul>
+      <li><b>2026-09-11 · V2.0 "The Israel Mirror".</b> Front-page layout: masthead, top-story cards with
+        images and standfirsts, outlet logos and flags, 30-day headline window; international-coverage
+        benchmark rubric i2 (bilateral stories count as international) with the earlier days re-classified.</li>
+      <li><b>2026-09-10 · Sentiment rubric v3.1.</b> Israeli tech and business coverage counts as related and
+        mildly favorable.</li>
+      <li><b>2026-09-09.</b> Panel expanded from 20 to 30 outlets; Associated Press and El País retired
+        (persistent fetch failures), their history stays in the daily series. Only the top-20 window is
+        ingested from this date; the international benchmark and story clustering begin.</li>
+      <li><b>2026-08-31.</b> First hourly run.</li>
+    </ul>
+    <p>Source code &amp; data: <a href="https://github.com/Oryassur/israel-media-monitor">GitHub</a>.</p>
   </details>
 </footer>
 </div>
@@ -686,7 +767,19 @@ function intlShare(S){
   }
   return intl?Math.min(1,isr/intl):null;
 }
-let heroAnimated=false;
+// Tween a figure from the value it currently shows to the new one (first paint counts up from 0).
+// Skips the motion when reduced-motion is set or the tab is hidden (rAF stalls in background tabs).
+function animateNum(el,to,fmt,dur=650){
+  if(el._raf)cancelAnimationFrame(el._raf);
+  const from=el._v==null?0:el._v;el._v=to;
+  if(to==null){el.textContent="—";return}
+  if(reducedMotion()||document.visibilityState!=="visible"||Math.abs(to-from)<1e-9){el.textContent=fmt(to);return}
+  const t0=performance.now();
+  const step=t=>{const k=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-k,3);
+    el.textContent=fmt(from+(to-from)*e);
+    if(k<1)el._raf=requestAnimationFrame(step);else el._raf=null};
+  el._raf=requestAnimationFrame(step);
+}
 function hero(S){
   let sh=0,shn=0,sn=0,sd=0;
   for(const p of S.combined){
@@ -694,18 +787,11 @@ function hero(S){
     if(p.sent!=null&&p.items>0){sn+=p.sent*p.items;sd+=p.items}
   }
   const cur=shn?sh/shn:null,sent=sd?sn/sd:null;
-  // top figure: share of international coverage, counted up once on first load
+  // top figure: share of international coverage — animates every time it changes
   const ish=cur==null?null:intlShare(S);
   const num=$("#heroNum");
-  const txt=fmtPct(ish);num.classList.toggle("long",txt.length>=5);
-  if(ish==null)num.textContent="—";
-  else if(!heroAnimated&&!reducedMotion()&&document.visibilityState==="visible"){ // rAF stalls in background tabs
-    const t0=performance.now(),dur=700;
-    const step=t=>{const k=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-k,3);
-      num.textContent=fmtPct(ish*e);if(k<1)requestAnimationFrame(step)};
-    requestAnimationFrame(step);
-  }else num.textContent=txt;
-  heroAnimated=true;
+  num.classList.toggle("long",fmtPct(ish).length>=5);
+  animateNum(num,ish,fmtPct);
   // previous equal-length window: its share of international coverage, arrow + tint for the direction
   const d=$("#heroDelta");d.hidden=true;d.className="delta";
   if(state.preset!=="all"&&ish!=null){
@@ -720,13 +806,13 @@ function hero(S){
     }
   }
   // secondary figure: share of all front-page weight, and how it compares with Israel's share of humanity
-  const av=$("#heroAll");av.textContent=cur==null?"—":fmtPct(cur);av.classList.toggle("none",cur==null);
+  const av=$("#heroAll");animateNum(av,cur,fmtPct);av.classList.toggle("none",cur==null);
   const pop=$("#heroPop");pop.hidden=cur==null;
   if(cur!=null){const x=cur*POP.world/POP.israel;pop.querySelector("b").textContent=(x>=100?x.toFixed(0):x.toFixed(1))+"×"}
   // sentiment: the signed number alone, colored by sign
   const sv=$("#heroSent");sv.className="sv";
-  if(cur==null||sent==null){sv.textContent="—";sv.classList.add("none");sv.title=cur==null?"":"not yet scored"}
-  else{sv.textContent=fmtSent(sent);sv.classList.add(sent<=-.05?"neg":sent>=.05?"pos":"zero");sv.title=(sentWord(sent)||[""])[0]}
+  if(cur==null||sent==null){animateNum(sv,null,fmtSent);sv.classList.add("none");sv.title=cur==null?"":"not yet scored"}
+  else{animateNum(sv,sent,fmtSent);sv.classList.add(sent<=-.05?"neg":sent>=.05?"pos":"zero");sv.title=(sentWord(sent)||[""])[0]}
   // provenance line lives in the footer
   const now=Date.now();
   const itemsPartial=S.interval.start<now-ITEMS_KEPT_DAYS*864e5-6e4;
