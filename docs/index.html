@@ -115,6 +115,9 @@ a{color:inherit}
 .kpi .sub{margin-top:16px}
 .kpi .inum{font:600 40px/1 var(--font-display);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .kpi .inum.none{color:var(--muted)}
+.kpi .popline{font-size:12.5px;line-height:1.4;color:var(--ink2);margin:14px 0 0;max-width:19ch}
+.kpi .popline b{font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+.kpi .popline[hidden]{display:none}
 .delta{display:inline-flex;align-items:baseline;gap:5px;font-size:13px;margin:12px 0 0;color:var(--ink2);
   padding:4px 11px 5px;border-radius:999px;background:color-mix(in srgb,var(--ink) 5%,transparent);
   white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
@@ -266,6 +269,7 @@ footer p{margin:10px 0 0;max-width:72ch}
   .kpi .sv{font-size:44px;margin-top:8px}
   .kpi .sub{margin-top:12px}
   .kpi .inum{font-size:30px}
+  .kpi .popline{font-size:11.5px;margin-top:10px}
   .kpi .sent{border-top:0;border-left:1px solid var(--grid);margin:0;padding:0 0 0 14px}
   .hl{font-size:23px}
   .srow .hl{font-size:15px}
@@ -319,6 +323,7 @@ footer p{margin:10px 0 0;max-width:72ch}
         <p class="kicker">Of all front-page news</p>
         <div class="inum" id="heroAll" title="Israel-related weight as a share of all front-page weight on the selected outlets">—</div>
       </div>
+      <p class="popline" id="heroPop" hidden>That's <b></b> more than its share of world population.</p>
     </div>
     <div class="sent">
       <p class="ttl">Sentiment</p>
@@ -381,7 +386,9 @@ footer p{margin:10px 0 0;max-width:72ch}
       of all international headlines on the selected outlets over the same runs (a language model classifies every
       top-20 headline as domestic or international relative to the outlet's home country — any story with
       another country as a subject counts as international; classifier version recorded per headline).
-      Both figures are pooled over the period and the selected outlets.</p>
+      Both figures are pooled over the period and the selected outlets. The population comparison divides the
+      front-page share by Israel's share of world population (8.27 billion / 10.15 million, 2026 estimates from
+      the UN World Population Prospects and Israel's Central Bureau of Statistics).</p>
     <p>V2.0 (2026-09-11): front-page layout — masthead, top-story cards, outlet logos and flags, 30-day
       headline window, article-page enrichment. On 2026-09-09 the panel expanded from 20 to 30 outlets; Associated Press and El País were retired
       at the same time (persistent fetch failures) — their history remains in the daily series.
@@ -712,8 +719,10 @@ function hero(S){
       d.hidden=false;
     }
   }
-  // secondary figure: share of all front-page weight
+  // secondary figure: share of all front-page weight, and how it compares with Israel's share of humanity
   const av=$("#heroAll");av.textContent=cur==null?"—":fmtPct(cur);av.classList.toggle("none",cur==null);
+  const pop=$("#heroPop");pop.hidden=cur==null;
+  if(cur!=null){const x=cur*POP.world/POP.israel;pop.querySelector("b").textContent=(x>=100?x.toFixed(0):x.toFixed(1))+"×"}
   // sentiment: the signed number alone, colored by sign
   const sv=$("#heroSent");sv.className="sv";
   if(cur==null||sent==null){sv.textContent="—";sv.classList.add("none");sv.title=cur==null?"":"not yet scored"}
@@ -1017,6 +1026,9 @@ function logoEl(src){
   else l.textContent=monogram(src.display);
   return l;
 }
+// Population constants for the "share of world population" comparison — update yearly.
+// World: UN World Population Prospects, 2026 estimate. Israel: Central Bureau of Statistics, 2026 estimate.
+const POP={world:8.27e9,israel:10.15e6};
 const LOGO_V="4"; // bump when docs/logos/ files are replaced under the same name (Pages caches 10 min)
 // wordmarks that carry their own colored field (readable on dark as-is; never inverted)
 const FIELD_LOGOS=new Set(["nypost","cnn","foxnews","newsweek","bbc","euronews","lacroix","spiegel","bild","globeandmail"]);
