@@ -22,6 +22,14 @@ SKIP_HREF_PAT = re.compile(
     r"contact|advertis|shop|store|deals|coupons)(/|$)",
     re.I,
 )
+# Commerce / account subdomains of the outlet's own domain (subscription offers,
+# shops, job boards) — their links are promos, never headlines.
+SKIP_HOST_PAT = re.compile(
+    r"^(abonnement|abo|abos|abbonamenti|suscripciones?|subscri(be|ption)s?|boutique|shop|store|"
+    r"tienda|jobs|emploi|immobilier|immo|kleinanzeigen|games|jeux|giochi|account|login|"
+    r"newsletters?|events?|tickets?)\.",
+    re.I,
+)
 
 
 def fetch_html(url: str, timeout: int = 25) -> str:
@@ -69,7 +77,7 @@ def extract_items(html: str, base_url: str, selector: str = None):
         # same site (allow subdomains) only
         if not (link_host == host or link_host.endswith("." + host) or host.endswith("." + link_host)):
             continue
-        if SKIP_HREF_PAT.search(pu.path):
+        if SKIP_HREF_PAT.search(pu.path) or SKIP_HOST_PAT.match(link_host):
             continue
         key = text.lower()
         if key in seen_text or href in seen_urls:
