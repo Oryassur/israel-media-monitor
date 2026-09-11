@@ -135,8 +135,16 @@ def homepage_candidates(src):
     return [u for _, u in sorted(out)]
 
 
-def fetch_one(src, force=False):
+# Hand-placed files (owner-chosen variants): foxnews.svg is the horizontal wordmark composed from
+# the Commons stacked SVG's own paths; bbc.svg is the 1997-2021 blocks recolored red. Skipped
+# unless named explicitly on the command line.
+HAND_PLACED = {"foxnews", "bbc"}
+
+
+def fetch_one(src, force=False, explicit=False):
     name = src["name"]
+    if name in HAND_PLACED and not explicit:
+        return "kept", "hand-placed"
     existing = sorted(p for p in OUT.glob(f"{name}.*") if p.suffix != ".html")
     if existing and not force:
         return "kept", existing[0].name
@@ -195,7 +203,7 @@ def main(argv):
         if names and src["name"] not in names:
             continue
         try:
-            status, detail = fetch_one(src, force=force)
+            status, detail = fetch_one(src, force=force, explicit=src["name"] in names)
             print(f"{src['name']:14} {status:5} {detail}")
         except Exception as e:  # noqa: BLE001
             failed.append(src["name"])

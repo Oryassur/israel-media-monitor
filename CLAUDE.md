@@ -34,7 +34,8 @@ pipeline/                  the whole pipeline (plain Python, no agent in the loo
   publish.py               builds docs/data/*.json for the dashboard (items 30d w/ img+desc; stories {id:{t,fs,ls}};
                            meta.sources w/ home, domain, logo)
 scripts/fetch_wordmarks.py one-off: outlet wordmark logos (Wikipedia infobox, header <img> fallback) → docs/logos/<name>.svg|png
-                           (committed by hand; re-run on source swaps; fetch_logos.py is the square-favicon fallback)
+                           (committed by hand; re-run on source swaps; foxnews.svg + bbc.svg are hand-placed variants;
+                           fetch_logos.py is the square-favicon fallback)
 docs/                      GitHub Pages dashboard "The Israel Monitor" (vanilla JS/SVG, self-contained) + docs/logos/ + docs/fonts/
 .github/workflows/pipeline.yml   hourly cron on GitHub Actions (secret: ANTHROPIC_API_KEY)
 ```
@@ -91,7 +92,8 @@ docs/                      GitHub Pages dashboard "The Israel Monitor" (vanilla 
   card headline = best placement (ties → best rank → newest) that has an image,
   else the lead text-only; bundle sentiment = prominence-weighted mean. Every
   headline row shows flag (country, or `home` for INT outlets) + the outlet's
-  wordmark on a white chip (so it reads in dark mode; uppercase-name fallback) —
+  wordmark with no chip/background (dark mode inverts text-only wordmarks via
+  CSS filter; logos in `FIELD_LOGOS` keep their own colored field; uppercase-name fallback) —
   the outlet name is never repeated as text. Headlines truncate at 100 chars,
   the lead standfirst at 150; date + hour and the sentiment chip sit right-aligned
   on every card. No "top story / top N" placement labels in the UI.
