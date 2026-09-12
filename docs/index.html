@@ -135,7 +135,7 @@ a{color:inherit}
 .kpi .sv.none{color:var(--muted)}
 
 .lead{min-width:0}
-.img{aspect-ratio:16/9;border-radius:8px;background:var(--grid);overflow:hidden;display:flex;align-items:center;justify-content:center}
+.img{aspect-ratio:16/9;border-radius:8px;background:var(--grid);overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative}
 .img img{width:100%;height:100%;object-fit:cover;display:block}
 .img.noimg{background:color-mix(in srgb,var(--dv-n1) 16%,var(--grid))}
 .img.noimg .logo{width:60%;height:44px;font-size:15px;opacity:.7}
@@ -166,6 +166,11 @@ a{color:inherit}
 .chip.z{background:var(--dv-0);color:var(--ink2)}
 .chip.p{background:color-mix(in srgb,var(--dv-p2) 22%,transparent);color:var(--dv-p2)}
 .chip.u{background:var(--dv-u);color:var(--muted)}
+/* bundle sentiment as an overlay on the card image: solid surface so it reads over any photo */
+.chip.ov{position:absolute;background:var(--surface);border:1px solid var(--border);box-shadow:0 1px 4px rgba(0,0,0,.25);
+  font-size:13px;padding:3px 9px;left:10px;bottom:10px}
+.chip.ov.z{color:var(--ink2)}
+.th .chip.ov{font-size:10px;padding:1px 6px;left:auto;bottom:auto;right:4px;top:4px;border-radius:5px}
 .more{border:0;background:none;font:inherit;font-size:12px;color:var(--ink2);cursor:pointer;padding:0;
   text-decoration:underline;text-decoration-color:var(--baseline);text-underline-offset:2px;white-space:nowrap}
 .more:hover{color:var(--ink)}
@@ -176,7 +181,7 @@ a{color:inherit}
 .side{min-width:0}
 .srow{display:grid;grid-template-columns:72px minmax(0,1fr);gap:11px;padding:10px 0;border-top:1px solid var(--grid)}
 .srow:first-child{border-top:0;padding-top:0}
-.th{width:72px;height:72px;border-radius:6px;background:var(--grid);overflow:hidden;display:flex;align-items:center;justify-content:center}
+.th{width:72px;height:72px;border-radius:6px;background:var(--grid);overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative}
 .th img{width:100%;height:100%;object-fit:cover;display:block}
 .th.noimg{background:color-mix(in srgb,var(--dv-n1) 16%,var(--grid))}
 .th.noimg .logo{width:60px;height:20px;font-size:9px;opacity:.7}
@@ -433,7 +438,8 @@ footer li b{color:var(--ink2);font-weight:600}
         no image, the next best-placed one with an image takes the card, and the bundle renders as text when
         none has one.</li>
       <li>The kicker is the bundle title, the flag is the outlet's home country, the logo is the outlet, the
-        chip is the bundle's prominence-weighted mean sentiment, and "and N more" opens the rest of the bundle.</li>
+        chip on the picture is the bundle's prominence-weighted mean sentiment, and "and N more" opens the rest
+        of the bundle.</li>
     </ul>
 
     <h3>The chart</h3>
@@ -1174,13 +1180,15 @@ function topBundles(list,n){
   return bundles.slice(0,n);
 }
 
-function imageBox(cls,it,src){
+function imageBox(cls,it,src,sent){
   const box=document.createElement("div");box.className=cls;
-  const fallback=()=>{box.innerHTML="";box.classList.add("noimg");box.appendChild(logoEl(src))};
+  const chip=sentChip(sent,true);chip.classList.add("ov");
+  const fallback=()=>{box.innerHTML="";box.classList.add("noimg");box.appendChild(logoEl(src));box.appendChild(chip)};
   if(it.img){
     const im=document.createElement("img");im.alt="";im.loading="eager";im.decoding="async";im.referrerPolicy="no-referrer";
     im.onerror=fallback;im.src=it.img;box.appendChild(im);
   }else fallback();
+  box.appendChild(chip);
   return box;
 }
 
@@ -1202,7 +1210,6 @@ function bundleMeta(b,withTime){
   }
   const r=document.createElement("span");r.className="r";
   r.append(document.createTextNode(new Date(b.card.fs).toLocaleString(undefined,{month:"short",day:"numeric",hour:"numeric"})));
-  r.appendChild(sentChip(b.sent,true));
   meta.append(l,r);
   return meta;
 }
@@ -1242,7 +1249,7 @@ function renderFront(list){
   }
   side.hidden=false;
   const b=bundles[0],src=SRC[b.card.src]||{display:b.card.src};
-  lead.appendChild(imageBox("img",b.card,src));
+  lead.appendChild(imageBox("img",b.card,src,b.sent));
   lead.appendChild(kickerEl(b));
   lead.appendChild(headlineEl(b));
   if(b.card.d){const d=document.createElement("p");d.className="dek";d.textContent=trunc(b.card.d,150);lead.appendChild(d)}
@@ -1250,7 +1257,7 @@ function renderFront(list){
   lead.appendChild(bundleMeta(b,true));
   for(const sb of bundles.slice(1)){
     const row=document.createElement("div");row.className="srow";
-    row.appendChild(imageBox("th",sb.card,SRC[sb.card.src]||{display:sb.card.src}));
+    row.appendChild(imageBox("th",sb.card,SRC[sb.card.src]||{display:sb.card.src},sb.sent));
     const body=document.createElement("div");
     body.appendChild(kickerEl(sb));body.appendChild(headlineEl(sb));
     body.appendChild(bundleMeta(sb,false));
