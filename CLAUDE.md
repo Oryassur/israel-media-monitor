@@ -101,9 +101,9 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
 - **Front-page bundles** are computed client-side from items.json: clustered
   items only, ranked by Σ prominence weight within the selected period + filters;
   card headline = best placement (ties → best rank → newest) that has an image,
-  else the lead text-only; bundle sentiment = prominence-weighted mean. Every
-  headline row shows flag (country, or `home` for INT outlets) + the outlet's
-  wordmark with no chip/background (dark mode inverts text-only wordmarks via
+  else the lead text-only; bundle sentiment = prominence-weighted mean (shown as a
+  chip overlaid on the card image). Every headline row shows the outlet's
+  wordmark (no flags since 2026-09-12) with no chip/background (dark mode inverts text-only wordmarks via
   CSS filter; logos in `FIELD_LOGOS` keep their own colored field; uppercase-name fallback) —
   the outlet name is never repeated as text. Headlines truncate at 100 chars,
   the lead standfirst at 150; date + hour and the sentiment chip sit right-aligned

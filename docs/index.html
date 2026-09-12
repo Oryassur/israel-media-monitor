@@ -160,7 +160,6 @@ a{color:inherit}
 .item .logo{width:66px;height:14px}
 @media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])) .logo img:not(.field){filter:invert(1) hue-rotate(180deg)}}
 :root[data-theme="dark"] .logo img:not(.field){filter:invert(1) hue-rotate(180deg)}
-.flag{font-size:13px;line-height:1}
 .chip{display:inline-block;font-weight:600;font-size:11px;padding:1px 6px;border-radius:6px;font-variant-numeric:tabular-nums}
 .chip.n{background:color-mix(in srgb,var(--dv-n2) 22%,transparent);color:var(--dv-n2)}
 .chip.z{background:var(--dv-0);color:var(--ink2)}
@@ -437,9 +436,8 @@ footer li b{color:var(--ink2);font-weight:600}
       <li>Each card shows the bundle's best-placed headline (the most recent one on ties); if that headline has
         no image, the next best-placed one with an image takes the card, and the bundle renders as text when
         none has one.</li>
-      <li>The kicker is the bundle title, the flag is the outlet's home country, the logo is the outlet, the
-        chip on the picture is the bundle's prominence-weighted mean sentiment, and "and N more" opens the rest
-        of the bundle.</li>
+      <li>The kicker is the bundle title, the logo is the outlet (its name on hover), the chip on the picture
+        is the bundle's prominence-weighted mean sentiment, and "and N more" opens the rest of the bundle.</li>
     </ul>
 
     <h3>The chart</h3>
@@ -1094,20 +1092,12 @@ function mainLegend(){
 }
 
 /* ---------- source badges ---------- */
-const FLAG_CC={US:"US",UK:"GB",DE:"DE",FR:"FR",IT:"IT",ES:"ES",CA:"CA",AU:"AU",EU:"EU"};
-function flagOf(code){
-  const cc=FLAG_CC[code]||code||"";
-  if(!/^[A-Z]{2}$/.test(cc))return "🌐";
-  return String.fromCodePoint(...[...cc].map(c=>0x1F1E6+c.charCodeAt(0)-65));
-}
 const monogram=name=>(name||"?").replace(/\(.*?\)/g,"").trim().toUpperCase().slice(0,18);
-// logo (committed favicon, monogram fallback) + country flag; flag first so the row reads flag · logo · name
+// outlet badge: the wordmark in its frame (outlet name on hover); flags were dropped 2026-09-12
 function srcBadge(name){
   const src=SRC[name]||{display:name,country:"",home:""};
   const b=document.createElement("span");b.className="badge";b.title=src.display;
-  const f=document.createElement("span");f.className="flag";f.setAttribute("aria-hidden","true");
-  f.textContent=flagOf(src.home||src.country);
-  b.appendChild(f);b.appendChild(logoEl(src));
+  b.appendChild(logoEl(src));
   return b;
 }
 function logoEl(src){
