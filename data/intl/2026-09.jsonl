@@ -4195,3 +4195,33 @@
 {"ts": "2026-09-12T18:45:27Z", "source": "globeandmail", "total_w": 55, "intl_w": 10, "uncl_w": 0, "topics": {"us-politics": 6, "asia-other": 3, "middle-east-other": 1}, "iv": "i2"}
 {"ts": "2026-09-12T18:45:27Z", "source": "abcau", "total_w": 55, "intl_w": 6, "uncl_w": 0, "topics": {"asia-other": 4, "us-politics": 1, "ukraine-russia": 1}, "iv": "i2"}
 {"ts": "2026-09-12T18:45:27Z", "source": "smh", "total_w": 55, "intl_w": 11, "uncl_w": 0, "topics": {"us-politics": 5, "asia-other": 5, "other": 1}, "iv": "i2"}
+{"ts": "2026-09-12T19:18:53Z", "source": "nyt", "total_w": 55, "intl_w": 20, "uncl_w": 0, "topics": {"uk-politics": 5, "latin-america": 3, "middle-east-other": 12}, "iv": "i2"}
+{"ts": "2026-09-12T19:18:53Z", "source": "usatoday", "total_w": 55, "intl_w": 1, "uncl_w": 0, "topics": {"latin-america": 1}, "iv": "i2"}
+{"ts": "2026-09-12T19:18:53Z", "source": "nypost", "total_w": 55, "intl_w": 12, "uncl_w": 0, "topics": {"israel-gaza": 12}, "iv": "i2"}
+{"ts": "2026-09-12T19:18:53Z", "source": "cnn", "total_w": 55, "intl_w": 25, "uncl_w": 0, "topics": {"china": 10, "europe-other": 6, "middle-east-other": 9}, "iv": "i2"}
+{"ts": "2026-09-12T19:18:53Z", "source": "foxnews", "total_w": 55, "intl_w": 11, "uncl_w": 0, "topics": {"middle-east-other": 5, "other": 5, "israel-gaza": 1}, "iv": "i2"}
+{"ts": "2026-09-12T19:18:53Z", "source": "nbcnews", "total_w": 55, "intl_w": 30, "uncl_w": 0, "topics": {"economy-global": 13, "middle-east-other": 13, "uk-politics": 3, "china": 1}, "iv": "i2"}
+{"ts": "2026-09-12T19:18:53Z", "source": "newsweek", "total_w": 55, "intl_w": 22, "uncl_w": 0, "topics": {"uk-politics": 10, "middle-east-other": 6, "europe-other": 5, "ukraine-russia": 1}, "iv": "i2"}
+{"ts": "2026-09-12T19:18:53Z", "source": "csmonitor", "total_w": 55, "intl_w": 33, "uncl_w": 0, "topics": {"israel-gaza": 10, "other": 5, "china": 5, "latin-america": 3, "middle-east-other": 6, "us-politics": 3, "europe-other": 1}, "iv": "i2"}
+{"ts": "2026-09-12T19:18:53Z", "source": "washexaminer", "total_w": 55, "intl_w": 12, "uncl_w": 0, "topics": {"economy-global": 5, "europe-other": 3, "middle-east-other": 4}, "iv": "i2"}
+{"ts": "2026-09-12T19:18:53Z", "source": "bbc", "total_w": 55, "intl_w": 25, "uncl_w": 0, "topics": {"economy-global": 5, "europe-other": 7, "middle-east-other": 3, "uk-politics": 3, "other": 3, "africa": 3, "climate": 1}, "iv": "i2"}
+{"ts": "2026-09-12T19:18:53Z", "source": "guardian", "total_w": 55, "intl_w": 37, "uncl_w": 0, "topics": {"middle-east-other": 15, "us-politics": 18, "europe-other": 3, "asia-other": 1}, "iv": "i2"}
+{"ts": "2026-09-12T19:18:53Z", "source": "thetimes", "total_w": 55, "intl_w": 27, "uncl_w": 0, "topics": {"us-politics": 11, "eu-politics": 5, "middle-east-other": 3, "economy-global": 4, "china": 3, "other": 1}, "iv": "i2"}
+{"ts": "2026-09-12T19:18:53Z", "source": "dailymail", "total_w": 55, "intl_w": 10, "uncl_w": 0, "topics": {"other": 3, "israel-gaza": 3, "europe-other": 3, "migration": 1}, "iv": "i2"}
+{"ts": "2026-09-12T19:18:53Z", "source": "independent", "total_w": 55, "intl_w": 37, "uncl_w": 0, "topics": {"uk-politics": 15, "us-politics": 21, "middle-east-other": 1}, "iv": "i2"}
+{"ts": "2026-09-12T19:18:53Z", "source": "dw", "total_w": 55, "intl_w": 30, "uncl_w": 0, "topics": {"middle-east-other": 12, "asia-other": 3, "ukraine-russia": 9, "uk-politics": 1, "africa": 2, "china": 1, "us-politics": 1, "latin-america": 1}, "iv": "i2"}
+{"ts": "2026-09-12T19:18:53Z", "source": "euronews", "total_w": 55, "intl_w": 21, "uncl_w": 0, "topics": {"israel-gaza": 10, "us-politics": 5, "europe-other": 6}, "iv": "i2"}
+{"ts": "2026-09-12T19:18:53Z", "source": "lemonde", "total_w": 55, "intl_w": 13, "uncl_w": 0, "topics": {"middle-east-other": 11, "europe-other": 2}, "iv": "i2"}
+{"ts": "2026-09-12T19:18:53Z", "source": "lefigaro", "total_w": 55, "intl_w": 0, "uncl_w": 0, "topics": {}, "iv": "i2"}
+{"ts": "2026-09-12T19:18:53Z", "source": "lacroix", "total_w": 55, "intl_w": 11, "uncl_w": 0, "topics": {"china": 5, "ukraine-russia": 4, "middle-east-other": 2}, "iv": "i2"}
+{"ts": "2026-09-12T19:18:53Z", "source": "spiegel", "total_w": 55, "intl_w": 6, "uncl_w": 0, "topics": {"asia-other": 3, "ukraine-russia": 1, "us-politics": 1, "economy-global": 1}, "iv": "i2"}
+{"ts": "2026-09-12T19:18:53Z", "source": "bild", "total_w": 55, "intl_w": 2, "uncl_w": 0, "topics": {"ukraine-russia": 1, "china": 1}, "iv": "i2"}
+{"ts": "2026-09-12T19:18:53Z", "source": "faz", "total_w": 55, "intl_w": 20, "uncl_w": 0, "topics": {"asia-other": 10, "ukraine-russia": 5, "economy-global": 3, "europe-other": 1, "other": 1}, "iv": "i2"}
+{"ts": "2026-09-12T19:18:53Z", "source": "tagesschau", "total_w": 55, "intl_w": 25, "uncl_w": 0, "topics": {"middle-east-other": 14, "ukraine-russia": 5, "us-politics": 3, "europe-other": 1, "latin-america": 1, "other": 1}, "iv": "i2"}
+{"ts": "2026-09-12T19:18:53Z", "source": "elmundo", "total_w": 55, "intl_w": 0, "uncl_w": 0, "topics": {}, "iv": "i2"}
+{"ts": "2026-09-12T19:18:53Z", "source": "corriere", "total_w": 55, "intl_w": 12, "uncl_w": 0, "topics": {"ukraine-russia": 9, "middle-east-other": 2, "uk-politics": 1}, "iv": "i2"}
+{"ts": "2026-09-12T19:18:53Z", "source": "ilgiornale", "total_w": 55, "intl_w": 9, "uncl_w": 0, "topics": {"eu-politics": 4, "uk-politics": 1, "middle-east-other": 1, "ukraine-russia": 3}, "iv": "i2"}
+{"ts": "2026-09-12T19:18:53Z", "source": "cbc", "total_w": 55, "intl_w": 20, "uncl_w": 0, "topics": {"europe-other": 6, "other": 3, "economy-global": 4, "middle-east-other": 3, "ukraine-russia": 2, "us-politics": 1, "uk-politics": 1}, "iv": "i2"}
+{"ts": "2026-09-12T19:18:53Z", "source": "globeandmail", "total_w": 55, "intl_w": 10, "uncl_w": 0, "topics": {"us-politics": 6, "asia-other": 3, "middle-east-other": 1}, "iv": "i2"}
+{"ts": "2026-09-12T19:18:53Z", "source": "abcau", "total_w": 55, "intl_w": 4, "uncl_w": 0, "topics": {"asia-other": 1, "us-politics": 2, "ukraine-russia": 1}, "iv": "i2"}
+{"ts": "2026-09-12T19:18:53Z", "source": "smh", "total_w": 55, "intl_w": 8, "uncl_w": 0, "topics": {"asia-other": 4, "us-politics": 3, "europe-other": 1}, "iv": "i2"}
