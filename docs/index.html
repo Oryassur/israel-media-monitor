@@ -1576,7 +1576,7 @@ function render(){
   dataTable(S);
 }
 
-const goWorld=()=>$("#worldCard").scrollIntoView({behavior:reducedMotion()?"auto":"smooth",block:"start"});
+const goWorld=()=>$("#worldCard").scrollIntoView({behavior:reducedMotion()||document.visibilityState!=="visible"?"auto":"smooth",block:"start"});
 $("#heroPie").addEventListener("click",goWorld);
 $("#heroPie").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();goWorld()}});
 $("#tblToggle").onclick=()=>{const w=$("#tblWrap");w.hidden=!w.hidden;
