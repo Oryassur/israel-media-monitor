@@ -102,10 +102,17 @@ a{color:inherit}
 .livebar a{color:var(--ink2)}
 
 /* front page: data card | lead story | stories 2–4 */
-.front{display:grid;grid-template-columns:228px minmax(0,1fr) 300px;gap:24px;align-items:stretch;margin-top:20px}
+.front{display:grid;grid-template-columns:228px minmax(0,1fr) 300px;column-gap:24px;row-gap:12px;align-items:stretch;margin-top:20px}
+/* explicit placement: title row over the story columns, card spans both rows, lead left of the side list,
+   the shared expansion row under the unit, the opinion row last */
+.front .ftitle{grid-column:2/-1;grid-row:1;margin:0;align-self:end}
+.front .kpi{grid-column:1;grid-row:1/span 2}
+.front #lead{grid-column:2;grid-row:2}
+.front #side{grid-column:3;grid-row:2}
+.ttl{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);margin:0 0 10px}
+.ttl span[title],h2 span[title]{cursor:help}
 .kicker{font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
 /* card section titles vs. their subtitles */
-.kpi .ttl{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);margin:0 0 10px}
 .kpi .kicker{font-size:10px;letter-spacing:.08em;color:var(--muted);margin:0 0 4px}
 .kpi{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 14px 16px;
   display:flex;flex-direction:column;justify-content:space-between;align-items:center;text-align:center;gap:10px}
@@ -146,10 +153,17 @@ a{color:inherit}
 .dek{font-size:14.5px;color:var(--ink2);margin:0 0 10px;line-height:1.45;max-width:62ch}
 .dek.orig{font-style:italic}
 .meta{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px;color:var(--muted);flex-wrap:wrap}
-.meta .l,.meta .r{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;min-width:0}
-.meta .r{margin-left:auto}
+.meta .l{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;min-width:0;color:var(--ink2)}
+.meta .r{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;margin-left:auto}
 .meta .src{color:var(--ink2);overflow:hidden;text-overflow:ellipsis}
 .badge{display:inline-flex;align-items:center;gap:4px;flex:0 0 auto}
+/* lean bar: outlets carrying the bundle, split left / center / right; click opens the bundle's headlines */
+.lbar{display:inline-flex;width:66px;height:7px;border-radius:3px;overflow:hidden;background:var(--grid);cursor:pointer;
+  vertical-align:middle;border:0;padding:0;flex:0 0 auto;transition:outline-color .15s ease}
+.lbar i{display:block;height:100%;min-width:0}
+.lbar i:nth-child(1){background:var(--ink)}.lbar i:nth-child(2){background:var(--ink2);opacity:.55}.lbar i:nth-child(3){background:var(--ink);opacity:.25}
+.lbar:hover,.lbar[aria-expanded="true"]{outline:2px solid var(--baseline);outline-offset:1px}
+.srow .lbar{width:48px;height:6px}
 /* outlet wordmarks sit in a fixed, invisible frame (transparent background, no outline) so every
    logo occupies the same box and lines up. Dark mode: text-only wordmarks are inverted (hue kept)
    so black lettering reads; logos with their own colored field are left alone. */
@@ -160,20 +174,19 @@ a{color:inherit}
 .item .logo{width:66px;height:14px}
 @media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])) .logo img:not(.field){filter:invert(1) hue-rotate(180deg)}}
 :root[data-theme="dark"] .logo img:not(.field){filter:invert(1) hue-rotate(180deg)}
-.chip{display:inline-block;font-weight:600;font-size:11px;padding:1px 6px;border-radius:6px;font-variant-numeric:tabular-nums}
-.chip.n{background:color-mix(in srgb,var(--dv-n2) 22%,transparent);color:var(--dv-n2)}
-.chip.z{background:var(--dv-0);color:var(--ink2)}
-.chip.p{background:color-mix(in srgb,var(--dv-p2) 22%,transparent);color:var(--dv-p2)}
-.chip.u{background:var(--dv-u);color:var(--muted)}
+/* sentiment chips: neutral beige with the red or blue mixed in at |score|/2 (set inline by sentChip);
+   ±2 are solid with white digits */
+.chip{display:inline-block;font-weight:700;font-size:11px;padding:1px 7px;border-radius:6px;font-variant-numeric:tabular-nums;
+  color:var(--ink);background:var(--dv-0)}
+.chip.w{color:#fff}
+.chip.u{background:var(--dv-u);color:var(--muted);font-weight:600}
 /* bundle sentiment as an overlay on the card image: solid surface so it reads over any photo */
-.chip.ov{position:absolute;background:var(--surface);border:1px solid var(--border);box-shadow:0 1px 4px rgba(0,0,0,.25);
-  font-size:13px;padding:3px 9px;left:10px;bottom:10px}
-.chip.ov.z{color:var(--ink2)}
+.chip.ov{position:absolute;box-shadow:0 1px 4px rgba(0,0,0,.25);font-size:13px;padding:3px 9px;left:10px;bottom:10px}
 .th .chip.ov{font-size:10px;padding:1px 6px;left:auto;bottom:auto;right:4px;top:4px;border-radius:5px}
 .more{border:0;background:none;font:inherit;font-size:12px;color:var(--ink2);cursor:pointer;padding:0;
   text-decoration:underline;text-decoration-color:var(--baseline);text-underline-offset:2px;white-space:nowrap}
 .more:hover{color:var(--ink)}
-.bundle{grid-column:2/-1;border-top:1px solid var(--grid);margin-top:-6px}
+.bundle{grid-column:2/-1;grid-row:3;border-top:1px solid var(--grid);margin-top:-6px}
 .bundle[hidden]{display:none}
 .bundle .storyhead{margin-top:12px}
 
@@ -189,6 +202,30 @@ a{color:inherit}
 .srow .meta{font-size:11px;gap:5px}
 .srow .meta .chip{font-size:10px}
 .front .empty{grid-column:2/-1}
+
+/* opinion & analysis row */
+.opinion{grid-column:2/-1;grid-row:4;border-top:1px solid var(--grid);padding-top:14px}
+.opinion[hidden]{display:none}
+.oprow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+.opcard{min-width:0}
+.opcard .th{width:100%;height:auto;aspect-ratio:16/10;margin-bottom:8px}
+.opcard .th .chip.ov{left:8px;bottom:8px;right:auto;top:auto;font-size:12px;padding:2px 8px}
+.opcard .hl{font-size:15.5px;line-height:1.25;margin:0 0 6px}
+.opcard .meta{font-size:11px}
+.opcard .logo{width:70px;height:16px}
+.oprow.single .opcard{grid-column:1/-1;display:grid;grid-template-columns:240px minmax(0,1fr);gap:18px;align-items:start}
+.oprow.single .opcard .th{margin:0}
+.oprow.single .opcard .hl{font-size:20px}
+
+/* "Israel among the world's news": bar list of subject groups */
+.wrow{display:grid;grid-template-columns:170px minmax(0,1fr) 52px;gap:10px;align-items:center;font-size:12.5px;color:var(--ink2);padding:3px 0;max-width:760px}
+.wrow .wl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wb{height:12px;background:color-mix(in srgb,var(--ink) 4%,transparent);border-radius:3px;overflow:hidden}
+.wb i{display:block;height:100%;background:var(--baseline);transition:width .45s ease}
+.wrow.isr .wl,.wrow.isr .wv{font-weight:700;color:var(--ink)}
+.wrow.isr .wb i{background:var(--ink)}
+.wrow.oth .wl,.wrow.oth .wv{color:var(--muted);font-style:italic}
+.wv{text-align:right;font-variant-numeric:tabular-nums}
 
 /* chart section */
 .section{border-top:1px solid var(--grid);padding:20px 0 6px;margin-top:20px;position:relative}
@@ -266,8 +303,11 @@ footer li b{color:var(--ink2);font-weight:600}
   #more{display:none}
   #more.open{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 0 2px}
   .livebar{display:flex;margin:6px 0 0;white-space:normal;font-size:11.5px}
-  .front{grid-template-columns:1fr;gap:18px;margin-top:16px}
-  .bundle{grid-column:1/-1}
+  .front{grid-template-columns:1fr;column-gap:0;row-gap:18px;margin-top:16px}
+  .front .ftitle,.front .kpi,.front #lead,.front #side,.bundle,.opinion{grid-column:1;grid-row:auto}
+  .oprow{grid-template-columns:1fr 1fr;gap:14px}
+  .oprow.single .opcard{grid-template-columns:1fr}
+  .wrow{grid-template-columns:110px minmax(0,1fr) 48px}
   .kpi{display:grid;grid-template-columns:1fr 1fr;gap:0 14px;align-items:start;padding:14px}
   .kpi .att,.kpi .sent{display:flex;flex-direction:column;align-items:center;align-self:stretch}
   .kpi .ttl{margin:0 0 8px}
@@ -338,14 +378,24 @@ footer li b{color:var(--ink2);font-weight:600}
       <div class="sv none" id="heroSent">—</div>
     </div>
   </div>
+  <p class="ttl ftitle" id="frontTitle"><span title="Ranked by front-page prominence in the selected period and outlets">Top stories</span></p>
   <div class="lead" id="lead"></div>
   <div class="side" id="side"></div>
+  <div class="opinion" id="opinion" hidden>
+    <p class="ttl"><span title="Op-eds, analysis and commentary in the selected period, ranked by front-page prominence">Opinion &amp; analysis</span></p>
+    <div class="oprow" id="opRow"></div>
+  </div>
 </section>
 
 <div class="section" id="mainCard">
   <h2>Attention &amp; Sentiment <span id="chartInfo"></span></h2>
   <div class="legend" id="mainLegend"></div>
   <div id="mainChart"><div class="skel" aria-hidden="true"></div></div>
+</div>
+
+<div class="section" id="worldCard">
+  <h2><span id="worldTitle">Israel among the world's news</span></h2>
+  <div id="worldBars"></div>
 </div>
 
 <div class="tooltip" id="tooltip"></div>
@@ -436,8 +486,34 @@ footer li b{color:var(--ink2);font-weight:600}
       <li>Each card shows the bundle's best-placed headline (the most recent one on ties); if that headline has
         no image, the next best-placed one with an image takes the card, and the bundle renders as text when
         none has one.</li>
-      <li>The kicker is the bundle title, the logo is the outlet (its name on hover), the chip on the picture
-        is the bundle's prominence-weighted mean sentiment, and "and N more" opens the rest of the bundle.</li>
+      <li>The kicker is the bundle title, the logo is the outlet (its name on hover), and the chip on the
+        picture is the bundle's prominence-weighted mean sentiment: neutral beige, with red or blue mixed in
+        proportionally to the score, solid at ±2.</li>
+      <li>The line under each card reads "[placement] at [outlet] + N news sites": the placement is where the
+        card's headline peaked on that outlet's homepage (top story, top 5, top 10, top 20); N is the number
+        of other outlets carrying the story. The small bar splits those outlets into Left, Center and Right
+        (hover for the counts); clicking it lists every headline in the bundle.</li>
+    </ul>
+
+    <h3>Opinion &amp; analysis</h3>
+    <ul>
+      <li>The op-eds, analysis pieces and commentary the scoring model categorised as opinion in the selected
+        period and outlets, ranked by front-page prominence; the four most prominent are shown, each with its
+        own sentiment score. In the data so far every −2 or +2 score belongs to this category, so this is
+        where the sharpest framing lives.</li>
+      <li>With a single qualifying piece the card widens; with none, the section is hidden.</li>
+    </ul>
+
+    <h3>Israel among the world's news</h3>
+    <ul>
+      <li>The international attention on the selected front pages, split into twelve subjects: United States
+        (US politics and North American affairs seen from abroad), Rest of Middle East, Israel, EU / Europe
+        (EU politics, individual European countries, royals), UK, Russia &amp; Ukraine, global themes
+        (economy, migration, climate), Asia, China, Latin America, Africa, and other.</li>
+      <li>Israel's bar is the same figure as the card's "of international news": Israel-related weight
+        divided by international weight. The other subjects share the remainder in proportion to the
+        classifier's topic weights, so the panel and the card never disagree. Sorted by share; follows the
+        period and outlet filters.</li>
     </ul>
 
     <h3>The chart</h3>
@@ -467,6 +543,10 @@ footer li b{color:var(--ink2);font-weight:600}
 
     <h3>Changelog</h3>
     <ul>
+      <li><b>2026-09-13 · V2.1.</b> Opinion &amp; analysis row under the top stories; "placement at outlet +
+        N news sites" line with a clickable Left / Center / Right bar; full-color sentiment chips; "Israel
+        among the world's news" panel; international rubric i3 (new subjects: North America, royals) with
+        the earlier days re-classified.</li>
       <li><b>2026-09-11 · V2.0 "The Israel Mirror".</b> Front-page layout: masthead, top-story cards with
         images and standfirsts, outlet logos and flags, 30-day headline window; international-coverage
         benchmark rubric i2 (bilateral stories count as international) with the earlier days re-classified.</li>
@@ -758,18 +838,50 @@ const sentWord=s=>s==null?null:s<=-.6?["sharply negative","neg"]:s<=-.15?["negat
 // Israel-related weight as a share of international weight, pooled over the window and
 // the selected outlets (same numerator as the attention share; denominator from the
 // international benchmark). null when no classified rows fall in the window.
-function intlShare(S){
+function intlPool(S){
   const useHourly=S.interval.start>=Date.now()-HOURLY_KEPT_DAYS*864e5;
   const rows=useHourly?INTL.hourly:INTL.daily;
   const lo=useHourly?S.interval.start:floorGran.daily(S.interval.start);
-  let isr=0,intl=0;
+  const nG=(META.intl_groups||[]).length;
+  let isr=0,intl=0;const g=new Array(nG).fill(0);
   for(const r of rows){
     if(!S.selNames.has(r[1]))continue;
     const ms=useHourly?parseTs(r[0]):parseTs(r[0]+"T00:00:00Z");
     if(ms<lo||ms>=S.interval.end)continue;
     intl+=r[3];isr+=r[5];
+    if(r[6])for(let i=0;i<nG;i++)g[i]+=r[6][i]||0;
   }
-  return intl?Math.min(1,isr/intl):null;
+  return intl?{intl,isr,g}:null;
+}
+function intlShare(S){const p=intlPool(S);return p?Math.min(1,p.isr/p.intl):null}
+// Subject groups as shares of international attention. Israel's share is the card figure
+// (pipeline numerator); the other groups split the remainder by the classifier's weights.
+function groupShares(S){
+  const p=intlPool(S),labels=META.intl_groups||[];
+  if(!p||!labels.length||!(INTL.cols||[]).includes("g"))return null;
+  const isr=Math.min(1,p.isr/p.intl),I=labels.indexOf("Israel");
+  let T=0;for(let i=0;i<labels.length;i++)if(i!==I)T+=p.g[i];
+  const rows=labels.map((label,i)=>({label,isr:i===I,share:i===I?isr:(T?(1-isr)*p.g[i]/T:0)}));
+  rows.sort((a,b)=>b.share-a.share);
+  return {rows,rank:rows.findIndex(r=>r.isr)+1,n:rows.length};
+}
+const ordinal=n=>n+(n%100>=11&&n%100<=13?"th":["th","st","nd","rd"][n%10]||"th");
+function renderWorld(S){
+  const el=$("#worldBars");el.innerHTML="";
+  const g=groupShares(S);
+  const nSel=S.selNames.size;
+  $("#worldTitle").title=`Share of international front-page attention · ${PRESET_LABEL[state.preset]} · ${nSel} outlet${nSel===1?"":"s"}. `
+    +"Israel's bar is the card's lead figure (Israel-related weight ÷ international weight); the other subjects share the remainder by the classifier's topic weights."
+    +(g?` Israel ranks ${ordinal(g.rank)} of ${g.n}.`:"");
+  if(!g){const e=document.createElement("div");e.className="empty";e.textContent="No international-benchmark data for this selection.";el.appendChild(e);return}
+  const max=Math.max(...g.rows.map(r=>r.share))||1;
+  for(const r of g.rows){
+    const row=document.createElement("div");row.className="wrow"+(r.isr?" isr":r.label==="Other"?" oth":"");
+    const wl=document.createElement("span");wl.className="wl";wl.textContent=r.label;
+    const wb=document.createElement("span");wb.className="wb";const i=document.createElement("i");i.style.width=(100*r.share/max).toFixed(1)+"%";wb.appendChild(i);
+    const wv=document.createElement("span");wv.className="wv";wv.textContent=fmtPct(r.share);
+    row.append(wl,wb,wv);el.appendChild(row);
+  }
 }
 // Tween a figure from the value it currently shows to the new one (first paint counts up from 0).
 // Skips the motion when reduced-motion is set or the tab is hidden (rAF stalls in background tabs).
@@ -1123,9 +1235,12 @@ function sentChip(v,mean){
   const el=document.createElement("span");el.className="chip";
   if(v==null){el.textContent="·";el.classList.add("u");el.title="not yet scored";return el}
   el.textContent=mean?fmtSent1(v):(v>0?"+":"")+v;
-  el.classList.add(Math.abs(v)<.15?"z":v<0?"n":"p");
+  const P=Math.min(100,Math.round(Math.abs(v)/2*100));
+  if(P>0)el.style.background=`color-mix(in srgb, var(${v<0?"--dv-n2":"--dv-p2"}) ${P}%, var(--dv-0))`;
+  if(P>=55)el.classList.add("w");
   return el;
 }
+const fmtWhen=ts=>new Date(ts).toLocaleString(undefined,{month:"short",day:"numeric",hour:"numeric"});
 
 /* ---------- stories ---------- */
 function makeItemRow(it){
@@ -1137,8 +1252,7 @@ function makeItemRow(it){
   if(it.ht){tr=document.createElement("div");tr.className="m";tr.style.fontStyle="italic";
     tr.style.color="var(--ink2)";tr.textContent="→ "+trunc(it.ht,100)}
   const m=document.createElement("div");m.className="m";
-  m.textContent=new Date(it.fs).toLocaleString(undefined,{month:"short",day:"numeric",hour:"numeric"})
-    +(it.c?` · ${it.c.replaceAll("_"," ")}`:"");
+  m.textContent=fmtWhen(it.fs)+(it.c?` · ${it.c.replaceAll("_"," ")}`:"");
   h.append(srcBadge(it.src),a);if(tr)h.append(tr);h.append(m);row.appendChild(h);
   return row;
 }
@@ -1165,14 +1279,16 @@ function topBundles(list,n){
     b.items.sort(byRank);
     b.lead=b.items[0];b.card=b.items.find(it=>it.img)||b.lead;
     b.sent=b.sd?b.sn/b.sd:null;b.nSources=b.srcs.size;
+    b.lean={left:0,center:0,right:0};
+    for(const n of b.srcs){const l=SRC[n]&&SRC[n].lean;if(l in b.lean)b.lean[l]++}
   }
   bundles.sort((a,b)=>(b.score-a.score)||(b.items.length-a.items.length));
   return bundles.slice(0,n);
 }
 
-function imageBox(cls,it,src,sent){
+function imageBox(cls,it,src,sent,mean=true){
   const box=document.createElement("div");box.className=cls;
-  const chip=sentChip(sent,true);chip.classList.add("ov");
+  const chip=sentChip(sent,mean);chip.classList.add("ov");
   const fallback=()=>{box.innerHTML="";box.classList.add("noimg");box.appendChild(logoEl(src));box.appendChild(chip)};
   if(it.img){
     const im=document.createElement("img");im.alt="";im.loading="eager";im.decoding="async";im.referrerPolicy="no-referrer";
@@ -1182,33 +1298,37 @@ function imageBox(cls,it,src,sent){
   return box;
 }
 
-// meta row: [flag · logo · outlet · "and N more…"]  …  [date · bundle sentiment]
-// "and N more…" opens the rest of the bundle in the shared expansion row under the unit.
+// meta row: "[placement] at [wordmark] + N news sites [lean bar]"  …  [date]
+// The lean bar (outlets carrying the bundle, split left/center/right) opens the rest of
+// the bundle in the shared expansion row under the unit.
 const expand={el:null,open:null,btns:new Map()};
-function bundleMeta(b,withTime){
+const placementOf=it=>{const r=it.r!=null?it.r:it.w>=10?1:it.w>=5?5:it.w>=3?10:20;
+  return r===1?"The top story":r<=5?"A top-5 story":r<=10?"A top-10 story":"A top-20 story"};
+function leanBar(b){
+  const {left,center,right}=b.lean,total=left+center+right;
+  if(!total)return null;
+  const bar=document.createElement("button");bar.type="button";bar.className="lbar";
+  bar.title=`Left ${left} · Center ${center} · Right ${right} — click for all ${b.items.length} headlines`;
+  bar.setAttribute("aria-label",bar.title);bar.setAttribute("aria-expanded","false");bar.setAttribute("aria-controls","frontExpand");
+  for(const n of [left,center,right]){const i=document.createElement("i");i.style.flex=String(n);bar.appendChild(i)}
+  bar.onclick=()=>toggleBundle(b);
+  expand.btns.set(b.st,{btn:bar});
+  return bar;
+}
+function bundleMeta(b){
   const meta=document.createElement("div");meta.className="meta";
   const l=document.createElement("span");l.className="l";
-  l.appendChild(srcBadge(b.card.src));
-  const rest=b.items.filter(it=>it!==b.card);
-  if(rest.length){
-    const btn=document.createElement("button");btn.type="button";btn.className="more";
-    btn.textContent=`and ${rest.length} more… ▾`;btn.setAttribute("aria-expanded","false");
-    btn.setAttribute("aria-controls","frontExpand");
-    expand.btns.set(b.st,{btn,rest});
-    btn.onclick=()=>toggleBundle(b);
-    l.appendChild(btn);
-  }
-  const r=document.createElement("span");r.className="r";
-  r.append(document.createTextNode(new Date(b.card.fs).toLocaleString(undefined,{month:"short",day:"numeric",hour:"numeric"})));
+  l.append(document.createTextNode(placementOf(b.card)+" at "),srcBadge(b.card.src));
+  const others=b.nSources-1;
+  if(others>0)l.append(document.createTextNode(` + ${others} news site${others===1?"":"s"}`));
+  const bar=leanBar(b);if(bar)l.appendChild(bar);
+  const r=document.createElement("span");r.className="r";r.textContent=fmtWhen(b.card.fs);
   meta.append(l,r);
   return meta;
 }
 function toggleBundle(b){
   const el=expand.el;
-  for(const [st,{btn,rest}] of expand.btns){
-    const on=st===b.st&&expand.open!==b.st;
-    btn.textContent=`and ${rest.length} more… ${on?"▴":"▾"}`;btn.setAttribute("aria-expanded",String(on));
-  }
+  for(const [st,{btn}] of expand.btns)btn.setAttribute("aria-expanded",String(st===b.st&&expand.open!==b.st));
   if(expand.open===b.st){el.hidden=true;expand.open=null;return}
   el.innerHTML="";
   const head=document.createElement("div");head.className="storyhead";
@@ -1216,16 +1336,16 @@ function toggleBundle(b){
   const n=document.createElement("span");n.className="m";
   n.textContent=` · ${b.items.length} headlines · ${b.nSources} outlet${b.nSources>1?"s":""}`;
   head.append(tt,n);el.appendChild(head);
-  for(const it of expand.btns.get(b.st).rest)el.appendChild(makeItemRow(it));
+  for(const it of b.items)el.appendChild(makeItemRow(it));
   el.hidden=false;expand.open=b.st;
 }
 
-function headlineEl(b,href){
+function headlineEl(it){
   const p=document.createElement("p");p.className="hl";
-  const a=document.createElement("a");a.href=b.card.u;a.target="_blank";a.rel="noopener";
-  const full=b.card.ht||b.card.h;a.textContent=trunc(full,100);a.title=full;p.appendChild(a);return p;
+  const a=document.createElement("a");a.href=it.u;a.target="_blank";a.rel="noopener";
+  const full=it.ht||it.h;a.textContent=trunc(full,100);a.title=full;p.appendChild(a);return p;
 }
-function kickerEl(b){const k=document.createElement("p");k.className="skick";k.textContent=b.title;return k}
+function kickerEl(text){const k=document.createElement("p");k.className="skick";k.textContent=text;return k}
 
 function renderFront(list){
   const lead=$("#lead"),side=$("#side");lead.innerHTML="";side.innerHTML="";
@@ -1233,6 +1353,7 @@ function renderFront(list){
     expand.el.hidden=true;$("#front").appendChild(expand.el)}
   expand.el.hidden=true;expand.open=null;expand.btns.clear();
   const bundles=topBundles(list,4);
+  $("#frontTitle").hidden=!bundles.length;
   if(!bundles.length){
     const e=document.createElement("div");e.className="empty";
     e.textContent="No clustered stories for this selection yet.";lead.appendChild(e);side.hidden=true;return;
@@ -1240,19 +1361,45 @@ function renderFront(list){
   side.hidden=false;
   const b=bundles[0],src=SRC[b.card.src]||{display:b.card.src};
   lead.appendChild(imageBox("img",b.card,src,b.sent));
-  lead.appendChild(kickerEl(b));
-  lead.appendChild(headlineEl(b));
+  lead.appendChild(kickerEl(b.title));
+  lead.appendChild(headlineEl(b.card));
   if(b.card.d){const d=document.createElement("p");d.className="dek";d.textContent=trunc(b.card.d,150);lead.appendChild(d)}
   else if(b.card.ht){const d=document.createElement("p");d.className="dek orig";d.textContent=trunc(b.card.h,150);lead.appendChild(d)}
-  lead.appendChild(bundleMeta(b,true));
+  lead.appendChild(bundleMeta(b));
   for(const sb of bundles.slice(1)){
     const row=document.createElement("div");row.className="srow";
     row.appendChild(imageBox("th",sb.card,SRC[sb.card.src]||{display:sb.card.src},sb.sent));
     const body=document.createElement("div");
-    body.appendChild(kickerEl(sb));body.appendChild(headlineEl(sb));
-    body.appendChild(bundleMeta(sb,false));
+    body.appendChild(kickerEl(sb.title));body.appendChild(headlineEl(sb.card));
+    body.appendChild(bundleMeta(sb));
     row.appendChild(body);side.appendChild(row);
   }
+}
+
+/* ---------- opinion & analysis ---------- */
+// one card per article: live-blog headline variants share a URL, keep the best-placed one
+const opinionItems=list=>{const seen=new Set();
+  return list.filter(it=>it.c==="opinion").sort(byRank).filter(it=>!seen.has(it.u)&&seen.add(it.u))};
+function opinionCard(it,single){
+  const card=document.createElement("div");card.className="opcard";
+  card.appendChild(imageBox("th",it,SRC[it.src]||{display:it.src},it.s,false));
+  const body=document.createElement("div");
+  body.appendChild(headlineEl(it));
+  if(single&&it.d){const d=document.createElement("p");d.className="dek";d.textContent=trunc(it.d,150);body.appendChild(d)}
+  const meta=document.createElement("div");meta.className="meta";
+  const l=document.createElement("span");l.className="l";l.appendChild(srcBadge(it.src));
+  const r=document.createElement("span");r.className="r";r.textContent=fmtWhen(it.fs);
+  meta.append(l,r);body.appendChild(meta);
+  card.appendChild(body);
+  return card;
+}
+function renderOpinion(list){
+  const sec=$("#opinion"),row=$("#opRow");row.innerHTML="";
+  const ops=opinionItems(list);
+  sec.hidden=!ops.length;
+  if(!ops.length)return;
+  row.classList.toggle("single",ops.length===1);
+  for(const it of ops.slice(0,4))row.appendChild(opinionCard(it,ops.length===1));
 }
 
 // Cluster the drill-down by story: multi-article stories first (count desc,
@@ -1356,6 +1503,8 @@ function render(){
   const partial=interval.start<Date.now()-ITEMS_KEPT_DAYS*864e5-6e4;
   const list=ITEMS.filter(it=>S.selNames.has(it.src)&&parseTs(it.fs)<interval.end&&parseTs(it.ls)>=interval.start);
   renderFront(list);
+  renderOpinion(list);
+  renderWorld(S);
   renderStories(list,"Israel-related stories",
     cap(PRESET_LABEL[state.preset])+" · grouped into cross-outlet stories"+(partial?` · headlines within the last ${ITEMS_KEPT_DAYS} days`:""),
     false);
