@@ -117,12 +117,14 @@ a{color:inherit}
 .kpi{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 14px 16px;
   display:flex;flex-direction:column;justify-content:space-between;align-items:center;text-align:center;gap:10px}
 .kpi .att{display:flex;flex-direction:column;align-items:center;max-width:100%}
+.kpi .strip{display:flex;flex-direction:column;align-items:center}
+.kpi .kicker.under{margin:6px 0 0}
 .kpi .num{font:600 94px/.9 var(--font-display);letter-spacing:-.045em;font-variant-numeric:lining-nums tabular-nums}
 .kpi .num.long{font-size:74px}
-.kpi .sub{margin-top:16px}
+.kpi .sub{margin-top:4px}
 .kpi .inum{font:600 40px/1 var(--font-display);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .kpi .inum.none{color:var(--muted)}
-.kpi .popline{font-size:12.5px;line-height:1.4;color:var(--ink2);margin:14px 0 0;max-width:19ch}
+.kpi .popline{font-size:12.5px;line-height:1.4;color:var(--ink2);margin:12px 0 0;max-width:100%}
 .kpi .popline b{font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
 .kpi .popline[hidden]{display:none}
 .delta{display:inline-flex;align-items:baseline;gap:5px;font-size:13px;margin:12px 0 0;color:var(--ink2);
@@ -140,6 +142,17 @@ a{color:inherit}
 .kpi .sv.neg{color:var(--dv-n2)}
 .kpi .sv.pos{color:var(--dv-p2)}
 .kpi .sv.none{color:var(--muted)}
+/* attention pie: top subjects of international coverage, Israel popped out; click → the panel below */
+.pie{margin:14px 0 6px;cursor:pointer;width:100%;display:flex;justify-content:center}
+.pie[hidden]{display:none}
+.pie svg{width:190px;height:150px;overflow:visible}
+.pie path{stroke:var(--surface);stroke-width:1.5;transition:opacity .15s}
+.pie:hover path:not(.isr){opacity:.85}
+.pie .isr{fill:var(--ink)}
+.pie text{font:600 11px var(--font-ui);fill:var(--ink)}
+.pie text .pct{font:600 11px var(--font-display)}
+.pie:focus-visible{outline:2px solid var(--baseline);outline-offset:4px;border-radius:8px}
+#worldCard{scroll-margin-top:210px}
 
 .lead{min-width:0}
 .img{aspect-ratio:16/9;border-radius:8px;background:var(--grid);overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative}
@@ -312,17 +325,21 @@ footer li b{color:var(--ink2);font-weight:600}
   .oprow.single .opcard{grid-template-columns:1fr}
   .wrow{grid-template-columns:110px minmax(0,1fr) 48px}
   .chartctl{margin-top:-4px}
-  .kpi{display:grid;grid-template-columns:1fr 1fr;gap:0 14px;align-items:start;padding:14px}
-  .kpi .att,.kpi .sent{display:flex;flex-direction:column;align-items:center;align-self:stretch}
-  .kpi .ttl{margin:0 0 8px}
-  .kpi .kicker{margin:0 0 4px}
-  .kpi .num{font-size:62px}
-  .kpi .num.long{font-size:50px}
-  .kpi .sv{font-size:44px;margin-top:8px}
-  .kpi .sub{margin-top:12px}
-  .kpi .inum{font-size:30px}
-  .kpi .popline{font-size:11.5px;margin-top:10px}
-  .kpi .sent{border-top:0;border-left:1px solid var(--grid);margin:0;padding:0 0 0 14px}
+  .kpi{display:flex;flex-direction:column;align-items:center;padding:14px;gap:0}
+  .kpi .att{width:100%}
+  .kpi .strip{display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;column-gap:12px;align-items:center;width:100%;text-align:right}
+  .kpi .strip .ttl{grid-column:1;grid-row:1;margin:0;text-align:left}
+  .kpi .strip .num{grid-column:2;grid-row:1;font-size:52px}
+  .kpi .strip .num.long{font-size:44px}
+  .kpi .strip .kicker.under{grid-column:2;grid-row:2;margin-top:2px}
+  .kpi .sub{display:none}
+  .pie{margin:8px 0 2px}
+  .pie svg{width:250px;height:198px}
+  .kpi .popline{font-size:12.5px;margin-top:8px}
+  .kpi .sent{display:flex;justify-content:space-between;align-items:center;width:100%;padding-top:10px;margin-top:10px}
+  .kpi .sent .ttl{margin:0}
+  .kpi .sv{font-size:34px;margin:0}
+  #worldCard{scroll-margin-top:170px}
   .hl{font-size:23px}
   .srow .hl{font-size:15px}
   .srow{grid-template-columns:64px minmax(0,1fr)}
@@ -365,13 +382,16 @@ footer li b{color:var(--ink2);font-weight:600}
 <section class="front" id="front" aria-live="polite">
   <div class="kpi">
     <div class="att">
-      <p class="ttl">Attention</p>
-      <p class="kicker">Of international news</p>
-      <div class="num" id="heroNum" title="Israel-related front-page weight as a share of the international front-page weight on the selected outlets">—</div>
+      <div class="strip">
+        <p class="ttl">Attention</p>
+        <div class="num" id="heroNum" title="Israel-related front-page weight as a share of the international front-page weight on the selected outlets">—</div>
+        <p class="kicker under">Of all international news</p>
+      </div>
       <div style="max-width:100%"><span class="delta" id="heroDelta" hidden><span class="v"></span><span class="lbl"></span></span></div>
+      <div class="pie" id="heroPie" role="link" tabindex="0" title="Israel among the world's news — open the full breakdown" hidden></div>
       <div class="sub">
-        <p class="kicker">Of all front-page news</p>
         <div class="inum" id="heroAll" title="Israel-related weight as a share of all front-page weight on the selected outlets">—</div>
+        <p class="kicker under">Of all front-page news</p>
       </div>
       <p class="popline" id="heroPop" hidden>That's <b></b> more than its share of world population.</p>
     </div>
@@ -474,6 +494,10 @@ footer li b{color:var(--ink2);font-weight:600}
         headlines divided by the prominence weight of all international headlines on the selected outlets over
         the same hours, pooled over the selected period. It answers: of the foreign news these front pages
         carried, how much was about Israel?</li>
+      <li><b>The pie</b> between the two figures: the four largest subjects of international coverage in the
+        selection, clockwise from twelve o'clock, with Israel's slice pulled out and labelled (Israel is added
+        as a fifth slice when it is not among the four); everything else is "Other". Hover a slice for its
+        name and share; click the pie to jump to the full breakdown below.</li>
       <li><b>Attention, of all front-page news:</b> for each outlet and hour, Israel-related weight divided by
         the total weight of the top-20 window; then averaged across hours and across the selected outlets.</li>
       <li><b>Previous period:</b> the lead figure computed for the window of equal length immediately before
@@ -551,6 +575,7 @@ footer li b{color:var(--ink2);font-weight:600}
 
     <h3>Changelog</h3>
     <ul>
+      <li><b>2026-09-13 · V2.2.</b> Attention pie in the card; single-column card on phones.</li>
       <li><b>2026-09-13 · V2.1.</b> Opinion &amp; analysis row under the top stories; "placement at outlet +
         N news sites" line with a clickable Left / Center / Right bar; full-color sentiment chips; "Israel
         among the world's news" panel; international rubric i3 (new subjects: North America, royals) with
@@ -873,6 +898,38 @@ function groupShares(S){
   return {rows,rank:rows.findIndex(r=>r.isr)+1,n:rows.length};
 }
 const ordinal=n=>n+(n%100>=11&&n%100<=13?"th":["th","st","nd","rd"][n%10]||"th");
+// Pie slices: the four largest subjects, Israel forced in as a fifth when absent, the rest as "Other".
+function pieSlices(rows){
+  const top=rows.slice(0,4);
+  if(!top.some(r=>r.isr)){const isr=rows.find(r=>r.isr);if(isr)top.push(isr)}
+  const rest=rows.filter(r=>!top.includes(r)).reduce((s,r)=>s+r.share,0);
+  const out=top.map(r=>({label:r.label,share:r.share,isr:r.isr}));
+  if(rest>0)out.push({label:"Other",share:rest,isr:false});
+  return out;
+}
+function renderPie(S){
+  const el=$("#heroPie"),g=groupShares(S);
+  if(!g){el.hidden=true;el.innerHTML="";return}
+  const slices=pieSlices(g.rows),total=slices.reduce((s,x)=>s+x.share,0)||1;
+  const cx=95,cy=75,r=52,pop=6,fills=["58%","42%","28%","16%"];
+  let a0=-Math.PI/2,k=0,svg=`<svg viewBox="0 0 190 150" aria-hidden="true">`;
+  for(const s of slices){
+    const a1=a0+2*Math.PI*s.share/total,mid=(a0+a1)/2;
+    const ox=s.isr?Math.cos(mid)*pop:0,oy=s.isr?Math.sin(mid)*pop:0;
+    const P=a=>`${(cx+ox+r*Math.cos(a)).toFixed(1)},${(cy+oy+r*Math.sin(a)).toFixed(1)}`;
+    const fill=s.isr?"var(--ink)":s.label==="Other"?"var(--grid)":`color-mix(in srgb,var(--ink) ${fills[Math.min(k++,3)]},var(--page))`;
+    const d=s.share>=total-1e-9
+      ?`M${cx-r},${cy} a${r},${r} 0 1 0 ${2*r},0 a${r},${r} 0 1 0 ${-2*r},0`
+      :`M${(cx+ox).toFixed(1)},${(cy+oy).toFixed(1)} L${P(a0)} A${r},${r} 0 ${a1-a0>Math.PI?1:0} 1 ${P(a1)} Z`;
+    svg+=`<path class="${s.isr?"isr":""}" d="${d}" fill="${fill}"><title>${s.label.replace("&","&amp;")} ${fmtPct(s.share)}</title></path>`;
+    if(s.isr){
+      const lx=cx+Math.cos(mid)*(r+pop+10),ly=cy+Math.sin(mid)*(r+pop+10),anchor=Math.cos(mid)>.2?"start":Math.cos(mid)<-.2?"end":"middle";
+      svg+=`<text x="${lx.toFixed(1)}" y="${(ly+4).toFixed(1)}" text-anchor="${anchor}">Israel <tspan class="pct">${fmtPct(s.share)}</tspan></text>`;
+    }
+    a0=a1;
+  }
+  el.innerHTML=svg+"</svg>";el.hidden=false;
+}
 function renderWorld(S){
   const el=$("#worldBars");el.innerHTML="";
   const g=groupShares(S);
@@ -932,6 +989,7 @@ function hero(S){
   const av=$("#heroAll");animateNum(av,cur,fmtPct);av.classList.toggle("none",cur==null);
   const pop=$("#heroPop");pop.hidden=cur==null;
   if(cur!=null){const x=cur*POP.world/POP.israel;pop.querySelector("b").textContent=(x>=100?x.toFixed(0):x.toFixed(1))+"×"}
+  renderPie(S);
   // sentiment: the signed number alone, colored by sign
   const sv=$("#heroSent");sv.className="sv";
   if(cur==null||sent==null){animateNum(sv,null,fmtSent);sv.classList.add("none");sv.title=cur==null?"":"not yet scored"}
@@ -1518,6 +1576,9 @@ function render(){
   dataTable(S);
 }
 
+const goWorld=()=>$("#worldCard").scrollIntoView({behavior:reducedMotion()?"auto":"smooth",block:"start"});
+$("#heroPie").addEventListener("click",goWorld);
+$("#heroPie").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();goWorld()}});
 $("#tblToggle").onclick=()=>{const w=$("#tblWrap");w.hidden=!w.hidden;
   $("#tblToggle").textContent=w.hidden?"Show data table":"Hide data table"};
 const openMethod=()=>{if(location.hash==="#method")$("#methodDetails").open=true};
