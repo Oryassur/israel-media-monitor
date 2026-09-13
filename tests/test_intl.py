@@ -2,7 +2,8 @@
 import unittest
 
 from pipeline import intl
-from pipeline.common import INTL_VERSION, item_id
+from pipeline.common import INTL_PROMPT_PATH, INTL_VERSION, item_id
+from pipeline.publish import INTL_GROUPS
 
 TS = "2026-09-11T10:00:00Z"
 SRC = {"bbc": {"name": "bbc"}}
@@ -36,6 +37,15 @@ class TestPendingClassification(unittest.TestCase):
         self.assertEqual(sorted(got), sorted([on_page[0], on_page[2], "Fresh unclassified not on page"]))
         # on-page items come first so the run's aggregate row is consistent
         self.assertEqual(got[-1], "Fresh unclassified not on page")
+
+
+class TestRubricVocabulary(unittest.TestCase):
+    def test_groups_cover_prompt_slugs(self):
+        self.assertEqual(INTL_VERSION, "i3")
+        text = INTL_PROMPT_PATH.read_text()
+        for _, slugs in INTL_GROUPS:
+            for slug in slugs:
+                self.assertIn(f"`{slug}`", text, slug)
 
 
 if __name__ == "__main__":

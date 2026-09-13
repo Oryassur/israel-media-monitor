@@ -20,15 +20,16 @@ config/sources.yaml        30 outlets: url, country, lang, lean (3-way: left/cen
 config/keywords.yaml       multilingual Israel keyword pre-filter (en/fr/de/es/it)
 prompts/sentiment_rubric_v3.1.md the scoring rubric (versioned — see below; older versions kept for history)
 prompts/cluster_v_c1.md    story-clustering rubric (versioned via CLUSTER_VERSION)
-prompts/intl_v_i2.md       domestic-vs-international rubric (versioned via INTL_VERSION; i2 = any story with another
-                           country as a subject is intl, incl. bilateral; Israel-as-party ⇒ israel-gaza)
+prompts/intl_v_i3.md       domestic-vs-international rubric (versioned via INTL_VERSION; i2 = any story with another
+                           country as a subject is intl, incl. bilateral; Israel-as-party ⇒ israel-gaza; i3 adds
+                           north-america + royals). publish.INTL_GROUPS folds slugs into the dashboard's 12 subject groups
 pipeline/                  the whole pipeline (plain Python, no agent in the loop)
   run.py                   hourly cycle: fetch → extract → detect → score → cluster → intl → enrich → store → publish
   extract.py               homepage HTML → ranked headlines; prominence weights v2 (rank1 ×10, 2–5 ×5, 6–10 ×3, 11–20 ×1, 21+ ×0)
   detect.py                keyword matching per language
   score.py                 LLM sentiment (backends: anthropic API / claude CLI); batch, cached per headline
   cluster.py               LLM story clustering: related items → cross-outlet stories (claude-sonnet-5, "c1")
-  intl.py                  LLM international benchmark over ALL top-20 headlines (claude-haiku-4-5-20251001, "i2")
+  intl.py                  LLM international benchmark over ALL top-20 headlines (claude-haiku-4-5-20251001, "i3")
   enrich.py                article-page og:image + description for related top-10 items (no LLM; best-effort)
   store.py                 data/items + data/stories + data/allitems (monthly jsonl, rewritten) ·
                            data/snapshots (monthly csv, append-only) · data/intl (monthly jsonl, append-only)

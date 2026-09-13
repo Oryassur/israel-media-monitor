@@ -5,8 +5,8 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import urlparse
 
-from .common import (CLUSTER_VERSION, DATA, DOCS_DATA, ENRICH_MIN_WEIGHT, METHOD_VERSION, ROOT,
-                     RUBRIC_VERSION, load_sources, read_jsonl)
+from .common import (CLUSTER_VERSION, DATA, DOCS_DATA, ENRICH_MIN_WEIGHT, INTL_VERSION, METHOD_VERSION,
+                     ROOT, RUBRIC_VERSION, load_sources, read_jsonl)
 from .store import load_all_items, load_all_stories, read_all_snapshots
 
 HOURLY_WINDOW_DAYS = 14
@@ -14,6 +14,34 @@ ITEMS_WINDOW_DAYS = 30
 LOGOS_DIR = ROOT / "docs" / "logos"
 
 COMP_KEYS = ("w_n2", "w_n1", "w_0", "w_p1", "w_p2", "w_u")
+
+# Subject groups for the "Israel among the world's news" panel: classifier topic
+# slugs (prompts/intl_v_*.md) folded into a dozen labels. Order is the wire order
+# of the `g` vector on intl.json rows; unknown slugs fall into the last group.
+INTL_GROUPS = [
+    ("United States", ("us-politics", "north-america")),
+    ("Rest of Middle East", ("middle-east-other",)),
+    ("Israel", ("israel-gaza",)),
+    ("EU / Europe", ("eu-politics", "europe-other", "royals")),
+    ("UK", ("uk-politics",)),
+    ("Russia & Ukraine", ("ukraine-russia",)),
+    ("Global themes", ("economy-global", "migration", "climate")),
+    ("Asia", ("asia-other",)),
+    ("China", ("china",)),
+    ("Latin America", ("latin-america",)),
+    ("Africa", ("africa",)),
+    ("Other", ("other",)),
+]
+INTL_GROUP_LABELS = [g for g, _ in INTL_GROUPS]
+_SLUG_GROUP = {slug: i for i, (_, slugs) in enumerate(INTL_GROUPS) for slug in slugs}
+
+
+def _topic_groups(topics):
+    """Fold a {slug: weight} map into the INTL_GROUPS vector."""
+    g = [0] * len(INTL_GROUPS)
+    for slug, w in (topics or {}).items():
+        g[_SLUG_GROUP.get(slug, len(g) - 1)] += w
+    return g
 
 
 def _write(name, obj):
@@ -61,23 +89,26 @@ def _row_comp(s, by_src):
 
 def _intl_series(snaps, hourly_cut):
     """International-benchmark rows for the dashboard: per run (hourly window) and per
-    day (full history), each [when, source, total_w, intl_w, uncl_w, israel_w] where
+    day (full history), each [when, source, total_w, intl_w, uncl_w, israel_w, g] where
     israel_w is the main pipeline's Israel-related weight for that run — the same
     numerator as the attention share, so "share of international coverage" =
-    israel_w / intl_w. Only classified rows (iv present) are used."""
+    israel_w / intl_w — and g is the topic weight per INTL_GROUPS entry. Only
+    classified rows (iv present) are used."""
     isr = {(r["ts"], r["source"]): int(r["israel_weight"] or 0)
            for r in snaps if r["fetch_ok"] in ("1", 1) and r["israel_weight"] != ""}
     rows = []
     for path in sorted((DATA / "intl").glob("*.jsonl")):
         rows.extend(r for r in read_jsonl(path) if r.get("iv") and (r["ts"], r["source"]) in isr)
-    hourly = [[r["ts"], r["source"], r["total_w"], r["intl_w"], r.get("uncl_w", 0), isr[(r["ts"], r["source"])]]
+    hourly = [[r["ts"], r["source"], r["total_w"], r["intl_w"], r.get("uncl_w", 0),
+               isr[(r["ts"], r["source"])], _topic_groups(r.get("topics"))]
               for r in rows if r["ts"] >= hourly_cut]
-    acc = defaultdict(lambda: [0, 0, 0, 0])
+    acc = defaultdict(lambda: [0, 0, 0, 0, [0] * len(INTL_GROUPS)])
     for r in rows:
         d = acc[(r["ts"][:10], r["source"])]
         d[0] += r["total_w"]; d[1] += r["intl_w"]; d[2] += r.get("uncl_w", 0); d[3] += isr[(r["ts"], r["source"])]
+        d[4] = [a + b for a, b in zip(d[4], _topic_groups(r.get("topics")))]
     daily = [[date, src, *v] for (date, src), v in sorted(acc.items())]
-    return {"cols": ["when", "source", "total_w", "intl_w", "uncl_w", "israel_w"],
+    return {"cols": ["when", "source", "total_w", "intl_w", "uncl_w", "israel_w", "g"],
             "hourly": hourly, "daily": daily}
 
 
@@ -182,6 +213,8 @@ def build():
         "comp_exact_since": min((s["ts"] for s in snaps if s.get("w_n2", "") != ""), default=None),
         "items_window_days": ITEMS_WINDOW_DAYS,
         "enrich_min_weight": ENRICH_MIN_WEIGHT,
+        "intl": INTL_VERSION,
+        "intl_groups": INTL_GROUP_LABELS,
         "sources": [_source_meta(s, LOGOS_DIR) for s in sources],
     })
     _write("intl.json", _intl_series(snaps, hourly_cut))

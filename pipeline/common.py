@@ -27,7 +27,9 @@ CLUSTER_PROMPT_PATH = ROOT / "prompts" / f"cluster_v_{CLUSTER_VERSION}.md"
 # International-coverage benchmark (domestic vs. international + topic).
 # i2 (2026-09-11): any story with another country as a subject is international,
 # including bilateral ones; Israel-as-party stories always get israel-gaza.
-INTL_VERSION = "i2"
+# i3 (2026-09-13): slugs north-america + royals added; us-politics and
+# europe-other documented as established. Backfill with the backfill-intl workflow.
+INTL_VERSION = "i3"
 INTL_MODEL = "claude-haiku-4-5-20251001"
 INTL_PROMPT_PATH = ROOT / "prompts" / f"intl_v_{INTL_VERSION}.md"
 MAX_INTL_ITEMS_PER_RUN = 600
