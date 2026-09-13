@@ -150,7 +150,6 @@ a{color:inherit}
 .pie:hover path:not(.isr){opacity:.85}
 .pie .isr{fill:var(--ink)}
 .pie text{font:600 11px var(--font-ui);fill:var(--ink)}
-.pie text .pct{font:600 11px var(--font-display)}
 .pie:focus-visible{outline:2px solid var(--baseline);outline-offset:4px;border-radius:8px}
 #worldCard{scroll-margin-top:210px}
 
@@ -496,8 +495,8 @@ footer li b{color:var(--ink2);font-weight:600}
         carried, how much was about Israel?</li>
       <li><b>The pie</b> between the two figures: the four largest subjects of international coverage in the
         selection, clockwise from twelve o'clock, with Israel's slice pulled out and labelled (Israel is added
-        as a fifth slice when it is not among the four); everything else is "Other". Hover a slice for its
-        name and share; click the pie to jump to the full breakdown below.</li>
+        as a fifth slice when it is not among the four); everything else is "Other". Hover any slice,
+        including Israel's, for its name and share; click the pie to jump to the full breakdown below.</li>
       <li><b>Attention, of all front-page news:</b> for each outlet and hour, Israel-related weight divided by
         the total weight of the top-20 window; then averaged across hours and across the selected outlets.</li>
       <li><b>Previous period:</b> the lead figure computed for the window of equal length immediately before
@@ -924,7 +923,7 @@ function renderPie(S){
     svg+=`<path class="${s.isr?"isr":""}" d="${d}" fill="${fill}"><title>${s.label.replace("&","&amp;")} ${fmtPct(s.share)}</title></path>`;
     if(s.isr){
       const lx=cx+Math.cos(mid)*(r+pop+10),ly=cy+Math.sin(mid)*(r+pop+10),anchor=Math.cos(mid)>.2?"start":Math.cos(mid)<-.2?"end":"middle";
-      svg+=`<text x="${lx.toFixed(1)}" y="${(ly+4).toFixed(1)}" text-anchor="${anchor}">Israel <tspan class="pct">${fmtPct(s.share)}</tspan></text>`;
+      svg+=`<text x="${lx.toFixed(1)}" y="${(ly+4).toFixed(1)}" text-anchor="${anchor}"><title>Israel ${fmtPct(s.share)}</title>Israel</text>`;
     }
     a0=a1;
   }
