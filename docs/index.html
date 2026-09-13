@@ -290,6 +290,17 @@ svg text.ann{font-size:11px}
 table.data{border-collapse:collapse;font-size:12.5px;width:100%}
 table.data th,table.data td{padding:5px 10px;text-align:right;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums}
 table.data th:first-child,table.data td:first-child{text-align:left}
+table.data th{font-weight:600;color:var(--ink2);white-space:nowrap}
+table.data th.sortable{cursor:pointer;user-select:none}
+table.data th.sortable:hover,table.data th.on{color:var(--ink)}
+table.data th .arr{font-size:9px;margin-left:3px;color:var(--muted)}
+table.outlets td.name{white-space:nowrap}
+table.outlets td.name .logo{width:80px;height:18px;vertical-align:middle;margin-right:8px}
+table.outlets td.name span.nm{vertical-align:middle}
+table.outlets td .chip{font-size:12px}
+/* stories list: title + mode switch on one row */
+.ihead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.ihead .seg{flex:0 0 auto;margin-top:2px}
 footer{color:var(--muted);font-size:12px;margin-top:26px;border-top:1px solid var(--grid);padding-top:14px;scroll-margin-top:210px}
 footer #provenance{margin:0 0 10px;color:var(--muted)}
 footer summary{font-size:13px;font-weight:600;color:var(--ink2);cursor:pointer}
@@ -419,6 +430,11 @@ footer li b{color:var(--ink2);font-weight:600}
   <div id="mainChart"><div class="skel" aria-hidden="true"></div></div>
 </div>
 
+<div class="section" id="outletsCard">
+  <h2><span title="Per outlet, for the selected period: how many Israel-related headlines peaked as the top story, in positions 2–5, 6–10 and 11–20; Israel-related weight as a share of the outlet's international weight and of all its front-page weight; mean headline sentiment. Click a column to sort.">Outlets</span></h2>
+  <div class="tblwrap"><table class="data outlets" id="outletsTbl"></table></div>
+</div>
+
 <div class="section" id="worldCard">
   <h2><span id="worldTitle">Israel among the world's news</span></h2>
   <div id="worldBars"></div>
@@ -427,8 +443,10 @@ footer li b{color:var(--ink2);font-weight:600}
 <div class="tooltip" id="tooltip"></div>
 
 <div class="items" id="itemsPanel">
-  <h2 id="itemsTitle">Israel-related stories</h2>
-  <p class="sub" id="itemsSub"></p>
+  <div class="ihead">
+    <div><h2 id="itemsTitle">Israel-related stories</h2><p class="sub" id="itemsSub"></p></div>
+    <div class="seg" id="listMode" role="group" aria-label="List order"></div>
+  </div>
   <div id="itemsList"></div>
 </div>
 
@@ -533,6 +551,14 @@ footer li b{color:var(--ink2);font-weight:600}
       <li>With a single qualifying piece the card widens; with none, the section is hidden.</li>
     </ul>
 
+    <h3>Outlets</h3>
+    <ul>
+      <li>One row per selected outlet for the selected period: how many Israel-related headlines peaked as its
+        top story, in positions 2–5, 6–10 and 11–20; its Israel-related weight as a share of its international
+        weight and of all its front-page weight; and the mean sentiment of its Israel-related headlines. Click
+        a column heading to sort.</li>
+    </ul>
+
     <h3>Israel among the world's news</h3>
     <ul>
       <li>The international attention on the selected front pages, split into twelve subjects: United States
@@ -572,6 +598,8 @@ footer li b{color:var(--ink2);font-weight:600}
 
     <h3>Changelog</h3>
     <ul>
+      <li><b>2026-09-13 · V2.3.</b> Sortable Outlets table; story list switchable between "By story"
+        (each story expandable) and "Latest"; headline rows show the peak homepage position.</li>
       <li><b>2026-09-13 · V2.2.</b> Attention pie in the card; single-column card on phones.</li>
       <li><b>2026-09-13 · V2.1.</b> Opinion &amp; analysis row under the top stories; "placement at outlet +
         N news sites" line with a clickable Left / Center / Right bar; full-color sentiment chips; "Israel
@@ -927,6 +955,60 @@ function renderPie(S){
   }
   el.innerHTML=svg+"</svg>";el.hidden=false;
 }
+/* ---------- outlets table ---------- */
+const OUTLET_COLS=[["Outlet","name"],["Top story","r1"],["Top 2–5","r5"],["Top 6–10","r10"],["Top 11–20","r20"],
+  ["Of international news","intl"],["Of all front-page news","share"],["Sentiment","sent"]];
+const outletSort={key:"intl",dir:-1};
+// Per selected outlet over the window: headline counts by peak position (from the items list), attention
+// shares and sentiment (from the hourly/daily rows), and the Israel-of-international share (intl rows).
+function outletStats(S,list){
+  const rows=new Map();
+  for(const name of S.selNames)rows.set(name,{name,r1:0,r5:0,r10:0,r20:0,sh:0,shn:0,sn:0,sd:0,isr:0,intl:0});
+  for(const it of list){const o=rows.get(it.src);if(!o)continue;const r=peakRank(it);
+    if(r===1)o.r1++;else if(r<=5)o.r5++;else if(r<=10)o.r10++;else o.r20++}
+  const useHourly=S.interval.start>=Date.now()-HOURLY_KEPT_DAYS*864e5;
+  const lo=useHourly?S.interval.start:floorGran.daily(S.interval.start);
+  const inWin=r=>{const ms=useHourly?parseTs(r[0]):parseTs(r[0]+"T00:00:00Z");return ms>=lo&&ms<S.interval.end};
+  for(const r of (useHourly?HOURLY:DAILY)){
+    const o=rows.get(r[1]);if(!o||!(useHourly?r[5]===1:r[5]>0)||!inWin(r))continue;
+    if(r[2]!=null){o.sh+=r[2];o.shn++}
+    if(r[3]!=null&&r[4]>0){o.sn+=r[3]*r[4];o.sd+=r[4]}
+  }
+  for(const r of (useHourly?INTL.hourly:INTL.daily)){const o=rows.get(r[1]);if(!o||!inWin(r))continue;o.intl+=r[3];o.isr+=r[5]}
+  return [...rows.values()].map(o=>({name:o.name,display:DISPN[o.name]||o.name,r1:o.r1,r5:o.r5,r10:o.r10,r20:o.r20,
+    intl:o.intl?Math.min(1,o.isr/o.intl):null,share:o.shn?o.sh/o.shn:null,sent:o.sd?o.sn/o.sd:null}));
+}
+function renderOutlets(S,list){
+  const tb=$("#outletsTbl");tb.innerHTML="";
+  const stats=outletStats(S,list);
+  const {key,dir}=outletSort;
+  stats.sort((a,b)=>{const x=a[key],y=b[key];
+    if(key==="name")return dir*a.display.localeCompare(b.display);
+    if(x==null&&y==null)return 0;if(x==null)return 1;if(y==null)return -1;   // blanks last either way
+    return dir*(x-y)||a.display.localeCompare(b.display)});
+  const thead=document.createElement("thead"),hr=document.createElement("tr");
+  for(const [label,k] of OUTLET_COLS){
+    const th=document.createElement("th");th.className="sortable"+(k===key?" on":"");th.textContent=label;
+    th.setAttribute("aria-sort",k===key?(dir>0?"ascending":"descending"):"none");
+    const arr=document.createElement("span");arr.className="arr";arr.textContent=k===key?(dir>0?"▲":"▼"):"";th.appendChild(arr);
+    th.onclick=()=>{if(outletSort.key===k)outletSort.dir=-outletSort.dir;else{outletSort.key=k;outletSort.dir=k==="name"?1:-1}renderOutlets(S,list)};
+    hr.appendChild(th);
+  }
+  thead.appendChild(hr);tb.appendChild(thead);
+  const tbody=document.createElement("tbody");
+  for(const o of stats){
+    const tr=document.createElement("tr");
+    const name=document.createElement("td");name.className="name";
+    name.appendChild(logoEl(SRC[o.name]||{display:o.display}));
+    const nm=document.createElement("span");nm.className="nm";nm.textContent=o.display;name.appendChild(nm);tr.appendChild(name);
+    for(const k of ["r1","r5","r10","r20"]){const td=document.createElement("td");td.textContent=o[k]||"—";if(!o[k])td.style.color="var(--muted)";tr.appendChild(td)}
+    for(const k of ["intl","share"]){const td=document.createElement("td");td.textContent=fmtPct(o[k]);if(o[k]==null)td.style.color="var(--muted)";tr.appendChild(td)}
+    const sd=document.createElement("td");if(o.sent==null)sd.textContent="—";else sd.appendChild(sentChip(o.sent,true));tr.appendChild(sd);
+    tbody.appendChild(tr);
+  }
+  tb.appendChild(tbody);
+}
+
 function renderWorld(S){
   const el=$("#worldBars");el.innerHTML="";
   const g=groupShares(S);
@@ -1292,7 +1374,7 @@ const FIELD_LOGOS=new Set(["nypost","cnn","foxnews","newsweek","bbc","euronews",
 const storyTitle=st=>(STORIES[st]&&STORIES[st].t)||"";
 // cut at a word boundary, "…" marks the cut
 const trunc=(s,n)=>{s=(s||"").trim();if(s.length<=n)return s;const c=s.slice(0,n-1);const i=c.lastIndexOf(" ");return (i>n*.6?c.slice(0,i):c).replace(/[\s,;:—–-]+$/,"")+"…"};
-const fmtSent1=v=>v<0?"−"+(-v).toFixed(1):(v>0?"+":"")+v.toFixed(1);
+const fmtSent1=v=>Math.abs(v)<.05?"0.0":v<0?"−"+(-v).toFixed(1):"+"+v.toFixed(1);
 // sentiment chip: per-headline integer score, or a bundle mean (1 decimal)
 function sentChip(v,mean){
   const el=document.createElement("span");el.className="chip";
@@ -1315,7 +1397,7 @@ function makeItemRow(it){
   if(it.ht){tr=document.createElement("div");tr.className="m";tr.style.fontStyle="italic";
     tr.style.color="var(--ink2)";tr.textContent="→ "+trunc(it.ht,100)}
   const m=document.createElement("div");m.className="m";
-  m.textContent=fmtWhen(it.fs)+(it.c?` · ${it.c.replaceAll("_"," ")}`:"");
+  m.textContent=fmtWhen(it.fs)+" · "+posLabel(it);
   h.append(srcBadge(it.src),a);if(tr)h.append(tr);h.append(m);row.appendChild(h);
   return row;
 }
@@ -1362,6 +1444,9 @@ function imageBox(cls,it,src,sent,mean=true){
 // meta row: "[placement] at [wordmark] + N news sites"  …  [date]
 // "+ N news sites" opens the whole bundle in the shared expansion row under the unit.
 const expand={el:null,open:null,btns:new Map()};
+// peak homepage position of a headline: rank when published, else inferred from its weight
+const peakRank=it=>it.r!=null?it.r:it.w>=10?1:it.w>=5?5:it.w>=3?10:20;
+const posLabel=it=>{const r=peakRank(it);return r===1?"Top story":r<=5?"Top 5":r<=10?"Top 10":"Top 20"};
 const placementOf=it=>{const r=it.r!=null?it.r:it.w>=10?1:it.w>=5?5:it.w>=3?10:20;
   return r===1?"The top story":r<=5?"A top-5 story":r<=10?"A top-10 story":"A top-20 story"};
 function bundleMeta(b){
@@ -1468,7 +1553,7 @@ function groupByStory(list){
   }
   const groups=[];
   for(const [st,items] of by){
-    if(items.length>1)groups.push({title:storyTitle(st)||"Untitled story",items:items.sort(byRank),
+    if(items.length>1)groups.push({st,title:storyTitle(st)||"Untitled story",items:items.sort(byRank),
       nSources:new Set(items.map(i=>i.src)).size});
     else other.push(items[0]);
   }
@@ -1477,30 +1562,51 @@ function groupByStory(list){
   return groups;
 }
 
-function renderStories(list,title,sub,expanded){
+// Two list modes: grouped by story (each story expandable) or latest first. State is reset by render().
+const listState={mode:"story",expanded:new Set(),allGroups:false,shownLatest:40,last:null};
+const LIST_MODES=[["By story","story"],["Latest","latest"]];
+(function buildListMode(){
+  const el=$("#listMode");
+  for(const [label,val] of LIST_MODES){
+    const b=document.createElement("button");b.type="button";b.textContent=label;b.dataset.val=val;
+    b.setAttribute("aria-pressed",String(listState.mode===val));
+    b.onclick=()=>{listState.mode=val;for(const x of el.children)x.setAttribute("aria-pressed",String(x===b));
+      if(listState.last)renderStories(listState.last.list,listState.last.title,listState.last.sub)};
+    el.appendChild(b);
+  }
+})();
+function renderStories(list,title,sub){
+  listState.last={list,title,sub};
   $("#itemsTitle").textContent=title;
   $("#itemsSub").textContent=sub;
   const el=$("#itemsList");el.innerHTML="";
   if(!list.length){el.innerHTML='<div class="empty">No headlines in this window.</div>';return}
+  const more=(text,fn)=>{const b=document.createElement("button");b.className="linklike";b.style.margin="8px 0 4px";b.textContent=text;b.onclick=fn;return b};
+  if(listState.mode==="latest"){
+    const sorted=[...list].sort((a,b)=>b.fs<a.fs?-1:b.fs>a.fs?1:0);
+    for(const it of sorted.slice(0,listState.shownLatest))el.appendChild(makeItemRow(it));
+    if(sorted.length>listState.shownLatest)
+      el.appendChild(more(`Show ${Math.min(40,sorted.length-listState.shownLatest)} more of ${sorted.length}`,
+        ()=>{listState.shownLatest+=40;renderStories(list,title,sub)}));
+    return;
+  }
   const groups=groupByStory(list);
-  const shown=expanded?groups:groups.slice(0,5);
-  let rendered=0;
+  const shown=listState.allGroups?groups:groups.slice(0,5);
   for(const g of shown){
+    const key=g.st||"__other";
     const head=document.createElement("div");head.className="storyhead";
     const tt=document.createElement("span");tt.textContent=g.title;
     const n=document.createElement("span");n.className="m";
     n.textContent=` · ${g.items.length} headline${g.items.length>1?"s":""}`+(g.nSources?` · ${g.nSources} outlet${g.nSources>1?"s":""}`:"");
     head.append(tt,n);el.appendChild(head);
-    const rows=expanded?g.items:g.items.slice(0,3);
+    const open=listState.expanded.has(key);
+    const rows=open?g.items:g.items.slice(0,3);
     for(const it of rows)el.appendChild(makeItemRow(it));
-    rendered+=rows.length;
+    if(!open&&g.items.length>3)
+      el.appendChild(more(`+ ${g.items.length-3} more in this story`,()=>{listState.expanded.add(key);renderStories(list,title,sub)}));
   }
-  if(!expanded&&rendered<list.length){
-    const b=document.createElement("button");b.className="linklike";b.style.marginTop="12px";
-    b.textContent=`Show all ${list.length} headlines`;
-    b.onclick=()=>renderStories(list,title,sub,true);
-    el.appendChild(b);
-  }
+  if(!listState.allGroups&&groups.length>shown.length)
+    el.appendChild(more(`Show all ${groups.length} stories`,()=>{listState.allGroups=true;renderStories(list,title,sub)}));
 }
 
 function bucketLabel(S,i){
@@ -1514,7 +1620,8 @@ function showStoriesFor(S,i,members){
   const bucketMs=S.ts[i],span=GRAN_SPAN[S.gran];
   const list=ITEMS.filter(it=>members.has(it.src)&&parseTs(it.fs)<bucketMs+span&&parseTs(it.ls)>=bucketMs);
   const partial=bucketMs<Date.now()-ITEMS_KEPT_DAYS*864e5-6e4;
-  renderStories(list,"Stories on homepages",bucketLabel(S,i)+(partial?` · headlines kept ${ITEMS_KEPT_DAYS} days`:""),false);
+  listState.expanded.clear();listState.allGroups=false;listState.shownLatest=40;
+  renderStories(list,"Stories on homepages",bucketLabel(S,i)+(partial?` · headlines kept ${ITEMS_KEPT_DAYS} days`:""));
   $("#itemsPanel").scrollIntoView({behavior:reducedMotion()?"auto":"smooth",block:"nearest"});
 }
 
@@ -1559,10 +1666,11 @@ function render(){
   const list=ITEMS.filter(it=>S.selNames.has(it.src)&&parseTs(it.fs)<interval.end&&parseTs(it.ls)>=interval.start);
   renderFront(list);
   renderOpinion(list);
+  renderOutlets(S,list);
   renderWorld(S);
+  listState.expanded.clear();listState.allGroups=false;listState.shownLatest=40;
   renderStories(list,"Israel-related stories",
-    cap(PRESET_LABEL[state.preset])+" · grouped into cross-outlet stories"+(partial?` · headlines within the last ${ITEMS_KEPT_DAYS} days`:""),
-    false);
+    cap(PRESET_LABEL[state.preset])+(partial?` · headlines within the last ${ITEMS_KEPT_DAYS} days`:""));
   dataTable(S);
 }
 
