@@ -169,13 +169,6 @@ a{color:inherit}
 .meta .r{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;margin-left:auto}
 .meta .src{color:var(--ink2);overflow:hidden;text-overflow:ellipsis}
 .badge{display:inline-flex;align-items:center;gap:4px;flex:0 0 auto}
-/* lean bar: outlets carrying the bundle, split left / center / right; click opens the bundle's headlines */
-.lbar{display:inline-flex;width:66px;height:7px;border-radius:3px;overflow:hidden;background:var(--grid);cursor:pointer;
-  vertical-align:middle;border:0;padding:0;flex:0 0 auto;transition:outline-color .15s ease}
-.lbar i{display:block;height:100%;min-width:0}
-.lbar i:nth-child(1){background:var(--ink)}.lbar i:nth-child(2){background:var(--ink2);opacity:.55}.lbar i:nth-child(3){background:var(--ink);opacity:.25}
-.lbar:hover,.lbar[aria-expanded="true"]{outline:2px solid var(--baseline);outline-offset:1px}
-.srow .lbar{width:48px;height:6px}
 /* outlet wordmarks sit in a fixed, invisible frame (transparent background, no outline) so every
    logo occupies the same box and lines up. Dark mode: text-only wordmarks are inverted (hue kept)
    so black lettering reads; logos with their own colored field are left alone. */
@@ -195,7 +188,7 @@ a{color:inherit}
 /* bundle sentiment as an overlay on the card image: solid surface so it reads over any photo */
 .chip.ov{position:absolute;box-shadow:0 1px 4px rgba(0,0,0,.25);font-size:15px;padding:2px 9px;left:10px;bottom:10px}
 .th .chip.ov{font-size:11.5px;padding:0 6px;left:auto;bottom:auto;right:4px;top:4px;border-radius:5px}
-.more{border:0;background:none;font:inherit;font-size:12px;color:var(--ink2);cursor:pointer;padding:0;
+.more{border:0;background:none;font:inherit;font-size:inherit;color:var(--ink2);cursor:pointer;padding:0;
   text-decoration:underline;text-decoration-color:var(--baseline);text-underline-offset:2px;white-space:nowrap}
 .more:hover{color:var(--ink)}
 .bundle{grid-column:2/-1;grid-row:3;border-top:1px solid var(--grid);margin-top:-6px}
@@ -522,8 +515,7 @@ footer li b{color:var(--ink2);font-weight:600}
         proportionally to the score, solid at ±2.</li>
       <li>The line under each card reads "[placement] at [outlet] + N news sites": the placement is where the
         card's headline peaked on that outlet's homepage (top story, top 5, top 10, top 20); N is the number
-        of other outlets carrying the story. The small bar splits those outlets into Left, Center and Right
-        (hover for the counts); clicking it lists every headline in the bundle.</li>
+        of other outlets carrying the story. Clicking "+ N news sites" lists every headline in the bundle.</li>
     </ul>
 
     <h3>Opinion &amp; analysis</h3>
@@ -979,8 +971,9 @@ function hero(S){
     if(prev!=null){
       const delta=(ish-prev)*100,dir=Math.abs(delta)<.05?"":delta>0?"up":"down";
       if(dir)d.classList.add(dir);
-      d.querySelector(".v").textContent=(dir==="up"?"▲ ":dir==="down"?"▼ ":"= ")+fmtPct(prev);
-      d.querySelector(".lbl").textContent="in previous period";
+      d.querySelector(".v").textContent=dir==="up"?"▲ from ":dir==="down"?"▼ from ":"≈ ";
+      d.querySelector(".lbl").textContent=fmtPct(prev)+(dir?"":" before");
+      d.title=`Previous period (same length): ${fmtPct(prev)} of international news`;
       d.hidden=false;
     }
   }
@@ -1343,8 +1336,6 @@ function topBundles(list,n){
     b.items.sort(byRank);
     b.lead=b.items[0];b.card=b.items.find(it=>it.img)||b.lead;
     b.sent=b.sd?b.sn/b.sd:null;b.nSources=b.srcs.size;
-    b.lean={left:0,center:0,right:0};
-    for(const n of b.srcs){const l=SRC[n]&&SRC[n].lean;if(l in b.lean)b.lean[l]++}
   }
   bundles.sort((a,b)=>(b.score-a.score)||(b.items.length-a.items.length));
   return bundles.slice(0,n);
@@ -1362,30 +1353,24 @@ function imageBox(cls,it,src,sent,mean=true){
   return box;
 }
 
-// meta row: "[placement] at [wordmark] + N news sites [lean bar]"  …  [date]
-// The lean bar (outlets carrying the bundle, split left/center/right) opens the rest of
-// the bundle in the shared expansion row under the unit.
+// meta row: "[placement] at [wordmark] + N news sites"  …  [date]
+// "+ N news sites" opens the whole bundle in the shared expansion row under the unit.
 const expand={el:null,open:null,btns:new Map()};
 const placementOf=it=>{const r=it.r!=null?it.r:it.w>=10?1:it.w>=5?5:it.w>=3?10:20;
   return r===1?"The top story":r<=5?"A top-5 story":r<=10?"A top-10 story":"A top-20 story"};
-function leanBar(b){
-  const {left,center,right}=b.lean,total=left+center+right;
-  if(!total)return null;
-  const bar=document.createElement("button");bar.type="button";bar.className="lbar";
-  bar.title=`Left ${left} · Center ${center} · Right ${right} — click for all ${b.items.length} headlines`;
-  bar.setAttribute("aria-label",bar.title);bar.setAttribute("aria-expanded","false");bar.setAttribute("aria-controls","frontExpand");
-  for(const n of [left,center,right]){const i=document.createElement("i");i.style.flex=String(n);bar.appendChild(i)}
-  bar.onclick=()=>toggleBundle(b);
-  expand.btns.set(b.st,{btn:bar});
-  return bar;
-}
 function bundleMeta(b){
   const meta=document.createElement("div");meta.className="meta";
   const l=document.createElement("span");l.className="l";
   l.append(document.createTextNode(placementOf(b.card)+" at "),srcBadge(b.card.src));
   const others=b.nSources-1;
-  if(others>0)l.append(document.createTextNode(` + ${others} news site${others===1?"":"s"}`));
-  const bar=leanBar(b);if(bar)l.appendChild(bar);
+  // "+ N news sites" opens the bundle's headline list in the shared row under the unit
+  const btn=document.createElement("button");btn.type="button";btn.className="more";
+  btn.textContent=others>0?`+ ${others} news site${others===1?"":"s"}`:`${b.items.length} headline${b.items.length===1?"":"s"}`;
+  btn.title=`All ${b.items.length} headlines in this story`;
+  btn.setAttribute("aria-expanded","false");btn.setAttribute("aria-controls","frontExpand");
+  btn.onclick=()=>toggleBundle(b);
+  expand.btns.set(b.st,{btn});
+  l.appendChild(btn);
   const r=document.createElement("span");r.className="r";r.textContent=fmtWhen(b.card.fs);
   meta.append(l,r);
   return meta;
