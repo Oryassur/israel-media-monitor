@@ -583,7 +583,7 @@ footer li b{color:var(--ink2);font-weight:600}
       <li>A diverging stacked bar per hour (or day, or week). Bar height is the attention share; its colored
         segments split that attention by headline sentiment; the neutral band, including still-unscored
         headlines in fainter gray, straddles the zero line.</li>
-      <li>The largest attention spikes are labeled with the story that dominated them. Click any bar to list
+      <li>The largest attention spikes and the sharpest sentiment shifts are labeled with the story that drove them. Click any bar to list
         the headlines on the homepages at that time.</li>
       <li>For hours before the composition columns existed (2026-09-09) the sentiment split is approximated
         from the headline archive.</li>
@@ -1149,35 +1149,61 @@ function tickStep(v){
 
 // Attention spikes worth labeling: local maxima well above the median, inside
 // the 7-day window where headlines exist, one per distinct dominant story.
+// Chart labels: the biggest attention spikes and the sharpest sentiment shifts,
+// each tagged with the story that drove it. Candidates from both kinds are
+// ranked by strength (how far past their threshold), kept apart, one per story.
+const SENT_SHIFT=0.6,SENT_MIN_ITEMS=5;
 function computeAnnotations(S){
   if(S.groups.length>1)return [];
   const n=S.ts.length;if(n<6)return [];
+  const span=GRAN_SPAN[S.gran],itemsLo=Date.now()-ITEMS_KEPT_DAYS*864e5;
+  const inWindow=i=>S.ts[i]+span>itemsLo;
+  const cands=[];
+  // attention: local maxima at >= 1.5x the period's median share
   const shares=S.combined.map(p=>p.share||0);
   const pos=shares.filter(v=>v>0).sort((a,b)=>a-b);
-  if(!pos.length)return [];
-  const med=pos[Math.floor(pos.length/2)];
-  const span=GRAN_SPAN[S.gran],itemsLo=Date.now()-ITEMS_KEPT_DAYS*864e5;
-  const cands=[];
-  for(let i=0;i<n;i++){
-    const v=shares[i];
-    if(v<=0||v<1.5*med||S.ts[i]+span<=itemsLo)continue;
-    let localMax=true;
-    for(let j=Math.max(0,i-2);j<=Math.min(n-1,i+2);j++)if(shares[j]>v)localMax=false;
-    if(localMax)cands.push({i,v});
+  if(pos.length){
+    const thr=1.5*pos[Math.floor(pos.length/2)];
+    for(let i=0;i<n;i++){
+      const v=shares[i];
+      if(v<=0||v<thr||!inWindow(i))continue;
+      let localMax=true;
+      for(let j=Math.max(0,i-2);j<=Math.min(n-1,i+2);j++)if(shares[j]>v)localMax=false;
+      if(localMax)cands.push({i,kind:"att",val:v,strength:v/thr});
+    }
   }
-  cands.sort((a,b)=>b.v-a.v);
+  // sentiment: local extremes >= SENT_SHIFT away from the period's median, on enough headlines
+  const sents=S.combined.map(p=>p.items>=SENT_MIN_ITEMS&&p.sent!=null?p.sent:null);
+  const known=sents.filter(v=>v!=null).sort((a,b)=>a-b);
+  if(known.length>=6){
+    const med=known[Math.floor(known.length/2)];
+    for(let i=0;i<n;i++){
+      const v=sents[i];if(v==null||!inWindow(i))continue;
+      const dev=v-med;if(Math.abs(dev)<SENT_SHIFT)continue;
+      let extreme=true;
+      for(let j=Math.max(0,i-2);j<=Math.min(n-1,i+2);j++){
+        const u=sents[j];if(u==null)continue;
+        if(dev>0?u>v:u<v)extreme=false;
+      }
+      if(extreme)cands.push({i,kind:"sent",val:v,dir:Math.sign(dev),strength:Math.abs(dev)/SENT_SHIFT});
+    }
+  }
+  cands.sort((a,b)=>b.strength-a.strength);
   const minSep=Math.max(3,Math.ceil(n/12)),picked=[],seen=new Set();
   for(const c of cands){
     if(picked.length===3)break;
     if(picked.some(p=>Math.abs(p.i-c.i)<minSep))continue;
+    // the story behind it: most prominent in the bucket; for a sentiment shift,
+    // most prominent among the headlines framed in the shift's direction
     const ms=S.ts[c.i],w=new Map();
     for(const it of ITEMS){
       if(!it.st||!S.selNames.has(it.src))continue;
-      if(parseTs(it.fs)<ms+span&&parseTs(it.ls)>=ms)w.set(it.st,(w.get(it.st)||0)+it.w);
+      if(c.kind==="sent"&&!(it.s!=null&&Math.sign(it.s)===c.dir))continue;
+      if(parseTs(it.fs)<ms+span&&parseTs(it.ls)>=ms)w.set(it.st,(w.get(it.st)||0)+it.w*(c.kind==="sent"?Math.abs(it.s):1));
     }
     let best=null,bw=0;for(const [st,ww] of w)if(ww>bw){bw=ww;best=st}
     if(!best||seen.has(best))continue;
-    seen.add(best);picked.push({i:c.i,share:c.v,title:storyTitle(best),st:best});
+    seen.add(best);picked.push({...c,title:storyTitle(best),st:best});
   }
   return picked;
 }
@@ -1197,7 +1223,7 @@ function drawStackedChart(el,S){
   const exactMs=META.comp_exact_since?parseTs(META.comp_exact_since):-Infinity;
   const multi=S.groups.length>1;
   let anns=multi?[]:computeAnnotations(S);
-  if(w<560)anns=anns.sort((a,b)=>b.share-a.share).slice(0,1);
+  if(w<560)anns=anns.sort((a,b)=>b.strength-a.strength).slice(0,1);
   anns.sort((a,b)=>a.i-b.i);
   const M={t:anns.length?52:18,r:16,b:26,l:48};
   const H=multi?170:(w<560?230:320);
@@ -1279,7 +1305,7 @@ function drawStackedChart(el,S){
     // Two label rows; a label that would overlap on its row moves to the
     // other, and is dropped if both are taken (labels are measured live).
     const from=grid[0],rowsUsed=[[],[]],ROW_Y=[20,40];
-    for(const a of [...anns].sort((p,q)=>q.share-p.share)){ // biggest spikes claim rows first
+    for(const a of [...anns].sort((p,q)=>q.strength-p.strength)){ // strongest claim rows first
       const si=Math.round((S.ts[a.i]-from)/GRAN_SPAN[S.gran]);
       const e=barExtents(S.combined[a.i]);
       if(!e||si<0||si>=grid.length)continue;
@@ -1288,7 +1314,8 @@ function drawStackedChart(el,S){
       const t=mk("text",{x:0,y:0,"text-anchor":"middle",class:"ann",style:HALO},gEl);
       const title=a.title.length>52?a.title.slice(0,51).replace(/\s\S*$/,"")+"…":a.title;
       const s1=mk("tspan",{class:"t",style:"fill:var(--ink2);font-weight:600"},t);s1.textContent=title;
-      const s2=mk("tspan",{style:"fill:var(--muted)"},t);s2.textContent="  "+(a.share*100).toFixed(1)+"%";
+      const s2=mk("tspan",{style:a.kind==="sent"?`fill:var(${a.val<0?"--dv-n2":"--dv-p2"});font-weight:700`:"fill:var(--muted)"},t);
+      s2.textContent="  "+(a.kind==="sent"?fmtSent1(a.val):(a.val*100).toFixed(1)+"%");
       const tw=t.getComputedTextLength();
       const lx=Math.min(Math.max(ax,M.l+tw/2+2),w-M.r-tw/2),L=lx-tw/2-6,R=lx+tw/2+6;
       const row=rowsUsed.findIndex(used=>!used.some(([a0,b0])=>L<b0&&R>a0));
