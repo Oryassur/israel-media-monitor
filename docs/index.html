@@ -176,13 +176,13 @@ a{color:inherit}
 :root[data-theme="dark"] .logo img:not(.field){filter:invert(1) hue-rotate(180deg)}
 /* sentiment chips: neutral beige with the red or blue mixed in at |score|/2 (set inline by sentChip);
    ±2 are solid with white digits */
-.chip{display:inline-block;font-weight:700;font-size:11px;padding:1px 7px;border-radius:6px;font-variant-numeric:tabular-nums;
+.chip{display:inline-block;font:600 12.5px/1.35 var(--font-display);padding:1px 7px;border-radius:6px;font-variant-numeric:lining-nums tabular-nums;
   color:var(--ink);background:var(--dv-0)}
 .chip.w{color:#fff}
 .chip.u{background:var(--dv-u);color:var(--muted);font-weight:600}
 /* bundle sentiment as an overlay on the card image: solid surface so it reads over any photo */
-.chip.ov{position:absolute;box-shadow:0 1px 4px rgba(0,0,0,.25);font-size:13px;padding:3px 9px;left:10px;bottom:10px}
-.th .chip.ov{font-size:10px;padding:1px 6px;left:auto;bottom:auto;right:4px;top:4px;border-radius:5px}
+.chip.ov{position:absolute;box-shadow:0 1px 4px rgba(0,0,0,.25);font-size:15px;padding:2px 9px;left:10px;bottom:10px}
+.th .chip.ov{font-size:11.5px;padding:0 6px;left:auto;bottom:auto;right:4px;top:4px;border-radius:5px}
 .more{border:0;background:none;font:inherit;font-size:12px;color:var(--ink2);cursor:pointer;padding:0;
   text-decoration:underline;text-decoration-color:var(--baseline);text-underline-offset:2px;white-space:nowrap}
 .more:hover{color:var(--ink)}
@@ -209,7 +209,7 @@ a{color:inherit}
 .oprow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
 .opcard{min-width:0}
 .opcard .th{width:100%;height:auto;aspect-ratio:16/10;margin-bottom:8px}
-.opcard .th .chip.ov{left:8px;bottom:8px;right:auto;top:auto;font-size:12px;padding:2px 8px}
+.opcard .th .chip.ov{left:8px;bottom:8px;right:auto;top:auto;font-size:14px;padding:1px 8px}
 .opcard .hl{font-size:15.5px;line-height:1.25;margin:0 0 6px}
 .opcard .meta{font-size:11px}
 .opcard .logo{width:70px;height:16px}
@@ -230,6 +230,9 @@ a{color:inherit}
 /* chart section */
 .section{border-top:1px solid var(--grid);padding:20px 0 6px;margin-top:20px;position:relative}
 .section h2{font:600 20px/1.2 var(--font-display);margin:0 0 10px;display:flex;align-items:center}
+.sechead{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.sechead h2{margin-bottom:10px}
+.chartctl{display:flex;gap:7px;margin:0 0 10px}
 .info{position:relative;display:inline-block;margin-left:8px}
 .info-btn{width:17px;height:17px;border-radius:50%;border:1px solid var(--border);background:var(--surface);
   color:var(--muted);font:600 10px/1 var(--font-display);cursor:pointer;padding:0;
@@ -269,7 +272,7 @@ svg text.ann{font-size:11px}
 .storyhead:first-of-type{margin-top:6px}
 .storyhead .m{font:400 12px var(--font-ui);color:var(--muted)}
 .item{display:flex;gap:11px;align-items:baseline;padding:7px 0;border-top:1px solid var(--grid)}
-.item .score{flex:0 0 34px;text-align:center;font-weight:600;font-size:12px;border-radius:6px;padding:2px 0}
+.item .score{flex:0 0 36px;text-align:center;padding:1px 0}
 .item .h{min-width:0}
 .item .h .badge{vertical-align:-3px;margin-right:4px}
 .item .h a{color:var(--ink);text-decoration:none}
@@ -308,6 +311,7 @@ footer li b{color:var(--ink2);font-weight:600}
   .oprow{grid-template-columns:1fr 1fr;gap:14px}
   .oprow.single .opcard{grid-template-columns:1fr}
   .wrow{grid-template-columns:110px minmax(0,1fr) 48px}
+  .chartctl{margin-top:-4px}
   .kpi{display:grid;grid-template-columns:1fr 1fr;gap:0 14px;align-items:start;padding:14px}
   .kpi .att,.kpi .sent{display:flex;flex-direction:column;align-items:center;align-self:stretch}
   .kpi .ttl{margin:0 0 8px}
@@ -348,8 +352,6 @@ footer li b{color:var(--ink2);font-weight:600}
     <button class="ghost filtersBtn" id="filtersBtn" type="button" aria-expanded="false" aria-controls="more">Filters <span class="cv">▾</span></button>
   </div>
   <div id="more">
-    <div class="ssel" id="granSel"></div>
-    <div class="ssel" id="splitSel"></div>
     <div class="msel" id="fLean"></div>
     <div class="msel" id="fRegion"></div>
     <div class="msel" id="fSource"></div>
@@ -388,7 +390,13 @@ footer li b{color:var(--ink2);font-weight:600}
 </section>
 
 <div class="section" id="mainCard">
-  <h2>Attention &amp; Sentiment <span id="chartInfo"></span></h2>
+  <div class="sechead">
+    <h2>Attention &amp; Sentiment <span id="chartInfo"></span></h2>
+    <div class="chartctl" aria-label="Chart options">
+      <div class="ssel" id="granSel"></div>
+      <div class="ssel" id="splitSel"></div>
+    </div>
+  </div>
   <div class="legend" id="mainLegend"></div>
   <div id="mainChart"><div class="skel" aria-hidden="true"></div></div>
 </div>
@@ -761,8 +769,7 @@ function syncControls(interval,gran){
   }
   $("#customRange").hidden=state.preset!=="custom";
   const spanDays=(interval.end-interval.start)/864e5;
-  const nFilters=state.regions.size+state.leans.size+state.sources.size
-    +(state.split!=="none"?1:0)+(state.granManual&&state.gran!==defaultGran(spanDays)?1:0);
+  const nFilters=state.regions.size+state.leans.size+state.sources.size;
   const nonDefault=state.preset!=="7d"||state.split!=="none"||state.gran!==defaultGran(spanDays)
     ||state.regions.size>0||state.leans.size>0||state.sources.size>0;
   $("#resetBtn").hidden=!nonDefault;
