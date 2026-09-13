@@ -102,7 +102,9 @@ a{color:inherit}
 .livebar a{color:var(--ink2)}
 
 /* front page: data card | lead story | stories 2–4 */
-.front{display:grid;grid-template-columns:228px minmax(0,1fr) 300px;column-gap:24px;row-gap:12px;align-items:stretch;margin-top:20px}
+/* row 2 is the flexible track: the card spans rows 1–2, and any height it has beyond the story columns must
+   go to row 2, never to the title row */
+.front{display:grid;grid-template-columns:228px minmax(0,1fr) 300px;grid-template-rows:auto 1fr auto auto;column-gap:24px;row-gap:12px;align-items:stretch;margin-top:20px}
 /* explicit placement: title row over the story columns, card spans both rows, lead left of the side list,
    the shared expansion row under the unit, the opinion row last */
 .front .ftitle{grid-column:2/-1;grid-row:1;margin:0;align-self:end}
@@ -311,7 +313,7 @@ footer li b{color:var(--ink2);font-weight:600}
   #more{display:none}
   #more.open{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 0 2px}
   .livebar{display:flex;margin:6px 0 0;white-space:normal;font-size:11.5px}
-  .front{grid-template-columns:1fr;column-gap:0;row-gap:18px;margin-top:16px}
+  .front{grid-template-columns:1fr;grid-template-rows:none;column-gap:0;row-gap:18px;margin-top:16px}
   .front .ftitle,.front .kpi,.front #lead,.front #side,.bundle,.opinion{grid-column:1;grid-row:auto}
   .oprow{grid-template-columns:1fr 1fr;gap:14px}
   .oprow.single .opcard{grid-template-columns:1fr}
