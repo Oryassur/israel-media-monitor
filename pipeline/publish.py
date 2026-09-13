@@ -5,7 +5,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import urlparse
 
-from .common import (CLUSTER_VERSION, DATA, DOCS_DATA, ENRICH_MIN_WEIGHT, INTL_VERSION, METHOD_VERSION,
+from .common import (CLUSTER_VERSION, DATA, DOCS_DATA, ENRICH_MIN_WEIGHT, INTL_VERSION, METHOD_VERSION, SUBJECT_VERSION,
                      ROOT, RUBRIC_VERSION, load_sources, read_jsonl)
 from .store import load_all_items, load_all_stories, read_all_snapshots
 
@@ -188,7 +188,8 @@ def build():
          "u": r["url"], "fs": r["first_seen"], "ls": r["last_seen"],
          "w": r["best_weight"], "r": r.get("best_rank"),
          "s": r.get("sentiment"), "c": r.get("category"), "st": r.get("story"),
-         "img": r.get("img"), "d": r.get("desc")}
+         "img": r.get("img"), "d": r.get("desc"),
+     "sj": r.get("subject"), "fg": r.get("figures") or []}
         for r in items
         if r["last_seen"] >= items_cut and r.get("related") is not False
         and r["best_weight"] > 0
@@ -214,6 +215,7 @@ def build():
         "items_window_days": ITEMS_WINDOW_DAYS,
         "enrich_min_weight": ENRICH_MIN_WEIGHT,
         "intl": INTL_VERSION,
+        "subjects": SUBJECT_VERSION,
         "intl_groups": INTL_GROUP_LABELS,
         "sources": [_source_meta(s, LOGOS_DIR) for s in sources],
     })

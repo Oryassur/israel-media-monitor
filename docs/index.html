@@ -128,9 +128,6 @@ a{color:inherit}
 .kpi .sub{margin-top:4px}
 .kpi .inum{font:600 40px/1 var(--font-display);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .kpi .inum.none{color:var(--muted)}
-.kpi .popline{font-size:12.5px;line-height:1.4;color:var(--ink2);margin:12px 0 0;max-width:100%}
-.kpi .popline b{font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
-.kpi .popline[hidden]{display:none}
 .delta{display:inline-flex;align-items:baseline;gap:5px;font-size:13px;margin:12px 0 0;color:var(--ink2);
   padding:4px 11px 5px;border-radius:999px;background:color-mix(in srgb,var(--ink) 5%,transparent);
   white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
@@ -146,6 +143,27 @@ a{color:inherit}
 .kpi .sv.neg{color:var(--dv-n2)}
 .kpi .sv.pos{color:var(--dv-p2)}
 .kpi .sv.none{color:var(--muted)}
+/* subjects cloud: third strip of the card (desktop: centred title, ⤢ at the right); overlay for the full cloud */
+.kpi .subj{width:100%;border-top:1px solid var(--grid);padding-top:14px;margin-top:14px}
+.kpi .subj[hidden]{display:none}
+.subj .hd{position:relative;text-align:center;margin-bottom:6px}
+.subj .hd .ttl{margin:0;cursor:help}
+.subj .hd .xp{position:absolute;right:-6px;top:-5px}
+.xp,.subjdlg .close{border:0;background:none;color:var(--muted);cursor:pointer;font:600 15px/1 var(--font-ui);padding:3px 5px;border-radius:5px}
+.xp:hover,.subjdlg .close:hover{color:var(--ink);background:var(--grid)}
+.xp:focus-visible,.subjdlg .close:focus-visible,.cloud text:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.cloud{display:block;width:100%;overflow:visible}
+.cloud text{cursor:pointer;transition:opacity .15s}
+.cloud text.sub{font:600 1px var(--font-display)}
+.cloud text.fig{font:italic 500 1px var(--font-display)}
+.cloud.dim text:not(.hot){opacity:.3}
+.subjdlg{width:min(920px,calc(100vw - 48px));max-width:none;padding:16px 22px 18px;border-radius:14px;box-shadow:var(--shadow-pop);color:var(--ink);position:relative}
+.subjdlg::backdrop{background:rgba(20,16,10,.38)}
+.subjdlg .hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.subjdlg .hd h2{margin:0}
+.subjdlg .per{font:400 13px var(--font-ui);color:var(--muted);margin-left:10px}
+.subjdlg .close{font-size:22px;font-weight:400}
+@media (prefers-reduced-motion:reduce){.cloud text{transition:none}}
 /* attention pie: top subjects of international coverage, Israel popped out; click → the panel below */
 .pie{margin:14px 0 6px;cursor:pointer;width:100%;display:flex;justify-content:center}
 .pie[hidden]{display:none}
@@ -350,10 +368,13 @@ footer li b{color:var(--ink2);font-weight:600}
   .kpi .sub{display:none}
   .pie{margin:8px 0 2px}
   .pie svg{width:250px;height:198px}
-  .kpi .popline{font-size:12.5px;margin-top:8px}
   .kpi .sent{display:flex;justify-content:space-between;align-items:center;width:100%;padding-top:10px;margin-top:10px}
   .kpi .sent .ttl{margin:0}
   .kpi .sv{font-size:34px;margin:0}
+  .kpi .subj{padding-top:10px;margin-top:10px}
+  .subj .hd{display:flex;justify-content:space-between;align-items:center;text-align:left}
+  .subj .hd .xp{position:static}
+  .subjdlg{width:calc(100vw - 24px);padding:14px 14px 16px}
   #worldCard{scroll-margin-top:170px}
   .hl{font-size:23px}
   .srow .hl{font-size:15px}
@@ -408,11 +429,14 @@ footer li b{color:var(--ink2);font-weight:600}
         <div class="inum" id="heroAll" title="Israel-related weight as a share of all front-page weight on the selected outlets">—</div>
         <p class="kicker under">Of all front-page news</p>
       </div>
-      <p class="popline" id="heroPop" hidden>That's <b></b> more than its share of world population.</p>
     </div>
     <div class="sent">
       <p class="ttl">Sentiment</p>
       <div class="sv none" id="heroSent">—</div>
+    </div>
+    <div class="subj" id="subjBlock" hidden>
+      <div class="hd"><p class="ttl" title="What the Israel-related headlines are about, and who is in them · size = front-page weight · colour = mean sentiment">Subjects</p><button type="button" class="xp" id="subjOpen" title="Expand">⤢</button></div>
+      <svg class="cloud" id="subjCloud" role="group" aria-label="Subjects"></svg>
     </div>
   </div>
   <h2 class="t2 ftitle" id="frontTitle"><span title="Ranked by front-page prominence in the selected period and outlets">Top stories</span></h2>
@@ -447,6 +471,12 @@ footer li b{color:var(--ink2);font-weight:600}
 </div>
 
 <div class="tooltip" id="tooltip"></div>
+
+<dialog class="card subjdlg" id="subjDlg" aria-label="Subjects">
+  <div class="hd"><h2 class="t2">Subjects<span class="per" id="subjPer"></span></h2><button type="button" class="close" id="subjClose" title="Close">×</button></div>
+  <svg class="cloud" id="subjBig" role="group" aria-label="Subjects, expanded"></svg>
+  <div class="tooltip" id="subjTip"></div>
+</dialog>
 
 <div class="items" id="itemsPanel">
   <div class="ihead">
@@ -524,9 +554,12 @@ footer li b{color:var(--ink2);font-weight:600}
         the total weight of the top-20 window; then averaged across hours and across the selected outlets.</li>
       <li><b>Previous period:</b> the lead figure computed for the window of equal length immediately before
         the selected one. The arrow shows the direction of change.</li>
-      <li><b>Share of world population:</b> the front-page share divided by Israel's share of humanity
-        (8.27 billion / 10.15 million, 2026 estimates from the UN World Population Prospects and Israel's
-        Central Bureau of Statistics).</li>
+      <li><b>Subjects:</b> every Israel-related headline is tagged by an LLM (version s1) with one subject
+        from a living vocabulary — established labels first, labels already in use next, a new label only
+        when nothing fits — and up to three figures, with titles and bynames reconciled to one name
+        ("the Israeli prime minister", "Bibi" and "Netanyahu" are one term). The cloud shows the subjects
+        and figures of the selected period and outlets: size is the front-page weight of the headlines
+        carrying the term, colour its mean sentiment; figures are set in italic. Click a term for its headlines.</li>
       <li><b>Sentiment:</b> the average framing score of the Israel-related headlines in the window, from −2
         (hostile) to +2 (sympathetic), each hour weighted by how many such headlines it had. Framing toward
         Israel is what is scored, not general positivity: a report of Israeli casualties can score positive, a
@@ -605,6 +638,9 @@ footer li b{color:var(--ink2);font-weight:600}
 
     <h3>Changelog</h3>
     <ul>
+      <li><b>2026-09-13 · V2.5.</b> Subjects: a cloud of what the Israel-related headlines are about and who
+        is in them, inside the attention card, expandable; the population comparison retired. Sentiment
+        shifts labelled on the chart alongside attention spikes.</li>
       <li><b>2026-09-13 · V2.4.</b> Page system: one type scale (section titles alike for news and
         analytics), one surface rule (analytics on white cards, editorial on the page), the attention card as a
         right rail beside the top stories.</li>
@@ -1083,10 +1119,8 @@ function hero(S){
       d.hidden=false;
     }
   }
-  // secondary figure: share of all front-page weight, and how it compares with Israel's share of humanity
+  // secondary figure: share of all front-page weight
   const av=$("#heroAll");animateNum(av,cur,fmtPct);av.classList.toggle("none",cur==null);
-  const pop=$("#heroPop");pop.hidden=cur==null;
-  if(cur!=null){const x=cur*POP.world/POP.israel;pop.querySelector("b").textContent=(x>=100?x.toFixed(0):x.toFixed(1))+"×"}
   renderPie(S);
   // sentiment: the signed number alone, colored by sign
   const sv=$("#heroSent");sv.className="sv";
@@ -1411,9 +1445,6 @@ function logoEl(src){
   else l.textContent=monogram(src.display);
   return l;
 }
-// Population constants for the "share of world population" comparison — update yearly.
-// World: UN World Population Prospects, 2026 estimate. Israel: Central Bureau of Statistics, 2026 estimate.
-const POP={world:8.27e9,israel:10.15e6};
 const LOGO_V="4"; // bump when docs/logos/ files are replaced under the same name (Pages caches 10 min)
 // wordmarks that carry their own colored field (readable on dark as-is; never inverted)
 // wordmarks drawn a notch smaller than the box (heavy fields that otherwise dominate the row)
@@ -1664,6 +1695,104 @@ function bucketLabel(S,i){
   return d.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"});
 }
 
+/* ---------- subjects cloud ---------- */
+// Terms of the filtered list: one per subject label and one per figure, weighted by
+// front-page weight, with the weight-mean sentiment of the headlines carrying them.
+function cloudTerms(list){
+  const m=new Map();
+  const add=(label,kind,it)=>{
+    if(!label||label==="Other")return;
+    const key=kind+":"+label.toLowerCase();
+    let t=m.get(key);
+    if(!t){t={key,label,kind,w:0,n:0,sw:0,sn:0,outlets:new Set(),items:[]};m.set(key,t)}
+    t.w+=it.w;t.n++;t.outlets.add(it.src);t.items.push(it);
+    if(it.s!=null){t.sw+=it.s*it.w;t.sn+=it.w}
+  };
+  let total=0;
+  for(const it of list){
+    if(it.sj===undefined)continue;
+    total+=it.w;
+    add(it.sj,"subject",it);
+    for(const f of it.fg||[])add(f,"figure",it);
+  }
+  const terms=[...m.values()].map(t=>({...t,sent:t.sn?t.sw/t.sn:null,share:total?t.w/total:0}));
+  terms.sort((a,b)=>b.w-a.w||a.label.localeCompare(b.label));
+  return terms;
+}
+const termColor=s=>s==null?"var(--ink)":`color-mix(in srgb, var(${s<0?"--dv-n2":"--dv-p2"}) ${Math.min(100,Math.round(Math.abs(s)/2*100))}%, var(--ink))`;
+// Spiral layout: largest first, boxes measured in the DOM, horizontal only, drop what doesn't fit.
+function layoutCloud(svg,terms,W,H,fmin,fmax,onPick,tipEl){
+  svg.setAttribute("viewBox",`0 0 ${W} ${H}`);svg.style.height=H+"px";svg.innerHTML="";
+  if(!terms.length)return 0;
+  const smax=Math.sqrt(terms[0].w),smin=Math.sqrt(terms[terms.length-1].w),placed=[];
+  let n=0;
+  for(const t of terms){
+    const f=smax===smin?fmax:fmin+(fmax-fmin)*(Math.sqrt(t.w)-smin)/(smax-smin);
+    const e=document.createElementNS("http://www.w3.org/2000/svg","text");
+    e.setAttribute("class",t.kind==="figure"?"fig":"sub");e.style.fontSize=f.toFixed(1)+"px";e.style.fill=termColor(t.sent);
+    e.setAttribute("tabindex","0");e.setAttribute("role","button");e.textContent=t.label;
+    svg.appendChild(e);
+    const bb=e.getBBox(),bw=bb.width+6,bh=bb.height+2;
+    let ok=false,x=0,y=0;
+    for(let i=0;i<3000&&!ok;i++){
+      const a=i*0.25,r=1.2*a;
+      x=W/2+r*Math.cos(a)*1.3-bw/2;y=H/2+r*Math.sin(a)*0.8-bh/2;
+      if(x<0||y<0||x+bw>W||y+bh>H)continue;
+      ok=!placed.some(p=>x<p.x+p.w&&x+bw>p.x&&y<p.y+p.h&&y+bh>p.y);
+    }
+    if(!ok){e.remove();continue}
+    placed.push({x,y,w:bw,h:bh});n++;
+    e.setAttribute("x",(x+3).toFixed(1));e.setAttribute("y",(y+1-bb.y).toFixed(1));
+    e.addEventListener("pointerenter",ev=>{svg.classList.add("dim");e.classList.add("hot");if(tipEl)termTip(tipEl,ev,t)});
+    e.addEventListener("pointermove",ev=>{if(tipEl)termTip(tipEl,ev,t)});
+    e.addEventListener("pointerleave",()=>{svg.classList.remove("dim");e.classList.remove("hot");if(tipEl)tipEl.classList.remove("show")});
+    e.addEventListener("click",()=>onPick(t));
+    e.addEventListener("keydown",ev=>{if(ev.key==="Enter"||ev.key===" "){ev.preventDefault();onPick(t)}});
+  }
+  return n;
+}
+function termTip(tt,ev,t){
+  tt.innerHTML="";
+  const h=document.createElement("div");h.className="tt-t";h.textContent=t.label+" · "+(t.kind==="figure"?"Figure":"Subject");tt.appendChild(h);
+  const line=(label,val,color)=>{const row=document.createElement("div");row.className="row";
+    const l=document.createElement("span");l.textContent=label;const v=document.createElement("b");v.textContent=val;if(color)v.style.color=color;
+    row.append(l,v);tt.appendChild(row)};
+  line("Share",fmtPct(t.share));line("Headlines",String(t.n));line("Outlets",String(t.outlets.size));
+  line("Mean sentiment",t.sent==null?"–":fmtSent1(t.sent),t.sent==null?null:`var(${t.sent<0?"--dv-n2":"--dv-p2"})`);
+  const hint=document.createElement("div");hint.className="tt-t";hint.style.marginTop="4px";hint.textContent="click for headlines";tt.appendChild(hint);
+  tt.classList.add("show");
+  const host=tt.offsetParent||tt.parentElement,wr=host.getBoundingClientRect();
+  let lx=ev.clientX-wr.left+14,ly=ev.clientY-wr.top+14;
+  if(lx+tt.offsetWidth>wr.width-8)lx-=tt.offsetWidth+28;
+  if(ly+tt.offsetHeight>wr.height-8)ly-=tt.offsetHeight+28;
+  tt.style.left=lx+"px";tt.style.top=ly+"px";
+}
+const subjState={terms:[],periodLabel:""};
+function pickTerm(t){
+  const dlg=$("#subjDlg");if(dlg.open)dlg.close();
+  listState.expanded.clear();listState.allGroups=false;listState.shownLatest=40;
+  renderStories(t.items,t.label,subjState.periodLabel);
+  $("#itemsPanel").scrollIntoView({behavior:reducedMotion()?"auto":"smooth",block:"nearest"});
+}
+function renderSubjects(list,periodLabel){
+  subjState.terms=cloudTerms(list);subjState.periodLabel=periodLabel;
+  const block=$("#subjBlock"),svg=$("#subjCloud");
+  block.hidden=!subjState.terms.length;
+  if(block.hidden)return;
+  const phone=window.innerWidth<=680,W=svg.clientWidth||198;
+  layoutCloud(svg,subjState.terms.slice(0,phone?18:16),W,phone?170:168,phone?11:10,phone?24:18,pickTerm,$("#tooltip"));
+}
+function openSubjects(){
+  const dlg=$("#subjDlg");$("#subjPer").textContent=subjState.periodLabel;
+  dlg.showModal();
+  const svg=$("#subjBig"),W=svg.clientWidth||600;
+  layoutCloud(svg,subjState.terms.slice(0,60),W,W<600?380:440,12,W<600?30:46,pickTerm,$("#subjTip"));
+}
+$("#subjOpen").addEventListener("click",openSubjects);
+$("#subjClose").addEventListener("click",()=>$("#subjDlg").close());
+$("#subjDlg").addEventListener("click",ev=>{if(ev.target===ev.currentTarget)ev.currentTarget.close()});
+document.fonts&&document.fonts.ready.then(()=>{if(subjState.terms.length)renderSubjects(subjState.list||[],subjState.periodLabel)});
+
 function showStoriesFor(S,i,members){
   const bucketMs=S.ts[i],span=GRAN_SPAN[S.gran];
   const list=ITEMS.filter(it=>members.has(it.src)&&parseTs(it.fs)<bucketMs+span&&parseTs(it.ls)>=bucketMs);
@@ -1716,6 +1845,7 @@ function render(){
   renderOpinion(list);
   renderOutlets(S,list);
   renderWorld(S);
+  subjState.list=list;renderSubjects(list,cap(PRESET_LABEL[state.preset]));
   listState.expanded.clear();listState.allGroups=false;listState.shownLatest=40;
   renderStories(list,"All stories",
     cap(PRESET_LABEL[state.preset])+(partial?` · headlines within the last ${ITEMS_KEPT_DAYS} days`:""));

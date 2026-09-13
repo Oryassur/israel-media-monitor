@@ -10,7 +10,7 @@ import sys
 import time
 from datetime import datetime, timedelta, timezone
 
-from . import enrich, intl, publish
+from . import enrich, intl, publish, subjects
 from .cluster import cluster_items
 from .common import (CLUSTER_VERSION, LOGS, RUBRIC_VERSION, SCORE_RETRY_WINDOW_H,
                      item_id, load_sources, month_key)
@@ -130,6 +130,21 @@ def run(no_llm=False, no_enrich=False):
                     stories_idx[sid]["last_seen"] = ts
             save_stories(stories_idx)
             log(f"clustered {n}/{len(to_cluster)} items")
+
+    # Subject & figure tagging of related items (newest first, capped; the
+    # backlog after a version bump drains over a few runs). Best-effort.
+    if not no_llm:
+        try:
+            to_tag = subjects.pending_subjects(items_idx)
+            if to_tag:
+                for r in to_tag:
+                    r["source_display"] = disp.get(r["source"], r["source"])
+                n = subjects.tag_items(to_tag, subjects.in_use(items_idx, now), log=log)
+                for r in to_tag:
+                    r.pop("source_display", None)
+                log(f"tagged subjects for {n}/{len(to_tag)} items")
+        except Exception as e:  # noqa: BLE001
+            log(f"subjects: pass failed ({e}); continuing")
 
     # International benchmark (all top-20 headlines, aggregates only).
     # Best-effort: nothing in it may ever fail the hourly run.

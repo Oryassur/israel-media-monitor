@@ -34,6 +34,15 @@ INTL_MODEL = "claude-haiku-4-5-20251001"
 INTL_PROMPT_PATH = ROOT / "prompts" / f"intl_v_{INTL_VERSION}.md"
 MAX_INTL_ITEMS_PER_RUN = 600
 
+# Subject & figure tagging of related items (one subject label from a living
+# vocabulary + up to three reconciled figures per headline; dashboard "Subjects"
+# cloud). Bumping SUBJECT_VERSION re-tags everything, MAX_SUBJECT_ITEMS_PER_RUN
+# items per hourly run, newest first — no separate backfill.
+SUBJECT_VERSION = "s1"
+SUBJECT_MODEL = "claude-sonnet-5"
+SUBJECT_PROMPT_PATH = ROOT / "prompts" / f"subjects_v_{SUBJECT_VERSION}.md"
+MAX_SUBJECT_ITEMS_PER_RUN = 300
+
 # Retry scoring for unscored items this long after first_seen (hours)
 SCORE_RETRY_WINDOW_H = 48
 

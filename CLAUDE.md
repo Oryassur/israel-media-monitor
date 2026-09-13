@@ -20,15 +20,17 @@ config/sources.yaml        30 outlets: url, country, lang, lean (3-way: left/cen
 config/keywords.yaml       multilingual Israel keyword pre-filter (en/fr/de/es/it)
 prompts/sentiment_rubric_v3.1.md the scoring rubric (versioned — see below; older versions kept for history)
 prompts/cluster_v_c1.md    story-clustering rubric (versioned via CLUSTER_VERSION)
+prompts/subjects_v_s1.md   subject + figures tagging rubric (versioned via SUBJECT_VERSION; living vocabulary + name reconciliation)
 prompts/intl_v_i3.md       domestic-vs-international rubric (versioned via INTL_VERSION; i2 = any story with another
                            country as a subject is intl, incl. bilateral; Israel-as-party ⇒ israel-gaza; i3 adds
                            north-america + royals). publish.INTL_GROUPS folds slugs into the dashboard's 12 subject groups
 pipeline/                  the whole pipeline (plain Python, no agent in the loop)
-  run.py                   hourly cycle: fetch → extract → detect → score → cluster → intl → enrich → store → publish
+  run.py                   hourly cycle: fetch → extract → detect → score → cluster → subjects → intl → enrich → store → publish
   extract.py               homepage HTML → ranked headlines; prominence weights v2 (rank1 ×10, 2–5 ×5, 6–10 ×3, 11–20 ×1, 21+ ×0)
   detect.py                keyword matching per language
   score.py                 LLM sentiment (backends: anthropic API / claude CLI); batch, cached per headline
   cluster.py               LLM story clustering: related items → cross-outlet stories (claude-sonnet-5, "c1")
+  subjects.py              LLM subject + figures per related item (claude-sonnet-5, "s1"); ≤300/run newest first, self-backfilling
   intl.py                  LLM international benchmark over ALL top-20 headlines (claude-haiku-4-5-20251001, "i3")
   enrich.py                article-page og:image + description for related top-10 items (no LLM; best-effort)
   store.py                 data/items + data/stories + data/allitems (monthly jsonl, rewritten) ·
@@ -74,6 +76,13 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   rows approximately — headline present at best_weight between first/last seen,
   scaled to the run's exact total_w — and marks them `approx: true`). The whole
   pass is best-effort — it must never fail the hourly run.
+- **Subjects** (V2.5, 2026-09-13): every related item carries `subject` (one label:
+  established list → in-use label → newly minted, never "Other" unless nothing
+  fits), `figures` (≤3 people, press short form, titles/bynames reconciled to one
+  name), `sv`, `sm`. Bumping `SUBJECT_VERSION` re-tags the backlog over a few
+  hourly runs (newest first, `MAX_SUBJECT_ITEMS_PER_RUN`); no backfill workflow.
+  Best-effort — must never fail the hourly run. The dashboard's Subjects cloud
+  (third strip of the attention card) is built client-side from `sj`/`fg`.
 - Every new LLM pass follows score.py's pattern: per-batch try/except, log,
   retry next run; model + prompt version recorded on each record.
 - **Enrichment** (V2, 2026-09-11): items with `related` and (`best_weight ≥ 3` or
