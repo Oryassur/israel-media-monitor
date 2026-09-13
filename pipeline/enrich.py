@@ -9,6 +9,9 @@ hotlinked, never downloaded. Fields written on item records:
   enr    ISO ts     last attempt
   enr_n  int        attempts so far (gives up after ENRICH_MAX_ATTEMPTS)
 
+Qualifying items: related, best_weight >= ENRICH_MIN_WEIGHT (top-10) or category
+"opinion" (any rank, they front the dashboard's Opinion row).
+
 Run:  python -m pipeline.enrich URL [URL ...]   dry run: print (img, desc) per URL
       python -m pipeline.enrich --pending       print the current queue, no fetches
 """
@@ -92,7 +95,8 @@ def pending_enrichment(items_idx: dict, now: datetime):
     for r in items_idx.values():
         if r.get("related") is not True or not r.get("url"):
             continue
-        if r.get("best_weight", 0) < ENRICH_MIN_WEIGHT:
+        # top-10 headlines, plus every opinion piece (they front the Opinion row whatever their rank)
+        if r.get("best_weight", 0) < ENRICH_MIN_WEIGHT and r.get("category") != "opinion":
             continue
         if r.get("img") or r.get("desc"):
             continue

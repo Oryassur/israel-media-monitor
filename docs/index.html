@@ -157,7 +157,7 @@ a{color:inherit}
 
 .lead{min-width:0}
 .img{aspect-ratio:16/9;border-radius:8px;background:var(--grid);overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative}
-.img img{width:100%;height:100%;object-fit:cover;display:block}
+.img>img{width:100%;height:100%;object-fit:cover;display:block}
 .img.noimg{background:color-mix(in srgb,var(--dv-n1) 16%,var(--grid))}
 .img.noimg .logo{width:60%;height:44px;font-size:15px;opacity:.7}
 .skick{font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--dv-n2);margin:12px 0 4px}
@@ -201,7 +201,7 @@ a{color:inherit}
 .srow{display:grid;grid-template-columns:72px minmax(0,1fr);gap:11px;padding:10px 0;border-top:1px solid var(--grid)}
 .srow:first-child{border-top:0;padding-top:0}
 .th{width:72px;height:72px;border-radius:6px;background:var(--grid);overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative}
-.th img{width:100%;height:100%;object-fit:cover;display:block}
+.th>img{width:100%;height:100%;object-fit:cover;display:block}
 .th.noimg{background:color-mix(in srgb,var(--dv-n1) 16%,var(--grid))}
 .th.noimg .logo{width:60px;height:20px;font-size:9px;opacity:.7}
 .srow .skick{margin:0 0 3px;font-size:9.5px}
@@ -220,6 +220,7 @@ a{color:inherit}
 .opcard .hl{font-size:15.5px;line-height:1.25;margin:0 0 6px}
 .opcard .meta{font-size:11px}
 .opcard .logo{width:70px;height:16px}
+.opcard .th.noimg .logo{width:60%;height:34px;font-size:12px}
 .oprow.single .opcard{grid-column:1/-1;display:grid;grid-template-columns:240px minmax(0,1fr);gap:18px;align-items:start}
 .oprow.single .opcard .th{margin:0}
 .oprow.single .opcard .hl{font-size:20px}
@@ -459,9 +460,9 @@ footer li b{color:var(--ink2);font-weight:600}
         ones (a UK sanction on Israel is international for a UK outlet).</li>
       <li><b>Stories.</b> Israel-related headlines are grouped into cross-outlet stories by a language model;
         story titles are written by the model.</li>
-      <li><b>Article details.</b> For headlines that reached an outlet's top 10, the article page is fetched once
-        for its image and standfirst (the outlet's own metadata). If an outlet blocks this, the card renders
-        without a picture.</li>
+      <li><b>Article details.</b> For headlines that reached an outlet's top 10, and for every opinion piece,
+        the article page is fetched once for its image and standfirst (the outlet's own metadata). If an
+        outlet blocks this, the card renders without a picture.</li>
       <li><b>Missing hours.</b> When an outlet fails to respond, that hour is recorded as missing for it, never
         as zero.</li>
       <li><b>Versioning.</b> Every model verdict records the model and rubric version used. Changing a rubric

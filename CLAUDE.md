@@ -76,7 +76,8 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   pass is best-effort — it must never fail the hourly run.
 - Every new LLM pass follows score.py's pattern: per-batch try/except, log,
   retry next run; model + prompt version recorded on each record.
-- **Enrichment** (V2, 2026-09-11): items with `related` and `best_weight ≥ 3` get
+- **Enrichment** (V2, 2026-09-11): items with `related` and (`best_weight ≥ 3` or
+  `category == "opinion"`, any rank) get
   one article-page fetch per run slot (≤40/run, 120 s budget, ≤3 attempts, retries
   only within 48 h of first_seen) storing `img` (hotlinked https URL, never
   downloaded), `desc` (≤300 chars), `enr`, `enr_n`. Best-effort — must never fail

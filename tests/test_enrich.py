@@ -70,6 +70,7 @@ class TestPendingEnrichment(unittest.TestCase):
         idx = {r["id"]: r for r in [
             item(1),                                   # qualifies
             item(2, best_weight=1),                    # below top-10
+            item(11, best_weight=1, category="opinion"),  # below top-10 but opinion -> qualifies
             item(3, related=False),                    # rejected by scorer
             item(4, related=None),                     # unscored
             item(5, img="https://x/y.jpg"),            # already enriched
@@ -80,7 +81,7 @@ class TestPendingEnrichment(unittest.TestCase):
             item(10, url=""),                          # no url
         ]}
         got = [r["id"] for r in pending_enrichment(idx, NOW)]
-        self.assertEqual(sorted(got), ["i1", "i9"])
+        self.assertEqual(sorted(got), ["i1", "i11", "i9"])
 
     def test_order_and_cap(self):
         idx = {}
