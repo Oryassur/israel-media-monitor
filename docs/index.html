@@ -1406,6 +1406,7 @@ function logoEl(src){
   const l=document.createElement("span");l.className="logo";
   if(src.logo){const im=document.createElement("img");im.src=src.logo+"?v="+LOGO_V;im.alt="";im.decoding="async";
     if(FIELD_LOGOS.has(src.name))im.className="field";
+    if(LOGO_SCALE[src.name])im.style.width=im.style.height=Math.round(LOGO_SCALE[src.name]*100)+"%";
     im.onerror=()=>{im.remove();l.textContent=monogram(src.display)};l.appendChild(im)}
   else l.textContent=monogram(src.display);
   return l;
@@ -1415,6 +1416,8 @@ function logoEl(src){
 const POP={world:8.27e9,israel:10.15e6};
 const LOGO_V="4"; // bump when docs/logos/ files are replaced under the same name (Pages caches 10 min)
 // wordmarks that carry their own colored field (readable on dark as-is; never inverted)
+// wordmarks drawn a notch smaller than the box (heavy fields that otherwise dominate the row)
+const LOGO_SCALE={lacroix:.82};
 const FIELD_LOGOS=new Set(["nypost","cnn","foxnews","newsweek","bbc","euronews","lacroix","spiegel","bild","globeandmail"]);
 const storyTitle=st=>(STORIES[st]&&STORIES[st].t)||"";
 // cut at a word boundary, "…" marks the cut
