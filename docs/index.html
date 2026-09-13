@@ -450,7 +450,7 @@ footer li b{color:var(--ink2);font-weight:600}
 
 <div class="items" id="itemsPanel">
   <div class="ihead">
-    <div><h2 id="itemsTitle">Israel-related stories</h2><p class="sub" id="itemsSub"></p></div>
+    <div><h2 id="itemsTitle">All stories</h2><p class="sub" id="itemsSub"></p></div>
     <div class="seg" id="listMode" role="group" aria-label="List order"></div>
   </div>
   <div id="itemsList"></div>
@@ -608,7 +608,7 @@ footer li b{color:var(--ink2);font-weight:600}
       <li><b>2026-09-13 · V2.4.</b> Page system: one type scale (section titles alike for news and
         analytics), one surface rule (analytics on white cards, editorial on the page), the attention card as a
         right rail beside the top stories.</li>
-      <li><b>2026-09-13 · V2.3.</b> Sortable Outlets table; story list switchable between "By story"
+      <li><b>2026-09-13 · V2.3.</b> Sortable Outlets table; story list switchable between "By theme"
         (each story expandable) and "Latest"; headline rows show the peak homepage position.</li>
       <li><b>2026-09-13 · V2.2.</b> Attention pie in the card; single-column card on phones.</li>
       <li><b>2026-09-13 · V2.1.</b> Opinion &amp; analysis row under the top stories; "placement at outlet +
@@ -1582,7 +1582,7 @@ function groupByStory(list){
 
 // Two list modes: grouped by story (each story expandable) or latest first. State is reset by render().
 const listState={mode:"story",expanded:new Set(),allGroups:false,shownLatest:40,last:null};
-const LIST_MODES=[["By story","story"],["Latest","latest"]];
+const LIST_MODES=[["By theme","story"],["Latest","latest"]];
 (function buildListMode(){
   const el=$("#listMode");
   for(const [label,val] of LIST_MODES){
@@ -1687,7 +1687,7 @@ function render(){
   renderOutlets(S,list);
   renderWorld(S);
   listState.expanded.clear();listState.allGroups=false;listState.shownLatest=40;
-  renderStories(list,"Israel-related stories",
+  renderStories(list,"All stories",
     cap(PRESET_LABEL[state.preset])+(partial?` · headlines within the last ${ITEMS_KEPT_DAYS} days`:""));
   dataTable(S);
 }
