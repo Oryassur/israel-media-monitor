@@ -102,12 +102,13 @@ a{color:inherit}
 .livebar a{color:var(--ink2)}
 
 /* front page: data card | lead story | stories 2–4 */
-/* The card spans every row of the unit and the last row is the flexible track, so the card's height never
-   pushes the story rows apart: any surplus lands below the opinion row. Vertical rhythm comes from margins,
-   not row-gap, so the hidden expansion row adds no space. */
+/* The card is independent of the story columns: it keeps its own content height (align-self:start) and spans
+   every row so that, if it is the taller side, its surplus lands in the flexible last row rather than between
+   Top stories and Opinion. Vertical rhythm comes from margins, not row-gap, so the hidden expansion row adds
+   no space. */
 .front{display:grid;grid-template-columns:228px minmax(0,1fr) 300px;grid-template-rows:auto auto auto 1fr;column-gap:24px;row-gap:0;align-items:start;margin-top:20px}
 .front .ftitle{grid-column:2/-1;grid-row:1;margin:0 0 12px;align-self:end}
-.front .kpi{grid-column:1;grid-row:1/span 4;align-self:stretch}
+.front .kpi{grid-column:1;grid-row:1/span 4;align-self:start}
 .front #lead{grid-column:2;grid-row:2}
 .front #side{grid-column:3;grid-row:2}
 .ttl{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);margin:0 0 10px}
