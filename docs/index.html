@@ -295,8 +295,9 @@ table.data th.sortable{cursor:pointer;user-select:none}
 table.data th.sortable:hover,table.data th.on{color:var(--ink)}
 table.data th .arr{font-size:9px;margin-left:3px;color:var(--muted)}
 table.outlets td.name{white-space:nowrap}
-table.outlets td.name .logo{width:80px;height:18px;vertical-align:middle;margin-right:8px}
-table.outlets td.name span.nm{vertical-align:middle}
+table.outlets td.name .logo{width:80px;height:18px;vertical-align:middle;cursor:help}
+table.outlets td.txt{text-align:left;color:var(--ink2)}
+table.outlets td.flag{text-align:center;font-size:16px;cursor:help}
 table.outlets td .chip{font-size:12px}
 /* stories list: title + mode switch on one row */
 .ihead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
@@ -553,8 +554,9 @@ footer li b{color:var(--ink2);font-weight:600}
 
     <h3>Outlets</h3>
     <ul>
-      <li>One row per selected outlet for the selected period: how many Israel-related headlines peaked as its
-        top story, in positions 2–5, 6–10 and 11–20; its Israel-related weight as a share of its international
+      <li>One row per selected outlet for the selected period: its logo (name on hover), lean and home country
+        (flag; name on hover); how many Israel-related headlines peaked as its top story, in positions 2–5,
+        6–10 and 11–20; its Israel-related weight as a share of its international
         weight and of all its front-page weight; and the mean sentiment of its Israel-related headlines. Click
         a column heading to sort.</li>
     </ul>
@@ -956,8 +958,11 @@ function renderPie(S){
   el.innerHTML=svg+"</svg>";el.hidden=false;
 }
 /* ---------- outlets table ---------- */
-const OUTLET_COLS=[["Outlet","name"],["Top story","r1"],["Top 2–5","r5"],["Top 6–10","r10"],["Top 11–20","r20"],
-  ["Of international news","intl"],["Of all front-page news","share"],["Sentiment","sent"]];
+const OUTLET_COLS=[["Outlet","name"],["Lean","lean"],["Country","country"],["Top story","r1"],["Top 2–5","r5"],
+  ["Top 6–10","r10"],["Top 11–20","r20"],["Of international news","intl"],["Of all front-page news","share"],["Sentiment","sent"]];
+const COUNTRY_NAME={US:"United States",UK:"United Kingdom",DE:"Germany",FR:"France",IT:"Italy",ES:"Spain",CA:"Canada",AU:"Australia",EU:"European Union"};
+const FLAG_CC={UK:"GB"};
+const flagOf=code=>{const cc=FLAG_CC[code]||code||"";return /^[A-Z]{2}$/.test(cc)?String.fromCodePoint(...[...cc].map(c=>0x1F1E6+c.charCodeAt(0)-65)):"🌐"};
 const outletSort={key:"intl",dir:-1};
 // Per selected outlet over the window: headline counts by peak position (from the items list), attention
 // shares and sentiment (from the hourly/daily rows), and the Israel-of-international share (intl rows).
@@ -975,8 +980,10 @@ function outletStats(S,list){
     if(r[3]!=null&&r[4]>0){o.sn+=r[3]*r[4];o.sd+=r[4]}
   }
   for(const r of (useHourly?INTL.hourly:INTL.daily)){const o=rows.get(r[1]);if(!o||!inWin(r))continue;o.intl+=r[3];o.isr+=r[5]}
-  return [...rows.values()].map(o=>({name:o.name,display:DISPN[o.name]||o.name,r1:o.r1,r5:o.r5,r10:o.r10,r20:o.r20,
-    intl:o.intl?Math.min(1,o.isr/o.intl):null,share:o.shn?o.sh/o.shn:null,sent:o.sd?o.sn/o.sd:null}));
+  return [...rows.values()].map(o=>{const src=SRC[o.name]||{};const home=src.home||src.country||"";
+    return {name:o.name,display:DISPN[o.name]||o.name,lean:LEAN_ORDER.indexOf(src.lean),leanLabel:cap(src.lean||""),
+    country:home,r1:o.r1,r5:o.r5,r10:o.r10,r20:o.r20,
+    intl:o.intl?Math.min(1,o.isr/o.intl):null,share:o.shn?o.sh/o.shn:null,sent:o.sd?o.sn/o.sd:null}});
 }
 function renderOutlets(S,list){
   const tb=$("#outletsTbl");tb.innerHTML="";
@@ -984,6 +991,7 @@ function renderOutlets(S,list){
   const {key,dir}=outletSort;
   stats.sort((a,b)=>{const x=a[key],y=b[key];
     if(key==="name")return dir*a.display.localeCompare(b.display);
+    if(key==="country")return dir*(COUNTRY_NAME[x]||x).localeCompare(COUNTRY_NAME[y]||y)||a.display.localeCompare(b.display);
     if(x==null&&y==null)return 0;if(x==null)return 1;if(y==null)return -1;   // blanks last either way
     return dir*(x-y)||a.display.localeCompare(b.display)});
   const thead=document.createElement("thead"),hr=document.createElement("tr");
@@ -991,16 +999,18 @@ function renderOutlets(S,list){
     const th=document.createElement("th");th.className="sortable"+(k===key?" on":"");th.textContent=label;
     th.setAttribute("aria-sort",k===key?(dir>0?"ascending":"descending"):"none");
     const arr=document.createElement("span");arr.className="arr";arr.textContent=k===key?(dir>0?"▲":"▼"):"";th.appendChild(arr);
-    th.onclick=()=>{if(outletSort.key===k)outletSort.dir=-outletSort.dir;else{outletSort.key=k;outletSort.dir=k==="name"?1:-1}renderOutlets(S,list)};
+    th.onclick=()=>{if(outletSort.key===k)outletSort.dir=-outletSort.dir;else{outletSort.key=k;outletSort.dir=["name","lean","country"].includes(k)?1:-1}renderOutlets(S,list)};
     hr.appendChild(th);
   }
   thead.appendChild(hr);tb.appendChild(thead);
   const tbody=document.createElement("tbody");
   for(const o of stats){
     const tr=document.createElement("tr");
-    const name=document.createElement("td");name.className="name";
-    name.appendChild(logoEl(SRC[o.name]||{display:o.display}));
-    const nm=document.createElement("span");nm.className="nm";nm.textContent=o.display;name.appendChild(nm);tr.appendChild(name);
+    const name=document.createElement("td");name.className="name";name.title=o.display;
+    const lg=logoEl(SRC[o.name]||{display:o.display});lg.setAttribute("aria-label",o.display);name.appendChild(lg);tr.appendChild(name);
+    const lean=document.createElement("td");lean.className="txt";lean.textContent=o.leanLabel;tr.appendChild(lean);
+    const co=document.createElement("td");co.className="flag";co.title=COUNTRY_NAME[o.country]||o.country;co.textContent=flagOf(o.country);
+    co.setAttribute("aria-label",co.title);tr.appendChild(co);
     for(const k of ["r1","r5","r10","r20"]){const td=document.createElement("td");td.textContent=o[k]||"—";if(!o[k])td.style.color="var(--muted)";tr.appendChild(td)}
     for(const k of ["intl","share"]){const td=document.createElement("td");td.textContent=fmtPct(o[k]);if(o[k]==null)td.style.color="var(--muted)";tr.appendChild(td)}
     const sd=document.createElement("td");if(o.sent==null)sd.textContent="—";else sd.appendChild(sentChip(o.sent,true));tr.appendChild(sd);
