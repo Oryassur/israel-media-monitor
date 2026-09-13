@@ -102,13 +102,12 @@ a{color:inherit}
 .livebar a{color:var(--ink2)}
 
 /* front page: data card | lead story | stories 2–4 */
-/* row 2 is the flexible track: the card spans rows 1–2, and any height it has beyond the story columns must
-   go to row 2, never to the title row */
-.front{display:grid;grid-template-columns:228px minmax(0,1fr) 300px;grid-template-rows:auto 1fr auto auto;column-gap:24px;row-gap:12px;align-items:stretch;margin-top:20px}
-/* explicit placement: title row over the story columns, card spans both rows, lead left of the side list,
-   the shared expansion row under the unit, the opinion row last */
-.front .ftitle{grid-column:2/-1;grid-row:1;margin:0;align-self:end}
-.front .kpi{grid-column:1;grid-row:1/span 2}
+/* The card spans every row of the unit and the last row is the flexible track, so the card's height never
+   pushes the story rows apart: any surplus lands below the opinion row. Vertical rhythm comes from margins,
+   not row-gap, so the hidden expansion row adds no space. */
+.front{display:grid;grid-template-columns:228px minmax(0,1fr) 300px;grid-template-rows:auto auto auto 1fr;column-gap:24px;row-gap:0;align-items:start;margin-top:20px}
+.front .ftitle{grid-column:2/-1;grid-row:1;margin:0 0 12px;align-self:end}
+.front .kpi{grid-column:1;grid-row:1/span 4;align-self:stretch}
 .front #lead{grid-column:2;grid-row:2}
 .front #side{grid-column:3;grid-row:2}
 .ttl{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);margin:0 0 10px}
@@ -193,7 +192,7 @@ a{color:inherit}
 .more{border:0;background:none;font:inherit;font-size:inherit;color:var(--ink2);cursor:pointer;padding:0;
   text-decoration:underline;text-decoration-color:var(--baseline);text-underline-offset:2px;white-space:nowrap}
 .more:hover{color:var(--ink)}
-.bundle{grid-column:2/-1;grid-row:3;border-top:1px solid var(--grid);margin-top:-6px}
+.bundle{grid-column:2/-1;grid-row:3;border-top:1px solid var(--grid);margin-top:12px}
 .bundle[hidden]{display:none}
 .bundle .storyhead{margin-top:12px}
 
@@ -211,7 +210,7 @@ a{color:inherit}
 .front .empty{grid-column:2/-1}
 
 /* opinion & analysis row */
-.opinion{grid-column:2/-1;grid-row:4;border-top:1px solid var(--grid);padding-top:14px}
+.opinion{grid-column:2/-1;grid-row:4;align-self:start;border-top:1px solid var(--grid);padding-top:14px;margin-top:16px}
 .opinion[hidden]{display:none}
 .oprow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
 .opcard{min-width:0}
@@ -314,8 +313,11 @@ footer li b{color:var(--ink2);font-weight:600}
   #more{display:none}
   #more.open{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 0 2px}
   .livebar{display:flex;margin:6px 0 0;white-space:normal;font-size:11.5px}
-  .front{grid-template-columns:1fr;grid-template-rows:none;column-gap:0;row-gap:18px;margin-top:16px}
-  .front .ftitle,.front .kpi,.front #lead,.front #side,.bundle,.opinion{grid-column:1;grid-row:auto}
+  .front{grid-template-columns:1fr;grid-template-rows:none;column-gap:0;row-gap:0;margin-top:16px}
+  .front .ftitle,.front .kpi,.front #lead,.front #side,.bundle,.opinion{grid-column:1;grid-row:auto;margin-top:18px}
+  .front .kpi{margin-top:0;align-self:auto}
+  .front .ftitle{margin-bottom:0}
+  .bundle{order:1}.opinion{order:2}
   .oprow{grid-template-columns:1fr 1fr;gap:14px}
   .oprow.single .opcard{grid-template-columns:1fr}
   .wrow{grid-template-columns:110px minmax(0,1fr) 48px}
