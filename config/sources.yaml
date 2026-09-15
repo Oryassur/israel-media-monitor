@@ -42,6 +42,8 @@ sources:
     lang: en
     lean: right  # AllSides: Lean Right
     type: tabloid
+    skip: [".module--related"]  # 2026-09-15 QA: "related" links under a lead are extensions of that story, not headlines
+
   - name: cnn
     display: CNN
     url: https://edition.cnn.com
