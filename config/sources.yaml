@@ -51,9 +51,10 @@ sources:
     lang: en
     lean: left  # AllSides: Lean Left
     type: broadcaster
+    lead: ".container_spotlight-package a.container__title-url"  # the spotlight splash is the visual top story; the DOM lists the lead package first
     skip:  # 2026-09-15 QA
       - ".container_ribbon"  # topic chips strip above the lead ("Ukraine-Poland border", "The tolls of working from home")
-      - ".container_lead-package li.container_lead-package__item:nth-child(n+2)"  # links under the lead are its related items
+      - ".container_spotlight-package .container__field-links"  # cards under the spotlight title are its related items
 
   - name: foxnews
     display: Fox News

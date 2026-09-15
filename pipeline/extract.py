@@ -123,7 +123,7 @@ def extract_items(html: str, base_url: str, selector: str = None, skip=None, lea
         # skip links inside non-editorial chrome
         if any(_is_chrome(p) for p in a.parents):
             continue
-        text = strip_meta_suffix(_clean_text(a.get_text(" ")))
+        text = _strip_labels(strip_meta_suffix(_clean_text(a.get_text(" "))))
         if len(text) < MIN_HEADLINE_LEN or len(text) > 300:
             continue
         if SKIP_TEXT_PAT.search(text):
@@ -207,6 +207,22 @@ def _is_chrome(tag) -> bool:
     if tag.name == "header" and not any(p.name in _CONTENT_TAGS for p in tag.parents):
         return True
     return _chrome_class(tag)
+
+
+# Kicker/label decorations some sites render inside the link text: CNN's "• Analysis
+# Analysis …" / "Live Updates 8 min ago …" prefixes and the "Show all" suffix on
+# package titles. Cosmetic — they only touch the stored headline, never the ranking.
+_LABEL_PREFIX = re.compile(
+    r"^(?:•\s*)?(?:(?:Analysis|Video|Gallery|Live Updates|CNN Exclusive|Exclusive)\b(?:\s*\d+\s*(?:min|hrs?|hours?)\s+ago)?\s*){1,2}"
+    r"(?:by\s+[A-Z][\w.'’-]+(?:\s+[A-Z][\w.'’-]+)?\s+)?",  # "Analysis by Stephen Collinson …" (two-token names)
+    re.I,
+)
+_LABEL_SUFFIX = re.compile(r"\s+(?:Show all|Read more|\d+:\d\d)\s*$", re.I)
+
+
+def _strip_labels(text: str) -> str:
+    stripped = _LABEL_SUFFIX.sub("", _LABEL_PREFIX.sub("", text)).strip()
+    return stripped if len(stripped) >= MIN_HEADLINE_LEN else text
 
 
 def _chrome_class(tag) -> bool:
