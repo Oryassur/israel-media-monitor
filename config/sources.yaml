@@ -51,6 +51,10 @@ sources:
     lang: en
     lean: left  # AllSides: Lean Left
     type: broadcaster
+    skip:  # 2026-09-15 QA
+      - ".container_ribbon"  # topic chips strip above the lead ("Ukraine-Poland border", "The tolls of working from home")
+      - ".container_lead-package li.container_lead-package__item:nth-child(n+2)"  # links under the lead are its related items
+
   - name: foxnews
     display: Fox News
     url: https://www.foxnews.com
