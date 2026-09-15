@@ -16,10 +16,14 @@ UA = (
 MIN_HEADLINE_LEN = 25
 # Sections of the page that are never editorial content.
 SKIP_ANCESTORS = {"nav", "footer", "aside", "form"}
+# Also topic/tag hub pages: a "Trending" tag in Euronews' header sat at rank 1
+# for six days (2026-09-09..15) and SMH's "Israeli-Palestinian conflict" topic
+# link at rank 9 — index pages, never headlines.
 SKIP_HREF_PAT = re.compile(
     r"/(video|videos|live-tv|newsletters?|podcasts?|games|crosswords?|recipes|"
     r"horoscopes?|account|subscribe|login|signin|register|terms|privacy|about|"
-    r"contact|advertis|shop|store|deals|coupons)(/|$)",
+    r"contact|advertis|shop|store|deals|coupons|tags?|topics?|themes?|thema|themen|"
+    r"sujets?|temas?|temi|dossiers?)(/|$)",
     re.I,
 )
 # Commerce / account subdomains of the outlet's own domain (subscription offers,
