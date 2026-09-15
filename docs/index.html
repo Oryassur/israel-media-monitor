@@ -638,6 +638,11 @@ footer li b{color:var(--ink2);font-weight:600}
 
     <h3>Changelog</h3>
     <ul>
+      <li><b>2026-09-15 · data.</b> Fixed page elements (site logos, menus, puzzle and newsletter promos,
+        topic hubs) had been counted as headlines on a third of the outlets — most visibly a Euronews
+        "trending" tag that sat at rank 1 for a week. The extractor now drops such chrome; rows from
+        Sep 9–15 were re-estimated as if it had never been counted (per-run rankings are not stored, so
+        those rows are approximate).</li>
       <li><b>2026-09-13 · V2.5.</b> Subjects: a cloud of what the Israel-related headlines are about and who
         is in them, inside the attention card, expandable; the population comparison retired. Sentiment
         shifts labelled on the chart alongside attention spikes.</li>

@@ -29,6 +29,7 @@ SNAP_FIELDS = [
     "ts", "source", "fetch_ok", "total_items", "total_weight",
     "israel_items", "israel_weight", "attention_share", "mean_sentiment",
     "w_n2", "w_n1", "w_0", "w_p1", "w_p2", "w_u",
+    "approx",  # "1" when the row's Israel weight was re-estimated (2026-09-15 chrome rebuild), else blank
 ]
 
 

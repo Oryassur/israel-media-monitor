@@ -91,6 +91,17 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   only within 48 h of first_seen) storing `img` (hotlinked https URL, never
   downloaded), `desc` (≤300 chars), `enr`, `enr_n`. Best-effort — must never fail
   the hourly run. NYT article pages 403 from everywhere; expected to give up.
+- **Page chrome is never a headline** (2026-09-15): extract.py drops page-level
+  headers, nav/menus/popins, newsletter/promo/subscription containers, links to
+  the homepage or to digit-free short-slug index pages, photo-credit link text,
+  "Skip to…"/"Play …" affordances and hub/utility paths (tags, topics, games,
+  account, programs…); sources may add `skip` CSS selectors (Spiegel) or a
+  `selector` (Le Monde, Corriere…). Audit with `scripts/audit_headlines.py` —
+  a link at the same rank for days is chrome unless the outlet is a slow weekly
+  (CS Monitor). Per-run rankings are not stored, so past rows could only be
+  re-estimated: snapshot rows with `approx=1` had their Israel weight re-scaled
+  as if the chrome above each Israel item were gone (2026-09-09..15, 189 rows),
+  and intl rows for those runs were rebuilt from presence windows (`approx`).
 - Parser health: Corriere needed `selector: main` (fixed 2026-09-11; its rows from
   2026-09-09 to 2026-09-11 07:45 UTC counted columnist boxes as headlines — attention 0,
   intl 0 — and are not recoverable). When a source's Israel share is flat zero, check
