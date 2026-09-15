@@ -5,6 +5,8 @@
 #   they cover; otherwise the widely documented characterization. Basis noted per source.
 # weight_profile: how homepage rank maps to prominence (see pipeline/extract.py)
 # selector: optional CSS scope for the main content area (falls back to full page)
+# skip: optional list of CSS selectors for blocks that are never news (promo boxes,
+#   games, "for you" carousels) — removed before ranking
 # home: the outlet's home scope for domestic-vs-international classification
 #   (defaults to country; pan-national outlets set it explicitly)
 
@@ -139,6 +141,8 @@ sources:
     lang: fr
     lean: left  # documented centre-left
     type: broadsheet
+    selector: main  # 2026-09-15: the burger-menu tag list outranked every headline
+
   - name: lefigaro
     display: Le Figaro
     url: https://www.lefigaro.fr
@@ -160,6 +164,10 @@ sources:
     lang: de
     lean: left  # documented centre-left
     type: broadsheet
+    skip:  # 2026-09-15: evergreen SPIEGEL+ box and an interactive-tool block sat at ranks 1–7 for a week
+      - "section[data-area='block>magletterarticles']"
+      - "section[data-area^='block>topic:interaktives_tool']"
+
   - name: bild
     display: Bild
     url: https://www.bild.de

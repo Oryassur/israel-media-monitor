@@ -16,16 +16,52 @@ UA = (
 MIN_HEADLINE_LEN = 25
 # Sections of the page that are never editorial content.
 SKIP_ANCESTORS = {"nav", "footer", "aside", "form"}
+# A <header> is page chrome only at page level; inside an article/section/list it
+# is the card's own headline group (El Mundo, Spiegel, Fox wrap headlines in one).
+_CONTENT_TAGS = {"main", "article", "section", "li", "ul"}
+# …and containers whose class/id names them as chrome (newsletter boxes, promos,
+# subscription pitches, accessibility skip links, sidebars of evergreen links).
+SKIP_CLASS_PAT = re.compile(
+    r"(^|[\s_-])(newsletter|advert|advertisement|sponsor|sponsored|marketing|"
+    r"subscription|subscribe|paywall|skip|skiplink|masthead|topbar|toolbar|breadcrumb|"
+    r"popin|popup|modal|drawer|offcanvas|burger|megamenu|mega-menu)"
+    r"s?([\s_-]|$)",
+    re.I,
+)
+# Link text that is a photo credit or an accessibility affordance, not a headline.
+SKIP_TEXT_PAT = re.compile(
+    r"(/(Getty Images|AFP|AP|Reuters|Bloomberg|Shutterstock|EPA|Alamy|The New York Times|"
+    r"The Washington Post|Los Angeles Times|CNN|File)\b|\b(via|for) (Getty|AP|Reuters|AFP|CNN)\b|"
+    r"^(skip (to|next|the)|go back to|zum inhalt|direkt zum|aller au contenu|saltar al|vai al contenuto|play )|"
+    r"überspringen\b)",
+    re.I,
+)
 # Also topic/tag hub pages: a "Trending" tag in Euronews' header sat at rank 1
 # for six days (2026-09-09..15) and SMH's "Israeli-Palestinian conflict" topic
 # link at rank 9 — index pages, never headlines.
 SKIP_HREF_PAT = re.compile(
     r"/(video|videos|live-tv|newsletters?|podcasts?|games|crosswords?|recipes|"
     r"horoscopes?|account|subscribe|login|signin|register|terms|privacy|about|"
-    r"contact|advertis|shop|store|deals|coupons|tags?|topics?|themes?|thema|themen|"
-    r"sujets?|temas?|temi|dossiers?)(/|$)",
+    r"contact|kontakt|contacto|contatti|feedback|help|hilfe|aide|ayuda|aiuto|faq|"
+    r"advertis|shop|store|deals|coupons|tags?|topics?|themes?|thema|themen|"
+    r"sujets?|temas?|temi|dossiers?|juegos|jeux|giochi|spiele|puzzles?|crucigrama|sudoku|"
+    r"kreuzwortraetsel|quiz|abonnement|abo|abos|abbonamenti|suscripci[oó]n(es)?|compte|"
+    r"mon-compte|konto|mein-konto|cuenta|profil|profile|programs|programmes|shows|"
+    r"galerie|galerien|bildergalerien|multimedia|fotogaleria|"
+    r"newsticker|email|emails|pod-force-one|monitornewsletters)(/|$)",
     re.I,
 )
+# Article URLs carry a date, an id, or a long slug. A short digit-free path is a
+# section or hub page ("/goodfood", "/environment/climate-crisis", "/programs/europe-today").
+_MIN_SLUG_WORDS = 4
+
+
+def looks_like_index(path: str) -> bool:
+    if any(ch.isdigit() for ch in path):
+        return False
+    last = path.rstrip("/").rsplit("/", 1)[-1]
+    last = re.sub(r"\.(html?|php|aspx?)$", "", last, flags=re.I)
+    return len([w for w in re.split(r"[-_]+", last) if w]) < _MIN_SLUG_WORDS
 # Commerce / account subdomains of the outlet's own domain (subscription offers,
 # shops, job boards) — their links are promos, never headlines.
 SKIP_HOST_PAT = re.compile(
@@ -54,28 +90,39 @@ def _clean_text(s: str) -> str:
     return re.sub(r"\s+", " ", s).strip()
 
 
-def extract_items(html: str, base_url: str, selector: str = None):
+def extract_items(html: str, base_url: str, selector: str = None, skip=None):
     """Return headline items in page order: [{rank, headline, url}].
 
     Rank is the order of first appearance in the DOM, which approximates
     editorial prominence on virtually all news homepages (top story first).
+    `selector` scopes extraction to the main content area; `skip` is a list of
+    CSS selectors for blocks inside it that are never news (evergreen promo
+    boxes, games, personalised "for you" carousels).
     """
     soup = BeautifulSoup(html, "html.parser")
     scope = soup.select_one(selector) if selector else None
     scope = scope or soup.body or soup
+    for sel in skip or []:
+        for el in scope.select(sel):
+            el.decompose()
     host = urlparse(base_url).netloc.split(":")[0].removeprefix("www.")
 
     items, seen_text, seen_urls = [], set(), set()
     for a in scope.find_all("a", href=True):
         # skip links inside non-editorial chrome
-        if any(p.name in SKIP_ANCESTORS for p in a.parents):
+        if any(_is_chrome(p) for p in a.parents):
             continue
         text = strip_meta_suffix(_clean_text(a.get_text(" ")))
         if len(text) < MIN_HEADLINE_LEN or len(text) > 300:
             continue
+        if SKIP_TEXT_PAT.search(text):
+            continue
         href = urljoin(base_url, a["href"].split("#")[0])
         pu = urlparse(href)
         if pu.scheme not in ("http", "https"):
+            continue
+        # the homepage itself (logo, "skip to content" anchors) or a section index
+        if pu.path in ("", "/") or looks_like_index(pu.path):
             continue
         link_host = pu.netloc.split(":")[0].removeprefix("www.")
         # same site (allow subdomains) only
@@ -90,6 +137,19 @@ def extract_items(html: str, base_url: str, selector: str = None):
         seen_urls.add(href)
         items.append({"rank": len(items) + 1, "headline": text, "url": href})
     return items
+
+
+def _is_chrome(tag) -> bool:
+    if tag.name in SKIP_ANCESTORS:
+        return True
+    if tag.name == "header" and not any(p.name in _CONTENT_TAGS for p in tag.parents):
+        return True
+    return _chrome_class(tag)
+
+
+def _chrome_class(tag) -> bool:
+    ident = " ".join(tag.get("class") or []) + " " + (tag.get("id") or "") + " " + (tag.get("role") or "")
+    return bool(SKIP_CLASS_PAT.search(ident)) or tag.get("role") in ("navigation", "banner", "contentinfo", "complementary")
 
 
 def prominence_weight(rank: int, total: int = 0) -> int:

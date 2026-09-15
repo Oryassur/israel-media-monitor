@@ -40,7 +40,7 @@ def run(no_llm=False, no_enrich=False):
         name = src["name"]
         try:
             html = fetch_html(src["url"])
-            extracted = extract_items(html, src["url"], src.get("selector"))
+            extracted = extract_items(html, src["url"], src.get("selector"), src.get("skip"))
         except Exception as e:  # noqa: BLE001 — one dead source must not kill the run
             log(f"FETCH FAIL {name}: {e}")
             per_source[name] = {"ok": False, "present": [], "top20": [],
