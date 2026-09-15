@@ -1,4 +1,5 @@
 """Fetch homepages and extract headline links with prominence ranks."""
+import json
 import re
 from urllib.parse import urljoin, urlparse
 
@@ -90,14 +91,19 @@ def _clean_text(s: str) -> str:
     return re.sub(r"\s+", " ", s).strip()
 
 
-def extract_items(html: str, base_url: str, selector: str = None, skip=None):
+def extract_items(html: str, base_url: str, selector: str = None, skip=None, lead: str = None,
+                  site: str = None):
     """Return headline items in page order: [{rank, headline, url}].
 
     Rank is the order of first appearance in the DOM, which approximates
     editorial prominence on virtually all news homepages (top story first).
     `selector` scopes extraction to the main content area; `skip` is a list of
     CSS selectors for blocks inside it that are never news (evergreen promo
-    boxes, games, personalised "for you" carousels).
+    boxes, games, personalised "for you" carousels); `lead` is a CSS selector
+    for the visual lead story's link(s) when the DOM puts a text column before
+    the hero (USA Today) — matching items move to the front; `site` names a
+    hook in SITE_HOOKS for outlets that embed part of the front page as data
+    rather than markup.
     """
     soup = BeautifulSoup(html, "html.parser")
     scope = soup.select_one(selector) if selector else None
@@ -105,6 +111,11 @@ def extract_items(html: str, base_url: str, selector: str = None, skip=None):
     for sel in skip or []:
         for el in scope.select(sel):
             el.decompose()
+    lead_urls = set()
+    if lead:
+        for a in scope.select(lead):
+            if a.name == "a" and a.get("href"):
+                lead_urls.add(urljoin(base_url, a["href"].split("#")[0]))
     host = urlparse(base_url).netloc.split(":")[0].removeprefix("www.")
 
     items, seen_text, seen_urls = [], set(), set()
@@ -135,8 +146,59 @@ def extract_items(html: str, base_url: str, selector: str = None, skip=None):
             continue
         seen_text.add(key)
         seen_urls.add(href)
-        items.append({"rank": len(items) + 1, "headline": text, "url": href})
+        items.append({"headline": text, "url": href, "lead": href in lead_urls})
+    if lead_urls:
+        items.sort(key=lambda it: not it["lead"])  # stable: leads first, page order otherwise
+    if site and site in SITE_HOOKS:
+        items = SITE_HOOKS[site](html, base_url, items)
+    for i, it in enumerate(items, 1):
+        it["rank"] = i
+        it.pop("lead", None)
     return items
+
+
+def _usatoday_bundles(html: str, base_url: str, items):
+    """USA Today ships its "More Top Stories" and "Top Headlines" lists as JSON
+    (gnt.fb = {...}, the fallback for a client-side recommendation call) and
+    fills the section blocks by script, so the markup alone yields the 7-story
+    top table followed by sidebars (pets, photos, horoscopes). Insert the two
+    editorial lists right after the top table, in their own order."""
+    m = re.search(r"gnt\.fb\s*=\s*(\{)", html)
+    if not m:
+        return items
+    start = m.start(1)
+    depth = 0
+    for end in range(start, len(html)):
+        if html[end] == "{":
+            depth += 1
+        elif html[end] == "}":
+            depth -= 1
+            if depth == 0:
+                break
+    try:
+        fb = json.loads(html[start:end + 1])
+    except ValueError:
+        return items
+    seen = {it["url"] for it in items}
+    extra = []
+    for key in ("More Top Stories", "Top Headlines"):
+        for e in fb.get(key) or []:
+            t, u = e.get("t"), e.get("u")
+            if not t or not u:
+                continue
+            u = urljoin(base_url, u)
+            if u in seen or len(t) < MIN_HEADLINE_LEN:
+                continue
+            seen.add(u)
+            extra.append({"headline": _clean_text(t), "url": u, "lead": False})
+    # after the top table: the last item whose URL appears in .gnt_m_tt
+    soup = BeautifulSoup(html, "html.parser")
+    top = {urljoin(base_url, a["href"].split("#")[0]) for a in soup.select(".gnt_m_tt a[href]")}
+    cut = max((i + 1 for i, it in enumerate(items) if it["url"] in top), default=0)
+    return items[:cut] + extra + items[cut:]
+
+
+SITE_HOOKS = {"usatoday": _usatoday_bundles}
 
 
 def _is_chrome(tag) -> bool:

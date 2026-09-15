@@ -7,6 +7,10 @@
 # selector: optional CSS scope for the main content area (falls back to full page)
 # skip: optional list of CSS selectors for blocks that are never news (promo boxes,
 #   games, "for you" carousels) — removed before ranking
+# lead: optional CSS selector for the visual lead story's link when the DOM puts a
+#   text column before it (moved to rank 1)
+# site_hook: name of an extract.SITE_HOOKS entry for outlets that embed part of the
+#   front page as script data (USA Today's "More Top Stories" / "Top Headlines")
 # home: the outlet's home scope for domestic-vs-international classification
 #   (defaults to country; pan-national outlets set it explicitly)
 
@@ -26,6 +30,11 @@ sources:
     lang: en
     lean: left  # AllSides: Lean Left
     type: broadsheet
+    selector: main
+    lead: a.gnt_m_he  # the hero card is rendered first but sits second in the DOM
+    skip: [".gnt_m_sb", ".gnt_m_dl", ".gnt_m_fyh"]  # sidebars (pets, photos, horoscopes), deferred-section stubs, "for you"
+    site_hook: usatoday  # 2026-09-15 QA: "More Top Stories" + "Top Headlines" come from embedded JSON
+
   - name: nypost
     display: New York Post
     url: https://nypost.com
