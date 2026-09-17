@@ -12,6 +12,13 @@ UA = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
 )
+# Outlets that edit a separate front page for phones (CNN, USA Today — found by
+# fetching every homepage with both identities at the same moment, 2026-09-15)
+# are measured on that front: `ua: mobile` in sources.yaml.
+UA_MOBILE = (
+    "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 "
+    "(KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1"
+)
 
 # Link text shorter than this is treated as navigation, not a headline.
 MIN_HEADLINE_LEN = 25
@@ -31,8 +38,9 @@ SKIP_CLASS_PAT = re.compile(
 )
 # Link text that is a photo credit or an accessibility affordance, not a headline.
 SKIP_TEXT_PAT = re.compile(
-    r"(/(Getty Images|AFP|AP|Reuters|Bloomberg|Shutterstock|EPA|Alamy|The New York Times|"
-    r"The Washington Post|Los Angeles Times|CNN|File)\b|\b(via|for) (Getty|AP|Reuters|AFP|CNN)\b|"
+    r"(\s*/\s*(Getty Images|AFP|AP|Reuters|Bloomberg|Shutterstock|EPA|Alamy|NurPhoto|iStockphoto|"
+    r"The New York Times|The Washington Post|Los Angeles Times|CNN|File)\b|"
+    r"\b(via|for) (Getty|AP|Reuters|AFP|CNN|Shutterstock|Telegram)\b|"
     r"^(skip (to|next|the)|go back to|zum inhalt|direkt zum|aller au contenu|saltar al|vai al contenuto|play )|"
     r"überspringen\b)",
     re.I,
@@ -73,12 +81,12 @@ SKIP_HOST_PAT = re.compile(
 )
 
 
-def fetch_html(url: str, timeout: int = 25) -> str:
+def fetch_html(url: str, timeout: int = 25, ua: str = None) -> str:
     resp = requests.get(
         url,
         timeout=timeout,
         headers={
-            "User-Agent": UA,
+            "User-Agent": UA_MOBILE if ua == "mobile" else UA,
             "Accept-Language": "en-US,en;q=0.8,fr;q=0.6,de;q=0.6,es;q=0.6,it;q=0.6",
             "Accept": "text/html,application/xhtml+xml",
         },
@@ -106,6 +114,8 @@ def extract_items(html: str, base_url: str, selector: str = None, skip=None, lea
     rather than markup.
     """
     soup = BeautifulSoup(html, "html.parser")
+    for t in soup(["script", "style", "noscript", "template"]):
+        t.decompose()
     scope = soup.select_one(selector) if selector else None
     scope = scope or soup.body or soup
     for sel in skip or []:
@@ -123,10 +133,12 @@ def extract_items(html: str, base_url: str, selector: str = None, skip=None, lea
         # skip links inside non-editorial chrome
         if any(_is_chrome(p) for p in a.parents):
             continue
-        text = _strip_labels(strip_meta_suffix(_clean_text(a.get_text(" "))))
+        head = a.find(class_=lambda c: c and "headline" in c.lower())
+        raw_text = head.get_text(" ") if head and len(_clean_text(head.get_text(" "))) >= MIN_HEADLINE_LEN else a.get_text(" ")
+        text = _strip_labels(strip_meta_suffix(_clean_text(raw_text)))
         if len(text) < MIN_HEADLINE_LEN or len(text) > 300:
             continue
-        if SKIP_TEXT_PAT.search(text):
+        if SKIP_TEXT_PAT.search(text) or _LABEL_ONLY.match(text):
             continue
         href = urljoin(base_url, a["href"].split("#")[0])
         pu = urlparse(href)
@@ -181,7 +193,11 @@ def _usatoday_bundles(html: str, base_url: str, items):
         return items
     seen = {it["url"] for it in items}
     extra = []
-    for key in ("More Top Stories", "Top Headlines"):
+    # the phone front splits each list into numbered parts ("More Top Stories 2", …)
+    def parts(prefix):
+        keys = [k for k in fb if k == prefix or re.fullmatch(re.escape(prefix) + r" \d+", k)]
+        return sorted(keys, key=lambda k: int(k.rsplit(" ", 1)[1]) if k != prefix else 1)
+    for key in parts("More Top Stories") + parts("Top Headlines"):
         for e in fb.get(key) or []:
             t, u = e.get("t"), e.get("u")
             if not t or not u:
@@ -191,11 +207,17 @@ def _usatoday_bundles(html: str, base_url: str, items):
                 continue
             seen.add(u)
             extra.append({"headline": _clean_text(t), "url": u, "lead": False})
-    # after the top table: the last item whose URL appears in .gnt_m_tt
+    # The editorial top = everything before the first deferred-section stub
+    # (desktop: the top table; mobile: the hero + the first list modules). What
+    # follows the stubs on either layout is sidebars and promos — dropped.
     soup = BeautifulSoup(html, "html.parser")
-    top = {urljoin(base_url, a["href"].split("#")[0]) for a in soup.select(".gnt_m_tt a[href]")}
+    top = set()
+    for a in soup.find_all("a", href=True):
+        if a.find_previous(class_="gnt_m_dl") is not None:
+            break
+        top.add(urljoin(base_url, a["href"].split("#")[0]))
     cut = max((i + 1 for i, it in enumerate(items) if it["url"] in top), default=0)
-    return items[:cut] + extra + items[cut:]
+    return items[:cut] + extra
 
 
 SITE_HOOKS = {"usatoday": _usatoday_bundles}
@@ -220,7 +242,20 @@ _LABEL_PREFIX = re.compile(
 _LABEL_SUFFIX = re.compile(r"\s+(?:Show all|Read more|\d+:\d\d)\s*$", re.I)
 
 
+# Link text that is nothing but labels, durations and credits ("• Video 4:47 Video 4:47 CNN").
+_LABEL_ONLY = re.compile(
+    r"^[•\s]*(?:(?:Video|Gallery|Analysis|Live Updates|CNN Exclusive|Exclusive|CNN|Reuters|AP|AFP|"
+    r"Getty Images|File|Clipped From Video|\d+:\d\d|via|/|,)\s*)+$",
+    re.I,
+)
+
+
+_VIDEO_CARD = re.compile(r"^(?:•\s*)?Video\b.*\d+:\d\d\s*$", re.I)
+
+
 def _strip_labels(text: str) -> str:
+    if re.match(r"^(?:•\s*)?Video\b", text, re.I) and not _VIDEO_CARD.match(text):
+        return text  # "Video shows the aftermath of …" is a headline, not a video-card label
     stripped = _LABEL_SUFFIX.sub("", _LABEL_PREFIX.sub("", text)).strip()
     return stripped if len(stripped) >= MIN_HEADLINE_LEN else text
 

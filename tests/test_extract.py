@@ -69,9 +69,11 @@ USAT = """<html><body><main>
 <div class="gnt_m_tt"><div><a class="gnt_m_tl" href="/story/news/2026/09/15/text-column-first-story/1/">Text column story that comes first in the DOM order</a></div>
 <div><a class="gnt_m_he" href="/story/tv/2026/09/14/hero-card-story/2/">Hero card story that is displayed first on the page</a></div></div>
 <div class="gnt_m_sb"><a href="/story/life/horoscopes/2026/09/15/horoscope/3/">Read your daily horoscope for Tuesday, September 15</a></div>
-<div class="gnt_m gnt_m_sc"><a href="/story/tv/2026/09/14/second-column-story/4/">A second-column story that follows the bundles</a></div>
+<div class="gnt_m_dl" aria-label="Sports">Sports</div>
+<div class="gnt_m gnt_m_lm"><a href="/story/tv/2026/09/14/sidebar-list-story/4/">A promo list that follows the deferred stubs is dropped</a></div>
 </main><script>gnt.fb = {"More Top Stories":[{"t":"First of the embedded More Top Stories list","u":"/story/news/2026/09/15/more-top-1/5/"},
 {"t":"Hero card story that is displayed first on the page","u":"/story/tv/2026/09/14/hero-card-story/2/"}],
+"More Top Stories 2":[{"t":"Second part of the embedded More Top Stories list","u":"/story/news/2026/09/15/more-top-2/7/"}],
 "Top Headlines":[{"t":"First of the embedded Top Headlines list","u":"/story/news/2026/09/15/top-headline-1/6/"}]};</script></body></html>"""
 
 
@@ -79,7 +81,17 @@ class TestUsaToday(unittest.TestCase):
     def test_lead_first_bundles_after_top_table_sidebar_dropped(self):
         got = [it["url"].split("/")[-2] for it in extract_items(
             USAT, "https://www.usatoday.com", "main", [".gnt_m_sb"], "a.gnt_m_he", "usatoday")]
-        self.assertEqual(got, ["2", "1", "5", "6", "4"])  # hero, text column, More Top, Top Headlines (dup dropped), rest
+        # hero, text column, More Top Stories (+ part 2; the hero dup dropped), Top Headlines; sidebars dropped
+        self.assertEqual(got, ["2", "1", "5", "7", "6"])
+
+    def test_video_label_guard(self):
+        from pipeline.extract import _strip_labels
+        self.assertEqual(_strip_labels("Video shows the aftermath of a drone strike on a train"),
+                         "Video shows the aftermath of a drone strike on a train")
+        self.assertEqual(_strip_labels("Video CNN’s SCOTUS analyst breaks down the ruling 1:43"),
+                         "CNN’s SCOTUS analyst breaks down the ruling")
+        self.assertEqual(_strip_labels("Analysis by Matt Egan The time Bessent tried to outsmart the market"),
+                         "The time Bessent tried to outsmart the market")
 
 
 class TestSkipHosts(unittest.TestCase):

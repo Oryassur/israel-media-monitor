@@ -102,6 +102,13 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   re-estimated: snapshot rows with `approx=1` had their Israel weight re-scaled
   as if the chrome above each Israel item were gone (2026-09-09..15, 189 rows),
   and intl rows for those runs were rebuilt from presence windows (`approx`).
+- **Mobile fronts** (2026-09-15, owner's choice "option 2"): CNN and USA Today edit a
+  separate front page for phones (same-moment fetch showed 18% / 33% top-10 overlap
+  with desktop; the other 28 outlets serve one front). They are fetched with the
+  iPhone user agent (`ua: mobile` in sources.yaml) and measured on that front.
+  Re-run the desktop-vs-mobile comparison when adding a source. Per-source knobs:
+  `selector`, `skip` (CSS blocks), `lead` (visual lead link → rank 1), `site_hook`
+  (extract.SITE_HOOKS, e.g. USA Today's embedded `gnt.fb` lists), `ua`.
 - Parser health: Corriere needed `selector: main` (fixed 2026-09-11; its rows from
   2026-09-09 to 2026-09-11 07:45 UTC counted columnist boxes as headlines — attention 0,
   intl 0 — and are not recoverable). When a source's Israel share is flat zero, check

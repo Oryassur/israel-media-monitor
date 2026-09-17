@@ -39,7 +39,7 @@ def run(no_llm=False, no_enrich=False):
     for src in sources:
         name = src["name"]
         try:
-            html = fetch_html(src["url"])
+            html = fetch_html(src["url"], ua=src.get("ua"))
             extracted = extract_items(html, src["url"], src.get("selector"), src.get("skip"),
                                       src.get("lead"), src.get("site_hook"))
         except Exception as e:  # noqa: BLE001 — one dead source must not kill the run
