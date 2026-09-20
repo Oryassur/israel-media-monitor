@@ -12022,3 +12022,32 @@
 {"ts": "2026-09-20T06:45:23Z", "source": "globeandmail", "total_w": 55, "intl_w": 0, "uncl_w": 54, "topics": {}, "iv": "i3"}
 {"ts": "2026-09-20T06:45:23Z", "source": "abcau", "total_w": 55, "intl_w": 0, "uncl_w": 55, "topics": {}, "iv": "i3"}
 {"ts": "2026-09-20T06:45:23Z", "source": "smh", "total_w": 55, "intl_w": 0, "uncl_w": 52, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T06:59:34Z", "source": "usatoday", "total_w": 55, "intl_w": 0, "uncl_w": 50, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T06:59:34Z", "source": "nypost", "total_w": 55, "intl_w": 0, "uncl_w": 55, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T06:59:34Z", "source": "cnn", "total_w": 55, "intl_w": 10, "uncl_w": 45, "topics": {"middle-east-other": 10}, "iv": "i3"}
+{"ts": "2026-09-20T06:59:34Z", "source": "foxnews", "total_w": 55, "intl_w": 0, "uncl_w": 55, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T06:59:34Z", "source": "nbcnews", "total_w": 55, "intl_w": 0, "uncl_w": 52, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T06:59:34Z", "source": "newsweek", "total_w": 55, "intl_w": 2, "uncl_w": 51, "topics": {"middle-east-other": 1, "other": 1}, "iv": "i3"}
+{"ts": "2026-09-20T06:59:34Z", "source": "csmonitor", "total_w": 55, "intl_w": 14, "uncl_w": 25, "topics": {"africa": 3, "middle-east-other": 6, "ukraine-russia": 3, "eu-politics": 1, "israel-gaza": 1}, "iv": "i3"}
+{"ts": "2026-09-20T06:59:34Z", "source": "washexaminer", "total_w": 55, "intl_w": 2, "uncl_w": 46, "topics": {"china": 1, "israel-gaza": 1}, "iv": "i3"}
+{"ts": "2026-09-20T06:59:34Z", "source": "bbc", "total_w": 55, "intl_w": 0, "uncl_w": 55, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T06:59:34Z", "source": "guardian", "total_w": 55, "intl_w": 0, "uncl_w": 49, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T06:59:34Z", "source": "thetimes", "total_w": 55, "intl_w": 0, "uncl_w": 54, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T06:59:34Z", "source": "dailymail", "total_w": 55, "intl_w": 3, "uncl_w": 46, "topics": {"royals": 3}, "iv": "i3"}
+{"ts": "2026-09-20T06:59:34Z", "source": "independent", "total_w": 55, "intl_w": 6, "uncl_w": 49, "topics": {"middle-east-other": 6}, "iv": "i3"}
+{"ts": "2026-09-20T06:59:34Z", "source": "dw", "total_w": 55, "intl_w": 2, "uncl_w": 46, "topics": {"asia-other": 1, "middle-east-other": 1}, "iv": "i3"}
+{"ts": "2026-09-20T06:59:34Z", "source": "euronews", "total_w": 55, "intl_w": 1, "uncl_w": 51, "topics": {"north-america": 1}, "iv": "i3"}
+{"ts": "2026-09-20T06:59:34Z", "source": "lemonde", "total_w": 55, "intl_w": 0, "uncl_w": 55, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T06:59:34Z", "source": "lefigaro", "total_w": 55, "intl_w": 5, "uncl_w": 49, "topics": {"ukraine-russia": 5}, "iv": "i3"}
+{"ts": "2026-09-20T06:59:34Z", "source": "lacroix", "total_w": 55, "intl_w": 4, "uncl_w": 36, "topics": {"ukraine-russia": 4}, "iv": "i3"}
+{"ts": "2026-09-20T06:59:34Z", "source": "spiegel", "total_w": 55, "intl_w": 0, "uncl_w": 55, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T06:59:34Z", "source": "bild", "total_w": 55, "intl_w": 0, "uncl_w": 52, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T06:59:34Z", "source": "faz", "total_w": 55, "intl_w": 1, "uncl_w": 53, "topics": {"north-america": 1}, "iv": "i3"}
+{"ts": "2026-09-20T06:59:34Z", "source": "tagesschau", "total_w": 55, "intl_w": 0, "uncl_w": 52, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T06:59:34Z", "source": "elmundo", "total_w": 55, "intl_w": 0, "uncl_w": 55, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T06:59:34Z", "source": "corriere", "total_w": 55, "intl_w": 0, "uncl_w": 55, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T06:59:34Z", "source": "ilgiornale", "total_w": 55, "intl_w": 0, "uncl_w": 45, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T06:59:34Z", "source": "cbc", "total_w": 55, "intl_w": 0, "uncl_w": 42, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T06:59:34Z", "source": "globeandmail", "total_w": 55, "intl_w": 0, "uncl_w": 54, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T06:59:34Z", "source": "abcau", "total_w": 55, "intl_w": 0, "uncl_w": 55, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T06:59:34Z", "source": "smh", "total_w": 55, "intl_w": 0, "uncl_w": 52, "topics": {}, "iv": "i3"}
