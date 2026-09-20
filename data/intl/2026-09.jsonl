@@ -12370,3 +12370,32 @@
 {"ts": "2026-09-20T15:45:28Z", "source": "globeandmail", "total_w": 55, "intl_w": 0, "uncl_w": 53, "topics": {}, "iv": "i3"}
 {"ts": "2026-09-20T15:45:28Z", "source": "abcau", "total_w": 55, "intl_w": 0, "uncl_w": 55, "topics": {}, "iv": "i3"}
 {"ts": "2026-09-20T15:45:28Z", "source": "smh", "total_w": 55, "intl_w": 0, "uncl_w": 55, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T16:29:16Z", "source": "usatoday", "total_w": 55, "intl_w": 0, "uncl_w": 55, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T16:29:16Z", "source": "nypost", "total_w": 55, "intl_w": 0, "uncl_w": 53, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T16:29:16Z", "source": "cnn", "total_w": 55, "intl_w": 0, "uncl_w": 55, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T16:29:16Z", "source": "foxnews", "total_w": 55, "intl_w": 0, "uncl_w": 55, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T16:29:16Z", "source": "nbcnews", "total_w": 55, "intl_w": 0, "uncl_w": 54, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T16:29:16Z", "source": "newsweek", "total_w": 55, "intl_w": 2, "uncl_w": 52, "topics": {"middle-east-other": 1, "other": 1}, "iv": "i3"}
+{"ts": "2026-09-20T16:29:16Z", "source": "csmonitor", "total_w": 55, "intl_w": 14, "uncl_w": 30, "topics": {"africa": 3, "middle-east-other": 6, "ukraine-russia": 3, "eu-politics": 1, "israel-gaza": 1}, "iv": "i3"}
+{"ts": "2026-09-20T16:29:16Z", "source": "washexaminer", "total_w": 55, "intl_w": 2, "uncl_w": 45, "topics": {"china": 1, "israel-gaza": 1}, "iv": "i3"}
+{"ts": "2026-09-20T16:29:16Z", "source": "bbc", "total_w": 55, "intl_w": 0, "uncl_w": 55, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T16:29:16Z", "source": "guardian", "total_w": 55, "intl_w": 0, "uncl_w": 55, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T16:29:16Z", "source": "thetimes", "total_w": 55, "intl_w": 0, "uncl_w": 54, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T16:29:16Z", "source": "dailymail", "total_w": 55, "intl_w": 5, "uncl_w": 45, "topics": {"royals": 5}, "iv": "i3"}
+{"ts": "2026-09-20T16:29:16Z", "source": "independent", "total_w": 55, "intl_w": 2, "uncl_w": 53, "topics": {"middle-east-other": 2}, "iv": "i3"}
+{"ts": "2026-09-20T16:29:16Z", "source": "dw", "total_w": 55, "intl_w": 0, "uncl_w": 51, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T16:29:16Z", "source": "euronews", "total_w": 55, "intl_w": 1, "uncl_w": 52, "topics": {"north-america": 1}, "iv": "i3"}
+{"ts": "2026-09-20T16:29:16Z", "source": "lemonde", "total_w": 55, "intl_w": 0, "uncl_w": 50, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T16:29:16Z", "source": "lefigaro", "total_w": 55, "intl_w": 0, "uncl_w": 55, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T16:29:16Z", "source": "lacroix", "total_w": 55, "intl_w": 5, "uncl_w": 41, "topics": {"ukraine-russia": 4, "middle-east-other": 1}, "iv": "i3"}
+{"ts": "2026-09-20T16:29:16Z", "source": "spiegel", "total_w": 55, "intl_w": 0, "uncl_w": 55, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T16:29:16Z", "source": "bild", "total_w": 55, "intl_w": 0, "uncl_w": 55, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T16:29:16Z", "source": "faz", "total_w": 55, "intl_w": 0, "uncl_w": 55, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T16:29:16Z", "source": "tagesschau", "total_w": 55, "intl_w": 0, "uncl_w": 55, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T16:29:16Z", "source": "elmundo", "total_w": 55, "intl_w": 0, "uncl_w": 55, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T16:29:16Z", "source": "corriere", "total_w": 55, "intl_w": 0, "uncl_w": 55, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T16:29:16Z", "source": "ilgiornale", "total_w": 55, "intl_w": 0, "uncl_w": 52, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T16:29:16Z", "source": "cbc", "total_w": 55, "intl_w": 0, "uncl_w": 55, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T16:29:16Z", "source": "globeandmail", "total_w": 55, "intl_w": 0, "uncl_w": 53, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T16:29:16Z", "source": "abcau", "total_w": 55, "intl_w": 0, "uncl_w": 55, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-20T16:29:16Z", "source": "smh", "total_w": 55, "intl_w": 0, "uncl_w": 55, "topics": {}, "iv": "i3"}
