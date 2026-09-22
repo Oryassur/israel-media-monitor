@@ -46,6 +46,15 @@ MAX_SUBJECT_ITEMS_PER_RUN = 300
 # Retry scoring for unscored items this long after first_seen (hours)
 SCORE_RETRY_WINDOW_H = 48
 
+# Every LLM pass swallows batch failures so the hourly run survives them; they
+# also report each one here so health.check can tell "all batches failed"
+# (billing, auth, outage) from a transient blip. [(stage, message)]
+LLM_ERRORS = []
+
+
+def note_llm_error(stage: str, exc: BaseException):
+    LLM_ERRORS.append((stage, str(exc)[:300]))
+
 # Article enrichment (og:image + description) for prominent related items.
 # Best-effort, hotlinked URLs only; see pipeline/enrich.py.
 ENRICH_MIN_WEIGHT = 3        # only headlines that reached a homepage top-10

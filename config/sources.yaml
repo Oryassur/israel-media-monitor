@@ -20,6 +20,11 @@ sources:
   - name: nyt
     display: The New York Times
     url: https://www.nytimes.com
+    # Homepage is DataDome-walled since 2026-09-15 (403 for every UA, from
+    # residential IPs too, and for archive.org's crawler). Measured on its own
+    # front-page feed since 2026-09-22: editorial order (not chronological),
+    # 25 items, description + image per item. See extract.fetch_feed.
+    feed: https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml
     country: US
     lang: en
     lean: left  # AllSides: Lean Left

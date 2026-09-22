@@ -25,8 +25,11 @@ prompts/intl_v_i3.md       domestic-vs-international rubric (versioned via INTL_
                            country as a subject is intl, incl. bilateral; Israel-as-party ⇒ israel-gaza; i3 adds
                            north-america + royals). publish.INTL_GROUPS folds slugs into the dashboard's 12 subject groups
 pipeline/                  the whole pipeline (plain Python, no agent in the loop)
-  run.py                   hourly cycle: fetch → extract → detect → score → cluster → subjects → intl → enrich → store → publish
-  extract.py               homepage HTML → ranked headlines; prominence weights v2 (rank1 ×10, 2–5 ×5, 6–10 ×3, 11–20 ×1, 21+ ×0)
+  run.py                   hourly cycle: fetch → extract → detect → score → cluster → subjects → intl → enrich → store → publish → health
+                           (--retry-hours N: one-off backfill of the unscored backlog after an outage)
+  extract.py               homepage HTML → ranked headlines; prominence weights v2 (rank1 ×10, 2–5 ×5, 6–10 ×3, 11–20 ×1, 21+ ×0);
+                           fetch_feed: bot-walled outlets measured on their front-page RSS (`feed:` in sources.yaml — NYT)
+  health.py                end-of-run alert conditions → logs/health.json (LLM dead, source down/empty 24h); never committed
   detect.py                keyword matching per language
   score.py                 LLM sentiment (backends: anthropic API / claude CLI); batch, cached per headline
   cluster.py               LLM story clustering: related items → cross-outlet stories (claude-sonnet-5, "c1")
@@ -37,11 +40,15 @@ pipeline/                  the whole pipeline (plain Python, no agent in the loo
                            data/snapshots (monthly csv, append-only) · data/intl (monthly jsonl, append-only)
   publish.py               builds docs/data/*.json for the dashboard (items 30d w/ img+desc; stories {id:{t,fs,ls}};
                            meta.sources w/ home, domain, logo)
+scripts/alert.py           workflow's last step: health.json → one GitHub issue per incident (@mentions the owner ⇒ email),
+                           updated when the condition set changes, auto-closed on the first clean run
 scripts/fetch_wordmarks.py one-off: outlet wordmark logos (Wikipedia infobox, header <img> fallback) → docs/logos/<name>.svg|png
                            (committed by hand; re-run on source swaps; foxnews.svg + bbc.svg are hand-placed variants;
                            fetch_logos.py is the square-favicon fallback)
 docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla JS/SVG, self-contained) + docs/logos/ + docs/fonts/
-.github/workflows/pipeline.yml   hourly cron on GitHub Actions (secret: ANTHROPIC_API_KEY)
+.github/workflows/pipeline.yml   hourly on GitHub Actions (secret: ANTHROPIC_API_KEY). GitHub's cron fires ~24% of its
+                           slots; the real scheduler is an external pinger (cron-job.org → workflow_dispatch at :45,
+                           99% hourly recall). Dispatch input `retry_hours` = backfill run.
 ```
 
 ## Invariants — keep these true
@@ -116,7 +123,26 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
 - Blocked sources (401/402/403) get swapped for an equivalent outlet, preserving
   country/lean balance — WSJ, WaPo, Reuters, Telegraph, Sky, France24, Politico
   are known-blocked (plus, from runner IPs: The Hill, news.com.au, Ouest-France,
-  NewsNation).
+  NewsNation). Exception — **feed mode** (2026-09-22): an outlet with a curated
+  *homepage* RSS feed in editorial order can keep being measured on it (`feed:`
+  in sources.yaml; rank = feed position, same top-20 window/weights, items arrive
+  with img/desc from the feed so enrichment is skipped). NYT is measured this way
+  since 2026-09-22 (DataDome-walled from 2026-09-15, 100% failed 09-18..22; it
+  blocks archive.org's crawler too, so Wayback is no fallback). Never point
+  `feed:` at a chronological section feed.
+- **Alerting** (2026-09-22): the run stays green through LLM/fetch failures by
+  design, so `health.check` runs last and `scripts/alert.py` opens/updates/closes
+  a `pipeline-alert` GitHub issue (⇒ owner email). Keys: `llm` (billing/auth
+  message, or 0/N scored with errors), `source_down:<name>`, `source_empty:<name>`
+  (all runs of the last 24h, ≥6 rows), `run_failed`. Every LLM batch except-block
+  calls `note_llm_error`.
+- **Outage 2026-09-18 22:45 → 09-22 ~09:00 UTC** (API credits exhausted): no item
+  scored/clustered/tagged, intl rows have uncl_w ≈ total_w, snapshot rows carry
+  the candidates in w_u (attention slightly overstated by the LLM's usual ~3%
+  rejections; sentiment blank). Recovery: `retry_hours` backfill run (scores +
+  clusters the backlog past the 48 h window) and the backfill-intl workflow
+  (its `apply` now also rebuilds rows with >25% unclassified weight, marked
+  `approx`). Snapshot sentiment columns for those runs stay blank.
 - Dashboard reads only `docs/data/*.json`; keep it dependency-free (the one
   external resource is the Fraunces display font from Google Fonts, with a
   Georgia fallback; the masthead uses the self-hosted "Old London" TTF in docs/fonts/) and light/dark-safe — three CSS token blocks (light,

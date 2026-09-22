@@ -5,7 +5,9 @@
                                                            #   INTL_VERSION; verdicts appended to CACHE
                                                            #   after each batch (safe to interrupt/resume)
     python scripts/backfill_intl.py apply CACHE.jsonl      # merge CACHE into data/allitems, then rebuild
-                                                           #   every data/intl row not at INTL_VERSION
+                                                           #   every data/intl row not at INTL_VERSION,
+                                                           #   plus rows where >25% of the weight was
+                                                           #   unclassified (classifier outage)
 
 Rebuilt rows are approximate: the run's exact total_w is kept, and each headline
 is assumed present at its best_weight in every run between first_seen and
@@ -90,7 +92,11 @@ def apply(cache_path: Path):
         rows = read_jsonl(path)
         out = []
         for row in rows:
-            if row.get("iv") == INTL_VERSION and not row.get("approx"):
+            # Exact current-version rows are kept — unless the classifier was down
+            # for that run (2026-09-18..22 API-credit outage: uncl_w ≈ total_w),
+            # in which case an approximate row beats an exact-but-empty one.
+            mostly_unclassified = row.get("uncl_w", 0) * 4 > row.get("total_w", 0)
+            if row.get("iv") == INTL_VERSION and not row.get("approx") and not mostly_unclassified:
                 out.append(row); kept += 1
                 continue
             ts = row["ts"]

@@ -1,21 +1,24 @@
 """One full pipeline cycle: fetch -> extract -> detect -> score -> cluster -> intl
 -> enrich -> store -> publish.
 
-Run:  python -m pipeline.run              (normal hourly cycle)
-      python -m pipeline.run --no-llm     (skip the LLM passes)
-      python -m pipeline.run --no-enrich  (skip article-page enrichment)
+Run:  python -m pipeline.run                  (normal hourly cycle)
+      python -m pipeline.run --no-llm         (skip the LLM passes)
+      python -m pipeline.run --no-enrich      (skip article-page enrichment)
+      python -m pipeline.run --retry-hours N  (one-off: score/cluster the unscored
+                                               backlog back N hours instead of
+                                               SCORE_RETRY_WINDOW_H — after an outage)
 """
 import argparse
 import sys
 import time
 from datetime import datetime, timedelta, timezone
 
-from . import enrich, intl, publish, subjects
+from . import enrich, health, intl, publish, subjects
 from .cluster import cluster_items
 from .common import (CLUSTER_VERSION, LOGS, RUBRIC_VERSION, SCORE_RETRY_WINDOW_H,
                      item_id, load_sources, month_key)
 from .detect import match_keyword
-from .extract import extract_items, fetch_html, prominence_weight
+from .extract import extract_items, fetch_feed, fetch_html, prominence_weight
 from .score import score_items
 from .store import (append_snapshots, load_recent_items, load_recent_stories,
                     save_items, save_stories)
@@ -25,8 +28,9 @@ def log(msg):
     print(msg, flush=True)
 
 
-def run(no_llm=False, no_enrich=False):
+def run(no_llm=False, no_enrich=False, retry_hours=None):
     now = datetime.now(timezone.utc)
+    retry_h = retry_hours or SCORE_RETRY_WINDOW_H
     ts = now.strftime("%Y-%m-%dT%H:%M:%SZ")
     sources = load_sources()
     months = [month_key(ts), month_key((now.replace(day=1) - timedelta(days=1)).strftime("%Y-%m"))]
@@ -39,13 +43,16 @@ def run(no_llm=False, no_enrich=False):
     for src in sources:
         name = src["name"]
         try:
-            html = fetch_html(src["url"], ua=src.get("ua"))
-            extracted = extract_items(html, src["url"], src.get("selector"), src.get("skip"),
-                                      src.get("lead"), src.get("site_hook"))
+            if src.get("feed"):  # bot-walled homepage: measured on its front-page feed
+                extracted = fetch_feed(src["feed"])
+            else:
+                html = fetch_html(src["url"], ua=src.get("ua"))
+                extracted = extract_items(html, src["url"], src.get("selector"), src.get("skip"),
+                                          src.get("lead"), src.get("site_hook"))
         except Exception as e:  # noqa: BLE001 — one dead source must not kill the run
             log(f"FETCH FAIL {name}: {e}")
             per_source[name] = {"ok": False, "present": [], "top20": [],
-                                "total_items": 0, "total_weight": 0}
+                                "total_items": 0, "total_weight": 0, "err": str(e)[:200]}
             continue
 
         total = len(extracted)
@@ -76,6 +83,11 @@ def run(no_llm=False, no_enrich=False):
                     "best_rank": it["rank"], "best_weight": weight,
                     "keyword": kw,
                 }
+                if it.get("img") or it.get("desc"):  # feed items arrive pre-enriched
+                    desc = (it.get("desc") or "")[:enrich.MAX_DESC_LEN].rstrip()
+                    rec.update({"img": it.get("img"),
+                                "desc": desc if desc and desc != it["headline"] else None,
+                                "enr": ts, "enr_n": 0})
                 items_idx[iid] = rec
                 fresh.append(rec)
         per_source[name] = {
@@ -87,7 +99,9 @@ def run(no_llm=False, no_enrich=False):
         time.sleep(1)  # be polite between hosts
 
     # Score fresh items plus earlier ones that missed scoring, within the retry window
-    cutoff = (now - timedelta(hours=SCORE_RETRY_WINDOW_H)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    cutoff = (now - timedelta(hours=retry_h)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    if retry_hours:
+        log(f"retry window widened to {retry_hours}h (cutoff {cutoff})")
     pending = [
         r for r in items_idx.values()
         if (
@@ -108,8 +122,12 @@ def run(no_llm=False, no_enrich=False):
         for r in pending:
             r.pop("source_display", None)
         log(f"scored {n}/{len(pending)} pending items ({len(fresh)} new this run)")
+        scored = (n, len(pending))
     elif pending:
         log(f"scoring skipped (--no-llm); {len(pending)} items pending")
+        scored = None
+    else:
+        scored = (0, 0)
 
     # Cluster confirmed-related items into cross-outlet stories (retries within
     # the same window as scoring; cluster_v mismatch re-clusters after a bump)
@@ -208,6 +226,16 @@ def run(no_llm=False, no_enrich=False):
         f.write(f"{ts} sources_ok={ok}/{len(sources)} new_items={len(fresh)} "
                 f"known_items={len(known_ids)}\n")
     log(f"done: {ok}/{len(sources)} sources ok, {len(fresh)} new candidate items")
+
+    # Health report for the alerting step (logs/health.json, not committed).
+    # Best-effort: a bug here must not fail the run either.
+    try:
+        alerts = health.check(now, sources, per_source, scored)
+        health.write(ts, alerts)
+        for a in alerts:
+            log(f"ALERT {a['key']}: {a['title']}")
+    except Exception as e:  # noqa: BLE001
+        log(f"health: check failed ({e}); continuing")
     return 0 if ok else 1
 
 
@@ -215,5 +243,7 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--no-llm", action="store_true", help="skip the LLM passes")
     ap.add_argument("--no-enrich", action="store_true", help="skip article-page enrichment")
+    ap.add_argument("--retry-hours", type=int, default=None,
+                    help="widen the unscored-item retry window to N hours (one-off backfill)")
     args = ap.parse_args()
-    sys.exit(run(no_llm=args.no_llm, no_enrich=args.no_enrich))
+    sys.exit(run(no_llm=args.no_llm, no_enrich=args.no_enrich, retry_hours=args.retry_hours))

@@ -7,10 +7,16 @@ on:
     # and the data model is per-run, so an hour with two runs is harmless.
     - cron: "7 * * * *"
     - cron: "37 * * * *"
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      retry_hours:
+        description: "One-off backfill: widen the unscored-item retry window to N hours (blank = normal run)"
+        required: false
+        default: ""
 
 permissions:
   contents: write
+  issues: write   # health alerts are GitHub issues (they email the owner)
 
 concurrency:
   group: pipeline
@@ -37,9 +43,11 @@ jobs:
       - run: pip install -r requirements.txt
 
       - name: Run pipeline
+        id: pipeline
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: python -m pipeline.run
+          RETRY_HOURS: ${{ inputs.retry_hours }}
+        run: python -m pipeline.run ${RETRY_HOURS:+--retry-hours "$RETRY_HOURS"}
 
       - name: Commit data
         run: |
@@ -60,3 +68,14 @@ jobs:
             exit 0
           fi
           git push
+
+      # Health -> email. The LLM passes and fetches are best-effort, so the job
+      # above is green even when every API call is rejected; this step opens a
+      # GitHub issue (@mentioning the owner => email) for the conditions in
+      # logs/health.json and closes it once a run comes back clean.
+      - name: Alert
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PIPELINE_OUTCOME: ${{ steps.pipeline.outcome }}
+        run: python scripts/alert.py

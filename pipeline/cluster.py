@@ -10,7 +10,7 @@ import re
 import subprocess
 from datetime import datetime, timedelta
 
-from .common import CLUSTER_MODEL, CLUSTER_PROMPT_PATH, CLUSTER_VERSION
+from .common import CLUSTER_MODEL, CLUSTER_PROMPT_PATH, CLUSTER_VERSION, note_llm_error
 from .score import pick_backend
 
 BATCH_SIZE = 40
@@ -113,6 +113,7 @@ def cluster_items(items, stories, ts, backend=None, log=print):
             resp = call(_build_prompt(batch, active))
             parsed = _parse_response(resp, len(batch))
         except Exception as e:  # noqa: BLE001 — batch failure must not kill the run
+            note_llm_error("clustering", e)
             log(f"clustering: batch {start // BATCH_SIZE} failed ({e}); will retry next run")
             continue
         new_map = {}  # "new:<k>" -> minted story id

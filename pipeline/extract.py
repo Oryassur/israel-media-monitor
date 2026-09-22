@@ -99,6 +99,47 @@ def _clean_text(s: str) -> str:
     return re.sub(r"\s+", " ", s).strip()
 
 
+# Front-page feed mode. An outlet whose homepage is bot-walled (DataDome et al.
+# also block archive.org's crawler, so the Wayback Machine is no way around it)
+# can be measured on its own curated front-page feed instead: `feed: <rss url>`
+# in sources.yaml. The feed must be the outlet's *homepage* feed, in editorial
+# order (NYT's HomePage.xml is: pubDates are not monotonic), not a chronological
+# section feed — rank is the item's position in it. Same top-20 window and
+# weights as the DOM fronts; total_weight is the usual 55 once the feed has 20+
+# items. Feeds carry description + media image, so items get img/desc without
+# an article-page fetch (NYT article pages 403 anyway).
+_MEDIA_NS = "{http://search.yahoo.com/mrss/}"
+
+
+def fetch_feed(url: str, timeout: int = 25):
+    """RSS front-page feed -> [{rank, headline, url, desc, img}] in feed order."""
+    import xml.etree.ElementTree as ET
+
+    resp = requests.get(url, timeout=timeout,
+                        headers={"User-Agent": UA, "Accept": "application/rss+xml, application/xml, text/xml, */*"})
+    resp.raise_for_status()
+    root = ET.fromstring(resp.content)
+    out, seen = [], set()
+    for node in root.iter("item"):
+        title = _clean_text(node.findtext("title") or "")
+        link = (node.findtext("link") or "").strip()
+        if not title or not link or link in seen:
+            continue
+        seen.add(link)
+        desc = _clean_text(node.findtext("description") or "") or None
+        img = None
+        for m in node.iter(f"{_MEDIA_NS}content"):
+            u = m.get("url", "")
+            if u.startswith("https://") and m.get("medium", "image") == "image":
+                img = u
+                break
+        out.append({"rank": len(out) + 1, "headline": strip_meta_suffix(title),
+                    "url": link, "desc": desc, "img": img})
+    if not out:
+        raise ValueError(f"feed has no items: {url}")
+    return out
+
+
 def extract_items(html: str, base_url: str, selector: str = None, skip=None, lead: str = None,
                   site: str = None):
     """Return headline items in page order: [{rank, headline, url}].

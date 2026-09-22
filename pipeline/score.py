@@ -14,7 +14,7 @@ import re
 import shutil
 import subprocess
 
-from .common import RUBRIC_PATH, RUBRIC_VERSION, SCORING_MODEL
+from .common import RUBRIC_PATH, RUBRIC_VERSION, SCORING_MODEL, note_llm_error
 
 BATCH_SIZE = 25
 
@@ -118,6 +118,7 @@ def score_items(items, backend=None, log=print):
             resp = call(_build_prompt(batch))
             parsed = _parse_response(resp, len(batch))
         except Exception as e:  # noqa: BLE001 — batch failure must not kill the run
+            note_llm_error("scoring", e)
             log(f"scoring: batch {start // BATCH_SIZE} failed ({e}); will retry next run")
             continue
         for i, it in enumerate(batch):

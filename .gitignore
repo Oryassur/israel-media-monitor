@@ -5,3 +5,6 @@ __pycache__/
 data/raw/
 bibi-media-monitor/data/raw/
 docs/logos/contact-sheet.html
+
+# per-run health report consumed by scripts/alert.py, never committed
+logs/health.json

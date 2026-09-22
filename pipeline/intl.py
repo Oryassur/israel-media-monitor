@@ -13,7 +13,7 @@ import subprocess
 from collections import Counter
 from datetime import datetime, timedelta
 
-from .common import INTL_MODEL, INTL_PROMPT_PATH, INTL_VERSION, MAX_INTL_ITEMS_PER_RUN, item_id
+from .common import INTL_MODEL, INTL_PROMPT_PATH, INTL_VERSION, MAX_INTL_ITEMS_PER_RUN, item_id, note_llm_error
 from .score import pick_backend
 from .store import append_intl, load_recent_allitems, save_allitems
 
@@ -107,6 +107,7 @@ def classify_items(items, in_use, backend=None, log=print):
             resp = call(_build_prompt(batch, in_use))
             parsed = _parse_response(resp, len(batch))
         except Exception as e:  # noqa: BLE001 — batch failure must not kill the run
+            note_llm_error("intl", e)
             log(f"intl: batch {start // BATCH_SIZE} failed ({e}); will retry next run")
             continue
         for i, it in enumerate(batch):
