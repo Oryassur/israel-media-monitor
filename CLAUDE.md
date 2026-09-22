@@ -142,7 +142,10 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   rejections; sentiment blank). Recovery: `retry_hours` backfill run (scores +
   clusters the backlog past the 48 h window) and the backfill-intl workflow
   (its `apply` now also rebuilds rows with >25% unclassified weight, marked
-  `approx`). Snapshot sentiment columns for those runs stay blank.
+  `approx`), then `scripts/rebuild_snapshot_sentiment.py START END --write`
+  (redistributes each row's w_u over the sentiment buckets from the now-scored
+  headlines, presence-window approximation, rows marked `approx=1`; 897 rows).
+  Only the exact per-run rank of each headline is unrecoverable.
 - Dashboard reads only `docs/data/*.json`; keep it dependency-free (the one
   external resource is the Fraunces display font from Google Fonts, with a
   Georgia fallback; the masthead uses the self-hosted "Old London" TTF in docs/fonts/) and light/dark-safe — three CSS token blocks (light,
