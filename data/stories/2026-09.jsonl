@@ -88,7 +88,7 @@
 {"id": "9b1406abaa60", "title": "Oct 7 families blame Netanyahu in dossier", "first_seen": "2026-09-15T21:43:50Z", "last_seen": "2026-09-15T21:43:50Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "2af39a987603", "title": "Iran war depletes US missile stockpile", "first_seen": "2026-09-15T22:45:43Z", "last_seen": "2026-09-15T22:45:43Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "5bb1ffdbeffa", "title": "Trump approves $2.8 billion arms sale to Israel", "first_seen": "2026-09-15T23:45:24Z", "last_seen": "2026-09-16T10:45:23Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "578158087eea", "title": "Children's YouTuber vows Gaza activism despite backlash", "first_seen": "2026-09-16T01:45:23Z", "last_seen": "2026-09-22T09:17:48Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "578158087eea", "title": "Children's YouTuber vows Gaza activism despite backlash", "first_seen": "2026-09-16T01:45:23Z", "last_seen": "2026-09-27T10:45:26Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "b99669b679fc", "title": "Gaza students' Belgium study plan fails", "first_seen": "2026-09-16T06:41:39Z", "last_seen": "2026-09-16T11:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "44f8ce2be6f5", "title": "US may send heavy bombs to Israel", "first_seen": "2026-09-16T07:45:28Z", "last_seen": "2026-09-17T03:45:26Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "eb792d43a348", "title": "War-damaged building collapses in Gaza City", "first_seen": "2026-09-16T08:45:23Z", "last_seen": "2026-09-17T13:45:24Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -210,4 +210,6 @@
 {"id": "b2b10a5e14c3", "title": "Adam Brody clarifies Israel-Palestine stance", "first_seen": "2026-09-26T22:10:53Z", "last_seen": "2026-09-26T22:10:53Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "c5aafae72011", "title": "Israel's operation that killed Hezbollah leader Nasrallah", "first_seen": "2026-09-26T23:45:26Z", "last_seen": "2026-09-27T07:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "63d6506a01e2", "title": "Iranian diplomat declines Starlink offer from Israeli envoy", "first_seen": "2026-09-27T02:45:23Z", "last_seen": "2026-09-27T02:45:23Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "642c101535f0", "title": "Hamas militant who kidnapped Noa killed", "first_seen": "2026-09-27T09:45:22Z", "last_seen": "2026-09-27T09:45:22Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "642c101535f0", "title": "Hamas militant who kidnapped Noa killed", "first_seen": "2026-09-27T09:45:22Z", "last_seen": "2026-09-27T10:45:26Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "63f532fb1176", "title": "Berlin Left party grapples with Gaza issue", "first_seen": "2026-09-27T10:45:26Z", "last_seen": "2026-09-27T10:45:26Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "97bd2f725779", "title": "Gaza death toll surpasses 74,000", "first_seen": "2026-09-27T10:45:26Z", "last_seen": "2026-09-27T10:45:26Z", "model": "claude-sonnet-5", "cv": "c1"}
