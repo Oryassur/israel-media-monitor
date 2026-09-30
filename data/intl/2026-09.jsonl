@@ -22536,3 +22536,33 @@
 {"ts": "2026-09-30T13:38:02Z", "source": "globeandmail", "total_w": 55, "intl_w": 13, "uncl_w": 0, "topics": {"israel-gaza": 10, "us-politics": 1, "north-america": 2}, "iv": "i3"}
 {"ts": "2026-09-30T13:38:02Z", "source": "abcau", "total_w": 55, "intl_w": 6, "uncl_w": 0, "topics": {"israel-gaza": 5, "middle-east-other": 1}, "iv": "i3"}
 {"ts": "2026-09-30T13:38:02Z", "source": "smh", "total_w": 55, "intl_w": 14, "uncl_w": 0, "topics": {"israel-gaza": 10, "europe-other": 3, "latin-america": 1}, "iv": "i3"}
+{"ts": "2026-09-30T13:46:03Z", "source": "nyt", "total_w": 55, "intl_w": 29, "uncl_w": 0, "topics": {"middle-east-other": 25, "china": 3, "ukraine-russia": 1}, "iv": "i3"}
+{"ts": "2026-09-30T13:46:03Z", "source": "usatoday", "total_w": 55, "intl_w": 8, "uncl_w": 0, "topics": {"israel-gaza": 5, "royals": 3}, "iv": "i3"}
+{"ts": "2026-09-30T13:46:03Z", "source": "nypost", "total_w": 55, "intl_w": 11, "uncl_w": 0, "topics": {"israel-gaza": 10, "middle-east-other": 1}, "iv": "i3"}
+{"ts": "2026-09-30T13:46:03Z", "source": "cnn", "total_w": 55, "intl_w": 12, "uncl_w": 0, "topics": {"other": 5, "china": 3, "climate": 1, "asia-other": 1, "uk-politics": 1, "middle-east-other": 1}, "iv": "i3"}
+{"ts": "2026-09-30T13:46:03Z", "source": "foxnews", "total_w": 55, "intl_w": 31, "uncl_w": 0, "topics": {"israel-gaza": 13, "middle-east-other": 17, "china": 1}, "iv": "i3"}
+{"ts": "2026-09-30T13:46:03Z", "source": "nbcnews", "total_w": 55, "intl_w": 17, "uncl_w": 0, "topics": {"israel-gaza": 14, "economy-global": 1, "middle-east-other": 2}, "iv": "i3"}
+{"ts": "2026-09-30T13:46:03Z", "source": "newsweek", "total_w": 55, "intl_w": 21, "uncl_w": 0, "topics": {"israel-gaza": 10, "ukraine-russia": 5, "middle-east-other": 6}, "iv": "i3"}
+{"ts": "2026-09-30T13:46:03Z", "source": "csmonitor", "total_w": 55, "intl_w": 33, "uncl_w": 0, "topics": {"europe-other": 16, "middle-east-other": 8, "israel-gaza": 6, "other": 3}, "iv": "i3"}
+{"ts": "2026-09-30T13:46:03Z", "source": "washexaminer", "total_w": 55, "intl_w": 10, "uncl_w": 0, "topics": {"middle-east-other": 3, "israel-gaza": 6, "other": 1}, "iv": "i3"}
+{"ts": "2026-09-30T13:46:03Z", "source": "bbc", "total_w": 55, "intl_w": 50, "uncl_w": 0, "topics": {"israel-gaza": 15, "us-politics": 15, "ukraine-russia": 8, "royals": 3, "eu-politics": 3, "asia-other": 3, "africa": 2, "china": 1}, "iv": "i3"}
+{"ts": "2026-09-30T13:46:03Z", "source": "guardian", "total_w": 55, "intl_w": 41, "uncl_w": 0, "topics": {"israel-gaza": 11, "europe-other": 7, "ukraine-russia": 5, "china": 5, "us-politics": 11, "climate": 1, "asia-other": 1}, "iv": "i3"}
+{"ts": "2026-09-30T13:46:03Z", "source": "thetimes", "total_w": 0, "intl_w": 0, "uncl_w": 0, "topics": {}, "iv": "i3"}
+{"ts": "2026-09-30T13:46:03Z", "source": "dailymail", "total_w": 55, "intl_w": 21, "uncl_w": 0, "topics": {"israel-gaza": 10, "china": 5, "uk-politics": 5, "royals": 1}, "iv": "i3"}
+{"ts": "2026-09-30T13:46:03Z", "source": "independent", "total_w": 55, "intl_w": 43, "uncl_w": 0, "topics": {"israel-gaza": 10, "us-politics": 30, "middle-east-other": 3}, "iv": "i3"}
+{"ts": "2026-09-30T13:46:03Z", "source": "dw", "total_w": 55, "intl_w": 49, "uncl_w": 0, "topics": {"israel-gaza": 15, "asia-other": 12, "europe-other": 6, "middle-east-other": 6, "other": 3, "us-politics": 4, "africa": 1, "latin-america": 1, "economy-global": 1}, "iv": "i3"}
+{"ts": "2026-09-30T13:46:03Z", "source": "euronews", "total_w": 55, "intl_w": 37, "uncl_w": 0, "topics": {"ukraine-russia": 20, "eu-politics": 6, "israel-gaza": 3, "economy-global": 3, "europe-other": 3, "uk-politics": 1, "china": 1}, "iv": "i3"}
+{"ts": "2026-09-30T13:46:03Z", "source": "lemonde", "total_w": 55, "intl_w": 20, "uncl_w": 0, "topics": {"ukraine-russia": 6, "europe-other": 3, "africa": 3, "israel-gaza": 3, "middle-east-other": 1, "us-politics": 2, "eu-politics": 1, "other": 1}, "iv": "i3"}
+{"ts": "2026-09-30T13:46:03Z", "source": "lefigaro", "total_w": 55, "intl_w": 29, "uncl_w": 0, "topics": {"israel-gaza": 21, "middle-east-other": 7, "us-politics": 1}, "iv": "i3"}
+{"ts": "2026-09-30T13:46:03Z", "source": "lacroix", "total_w": 55, "intl_w": 10, "uncl_w": 0, "topics": {"us-politics": 3, "europe-other": 4, "other": 1, "eu-politics": 2}, "iv": "i3"}
+{"ts": "2026-09-30T13:46:03Z", "source": "spiegel", "total_w": 55, "intl_w": 14, "uncl_w": 0, "topics": {"israel-gaza": 5, "us-politics": 3, "uk-politics": 5, "middle-east-other": 1}, "iv": "i3"}
+{"ts": "2026-09-30T13:46:03Z", "source": "bild", "total_w": 55, "intl_w": 6, "uncl_w": 0, "topics": {"royals": 3, "europe-other": 1, "us-politics": 1, "climate": 1}, "iv": "i3"}
+{"ts": "2026-09-30T13:46:03Z", "source": "faz", "total_w": 55, "intl_w": 7, "uncl_w": 0, "topics": {"israel-gaza": 3, "middle-east-other": 3, "europe-other": 1}, "iv": "i3"}
+{"ts": "2026-09-30T13:46:03Z", "source": "tagesschau", "total_w": 55, "intl_w": 4, "uncl_w": 0, "topics": {"middle-east-other": 1, "ukraine-russia": 1, "us-politics": 2}, "iv": "i3"}
+{"ts": "2026-09-30T13:46:03Z", "source": "elmundo", "total_w": 55, "intl_w": 8, "uncl_w": 0, "topics": {"israel-gaza": 5, "europe-other": 1, "china": 1, "other": 1}, "iv": "i3"}
+{"ts": "2026-09-30T13:46:03Z", "source": "corriere", "total_w": 55, "intl_w": 34, "uncl_w": 0, "topics": {"israel-gaza": 33, "us-politics": 1}, "iv": "i3"}
+{"ts": "2026-09-30T13:46:03Z", "source": "ilgiornale", "total_w": 55, "intl_w": 21, "uncl_w": 0, "topics": {"israel-gaza": 21}, "iv": "i3"}
+{"ts": "2026-09-30T13:46:03Z", "source": "cbc", "total_w": 55, "intl_w": 10, "uncl_w": 0, "topics": {"israel-gaza": 3, "us-politics": 4, "economy-global": 1, "ukraine-russia": 1, "middle-east-other": 1}, "iv": "i3"}
+{"ts": "2026-09-30T13:46:03Z", "source": "globeandmail", "total_w": 55, "intl_w": 13, "uncl_w": 0, "topics": {"israel-gaza": 10, "us-politics": 1, "north-america": 2}, "iv": "i3"}
+{"ts": "2026-09-30T13:46:03Z", "source": "abcau", "total_w": 55, "intl_w": 6, "uncl_w": 0, "topics": {"israel-gaza": 5, "middle-east-other": 1}, "iv": "i3"}
+{"ts": "2026-09-30T13:46:03Z", "source": "smh", "total_w": 55, "intl_w": 14, "uncl_w": 0, "topics": {"israel-gaza": 10, "europe-other": 3, "latin-america": 1}, "iv": "i3"}
