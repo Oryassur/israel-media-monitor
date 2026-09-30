@@ -9,7 +9,7 @@ from .common import (CLUSTER_VERSION, DATA, DOCS_DATA, ENRICH_MIN_WEIGHT, INTL_V
                      ROOT, RUBRIC_VERSION, load_sources, read_jsonl)
 from .store import load_all_items, load_all_stories, read_all_snapshots
 
-HOURLY_WINDOW_DAYS = 14
+HOURLY_WINDOW_DAYS = 30  # = ITEMS_WINDOW_DAYS: hourly detail for every window the dashboard offers up to 30d
 ITEMS_WINDOW_DAYS = 30
 LOGOS_DIR = ROOT / "docs" / "logos"
 
@@ -213,6 +213,7 @@ def build():
         # first snapshot with stored (not approximated) composition columns
         "comp_exact_since": min((s["ts"] for s in snaps if s.get("w_n2", "") != ""), default=None),
         "items_window_days": ITEMS_WINDOW_DAYS,
+        "hourly_window_days": HOURLY_WINDOW_DAYS,
         "enrich_min_weight": ENRICH_MIN_WEIGHT,
         "intl": INTL_VERSION,
         "subjects": SUBJECT_VERSION,

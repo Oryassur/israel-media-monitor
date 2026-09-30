@@ -146,6 +146,15 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   (redistributes each row's w_u over the sentiment buckets from the now-scored
   headlines, presence-window approximation, rows marked `approx=1`; 897 rows).
   Only the exact per-run rank of each headline is unrecoverable.
+- **Chart granularity** (2026-09-30): `publish.HOURLY_WINDOW_DAYS` = 30 (= items
+  window) and `meta.hourly_window_days` tells the client. Hourly bars are offered on
+  any window that reaches into the published range, not only on windows shorter than
+  it; a longer window keeps its own bounds for the card/table figures while the chart
+  starts where the hourly detail does. Hourly coverage is derived from the first
+  `hourly.json` row (`HOURLY_FROM`), never from a `Date.now()` cutoff — a cutoff moves
+  during a render, so a window starting on it (the 30d preset) flips between the
+  hourly and daily pools mid-render. Card figures are means over the chart's buckets,
+  so they still shift by ~0.1pt between granularities on the same window.
 - Dashboard reads only `docs/data/*.json`; keep it dependency-free (the one
   external resource is the Fraunces display font from Google Fonts, with a
   Georgia fallback; the masthead uses the self-hosted "Old London" TTF in docs/fonts/) and light/dark-safe — three CSS token blocks (light,
