@@ -46,7 +46,7 @@
 {"id": "5db310a21e14", "title": "Pope questions Gaza parish priest on war", "first_seen": "2026-10-05T15:45:25Z", "last_seen": "2026-10-06T10:45:09Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "f0c280d06c54", "title": "UK threatens Israeli diplomats over consulate closure", "first_seen": "2026-10-05T19:45:42Z", "last_seen": "2026-10-06T19:45:31Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "34051eb9686f", "title": "NYC teacher criticized for pro-Hamas comments", "first_seen": "2026-10-05T21:45:26Z", "last_seen": "2026-10-05T21:45:26Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "624467dbfa07", "title": "MEP accuses Rima Hassan of flag incident", "first_seen": "2026-10-05T21:45:26Z", "last_seen": "2026-10-06T14:45:32Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "624467dbfa07", "title": "MEP accuses Rima Hassan of flag incident", "first_seen": "2026-10-05T21:45:26Z", "last_seen": "2026-10-06T20:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "ccfdcd508382", "title": "Former hostages share message of peace", "first_seen": "2026-10-06T02:45:24Z", "last_seen": "2026-10-06T02:45:24Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "8f331fd1b430", "title": "Opinion: Hamas distorted global moral compass", "first_seen": "2026-10-06T04:46:00Z", "last_seen": "2026-10-06T04:46:00Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "4f7831b62899", "title": "Man says attack was for Gaza", "first_seen": "2026-10-06T05:45:29Z", "last_seen": "2026-10-06T05:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -64,3 +64,5 @@
 {"id": "612fa421a7a2", "title": "UEFA probes Israel player spat allegation vs Ireland", "first_seen": "2026-10-06T17:23:36Z", "last_seen": "2026-10-06T17:23:36Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "91e2c4257a7c", "title": "Berlin's Left party cooperation with extremists scrutinized", "first_seen": "2026-10-06T17:23:36Z", "last_seen": "2026-10-06T17:23:36Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "0ce28fc18180", "title": "Paris town hall vandalized with pro-Palestine graffiti", "first_seen": "2026-10-06T19:45:31Z", "last_seen": "2026-10-06T19:45:31Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "c12b799bce11", "title": "NYPD prepares for NYC Oct 7 protests", "first_seen": "2026-10-06T20:45:25Z", "last_seen": "2026-10-06T20:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "991e048cf4cc", "title": "Israel destroys Gaza tunnel after Oct 7", "first_seen": "2026-10-06T20:45:25Z", "last_seen": "2026-10-06T20:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
