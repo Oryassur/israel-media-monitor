@@ -46,7 +46,7 @@
 {"id": "5db310a21e14", "title": "Pope questions Gaza parish priest on war", "first_seen": "2026-10-05T15:45:25Z", "last_seen": "2026-10-06T10:45:09Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "f0c280d06c54", "title": "UK threatens Israeli diplomats over consulate closure", "first_seen": "2026-10-05T19:45:42Z", "last_seen": "2026-10-05T19:45:42Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "34051eb9686f", "title": "NYC teacher criticized for pro-Hamas comments", "first_seen": "2026-10-05T21:45:26Z", "last_seen": "2026-10-05T21:45:26Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "624467dbfa07", "title": "MEP accuses Rima Hassan of flag incident", "first_seen": "2026-10-05T21:45:26Z", "last_seen": "2026-10-06T09:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "624467dbfa07", "title": "MEP accuses Rima Hassan of flag incident", "first_seen": "2026-10-05T21:45:26Z", "last_seen": "2026-10-06T12:45:26Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "ccfdcd508382", "title": "Former hostages share message of peace", "first_seen": "2026-10-06T02:45:24Z", "last_seen": "2026-10-06T02:45:24Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "8f331fd1b430", "title": "Opinion: Hamas distorted global moral compass", "first_seen": "2026-10-06T04:46:00Z", "last_seen": "2026-10-06T04:46:00Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "4f7831b62899", "title": "Man says attack was for Gaza", "first_seen": "2026-10-06T05:45:29Z", "last_seen": "2026-10-06T05:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -54,4 +54,6 @@
 {"id": "68182a0db128", "title": "Trump's foreign policy influence on US midterms", "first_seen": "2026-10-06T09:45:25Z", "last_seen": "2026-10-06T09:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "c30bd003955d", "title": "Israel on alert for Oct 7 anniversary attack", "first_seen": "2026-10-06T10:45:09Z", "last_seen": "2026-10-06T10:45:09Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "8d60e760bd98", "title": "Milan anti-Israel candidacy requirement controversy", "first_seen": "2026-10-06T10:45:09Z", "last_seen": "2026-10-06T10:45:09Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "8d8e291eaa33", "title": "Hamas releases images of Sinwar's final days", "first_seen": "2026-10-06T11:45:25Z", "last_seen": "2026-10-06T11:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "8d8e291eaa33", "title": "Hamas releases images of Sinwar's final days", "first_seen": "2026-10-06T11:45:25Z", "last_seen": "2026-10-06T12:45:26Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "adbc71cfe11e", "title": "Israel diplomatic contacts update", "first_seen": "2026-10-06T12:45:26Z", "last_seen": "2026-10-06T12:45:26Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "a251d7907768", "title": "Retrospective on three years since Oct 7", "first_seen": "2026-10-06T12:45:26Z", "last_seen": "2026-10-06T12:45:26Z", "model": "claude-sonnet-5", "cv": "c1"}
