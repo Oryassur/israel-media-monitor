@@ -14,7 +14,7 @@
 {"id": "97959c2ac44f", "title": "Western powers weigh action over Israel's policies", "first_seen": "2026-10-02T02:45:30Z", "last_seen": "2026-10-04T23:45:23Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "1cb1b71f2dfc", "title": "Mamdani calls for Netanyahu's ICC arrest", "first_seen": "2026-10-02T05:28:18Z", "last_seen": "2026-10-02T11:45:30Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "5f668f00d1c7", "title": "Israel's President addresses antisemitism in Germany", "first_seen": "2026-10-02T05:45:24Z", "last_seen": "2026-10-02T05:45:24Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "bf936b299d12", "title": "Debate on Germany's stance toward Israel", "first_seen": "2026-10-02T06:45:25Z", "last_seen": "2026-10-05T15:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "bf936b299d12", "title": "Debate on Germany's stance toward Israel", "first_seen": "2026-10-02T06:45:25Z", "last_seen": "2026-10-07T15:45:30Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "25d26e040fcb", "title": "UN cash-for-work program aids Gazans", "first_seen": "2026-10-02T08:45:26Z", "last_seen": "2026-10-02T08:45:26Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "dfcb94ecb76f", "title": "Finland government survives confidence vote over Israel visit", "first_seen": "2026-10-02T13:45:29Z", "last_seen": "2026-10-02T13:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "b43c962ea01e", "title": "Comparison of Hamas funding versus sick aid", "first_seen": "2026-10-02T14:45:27Z", "last_seen": "2026-10-02T14:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -88,7 +88,7 @@
 {"id": "c50cce807453", "title": "Opinion on Gaza war aftermath", "first_seen": "2026-10-07T12:45:27Z", "last_seen": "2026-10-07T13:45:32Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "50f2c114dd09", "title": "Conspiracy theories about Oct 7 attack", "first_seen": "2026-10-07T12:45:27Z", "last_seen": "2026-10-07T12:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "53d9e6e1907d", "title": "Funeral held for slain Gaza teen", "first_seen": "2026-10-07T13:45:32Z", "last_seen": "2026-10-07T13:45:32Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "7ccbadedcd4f", "title": "Mamdani marks Oct 7 anniversary activities", "first_seen": "2026-10-07T13:45:32Z", "last_seen": "2026-10-07T15:31:03Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "7ccbadedcd4f", "title": "Mamdani marks Oct 7 anniversary activities", "first_seen": "2026-10-07T13:45:32Z", "last_seen": "2026-10-07T15:45:30Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "d995013952bd", "title": "Netanyahu posts Oct 7 AI video", "first_seen": "2026-10-07T13:45:32Z", "last_seen": "2026-10-07T13:45:32Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "ac4896993341", "title": "Money flows from Germany to Hamas", "first_seen": "2026-10-07T14:45:30Z", "last_seen": "2026-10-07T14:45:30Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "452b62b587af", "title": "Debate over two-state solution feasibility", "first_seen": "2026-10-07T15:31:03Z", "last_seen": "2026-10-07T15:31:03Z", "model": "claude-sonnet-5", "cv": "c1"}
