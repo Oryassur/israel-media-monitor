@@ -35,7 +35,7 @@
 {"id": "863a56570c79", "title": "Israeli strike kills Turkish NGO director in Gaza", "first_seen": "2026-10-04T23:45:23Z", "last_seen": "2026-10-04T23:45:23Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "3d9d741927b2", "title": "Israel bans Green Party leader Zack Polanski", "first_seen": "2026-10-05T01:14:30Z", "last_seen": "2026-10-05T08:54:17Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "59ee7183bdd1", "title": "Opinion on Gaza war civilian casualties", "first_seen": "2026-10-05T07:39:31Z", "last_seen": "2026-10-05T07:39:31Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "1569335c441c", "title": "Israel marks October 7 memorial day", "first_seen": "2026-10-05T08:45:30Z", "last_seen": "2026-10-07T09:45:26Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "1569335c441c", "title": "Israel marks October 7 memorial day", "first_seen": "2026-10-05T08:45:30Z", "last_seen": "2026-10-07T10:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "027cdd42b524", "title": "Israel's mental health crisis after Oct 7", "first_seen": "2026-10-05T08:54:17Z", "last_seen": "2026-10-06T04:46:00Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "2eab388fba36", "title": "Italian union opposes Israeli teachers' school visit", "first_seen": "2026-10-05T08:54:17Z", "last_seen": "2026-10-05T11:45:26Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "48136b9132c0", "title": "Biden-Trump partnership secures Gaza ceasefire", "first_seen": "2026-10-05T09:45:31Z", "last_seen": "2026-10-05T09:45:31Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -77,6 +77,9 @@
 {"id": "af9cc10553d6", "title": "Houthi attacks Saudi airports and Gaza strike", "first_seen": "2026-10-07T05:45:27Z", "last_seen": "2026-10-07T05:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "9d2dd2457ec3", "title": "German woman's story after Hamas attack", "first_seen": "2026-10-07T06:45:25Z", "last_seen": "2026-10-07T06:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "d758d155171f", "title": "Italian universities celebrate Hamas's Oct 7 attack", "first_seen": "2026-10-07T06:45:25Z", "last_seen": "2026-10-07T06:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "913c07036ea7", "title": "Former hostage reflects on captivity ordeal", "first_seen": "2026-10-07T09:12:28Z", "last_seen": "2026-10-07T09:12:28Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "913c07036ea7", "title": "Former hostage reflects on captivity ordeal", "first_seen": "2026-10-07T09:12:28Z", "last_seen": "2026-10-07T10:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "a4301360e69b", "title": "Analysis of Hamas's war outcome", "first_seen": "2026-10-07T09:12:28Z", "last_seen": "2026-10-07T09:12:28Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "74a0eb163172", "title": "Protest against Israeli professors in Italy", "first_seen": "2026-10-07T09:45:26Z", "last_seen": "2026-10-07T09:45:26Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "3518999a9988", "title": "Students plan Oct 7 anniversary stunt protest", "first_seen": "2026-10-07T10:45:25Z", "last_seen": "2026-10-07T10:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "6ed8b8a88972", "title": "Oct 7 influence on 2028 Democratic race", "first_seen": "2026-10-07T10:45:25Z", "last_seen": "2026-10-07T10:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "7eb6a615998f", "title": "Comparing safety of Tel Aviv and Berlin", "first_seen": "2026-10-07T10:45:25Z", "last_seen": "2026-10-07T10:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
