@@ -35,7 +35,7 @@
 {"id": "863a56570c79", "title": "Israeli strike kills Turkish NGO director in Gaza", "first_seen": "2026-10-04T23:45:23Z", "last_seen": "2026-10-04T23:45:23Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "3d9d741927b2", "title": "Israel bans Green Party leader Zack Polanski", "first_seen": "2026-10-05T01:14:30Z", "last_seen": "2026-10-05T08:54:17Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "59ee7183bdd1", "title": "Opinion on Gaza war civilian casualties", "first_seen": "2026-10-05T07:39:31Z", "last_seen": "2026-10-05T07:39:31Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "1569335c441c", "title": "Israel marks October 7 memorial day", "first_seen": "2026-10-05T08:45:30Z", "last_seen": "2026-10-06T09:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "1569335c441c", "title": "Israel marks October 7 memorial day", "first_seen": "2026-10-05T08:45:30Z", "last_seen": "2026-10-07T03:45:24Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "027cdd42b524", "title": "Israel's mental health crisis after Oct 7", "first_seen": "2026-10-05T08:54:17Z", "last_seen": "2026-10-06T04:46:00Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "2eab388fba36", "title": "Italian union opposes Israeli teachers' school visit", "first_seen": "2026-10-05T08:54:17Z", "last_seen": "2026-10-05T11:45:26Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "48136b9132c0", "title": "Biden-Trump partnership secures Gaza ceasefire", "first_seen": "2026-10-05T09:45:31Z", "last_seen": "2026-10-05T09:45:31Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -69,3 +69,5 @@
 {"id": "5f126c75b6aa", "title": "US warns against Israel boycott retaliation", "first_seen": "2026-10-06T21:45:26Z", "last_seen": "2026-10-06T21:45:26Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "50311255ded5", "title": "Mother recounts hostage daughter's killing in Gaza", "first_seen": "2026-10-06T23:45:27Z", "last_seen": "2026-10-06T23:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "815a4661a766", "title": "Former hostage Luis Har's life after captivity", "first_seen": "2026-10-07T01:45:27Z", "last_seen": "2026-10-07T01:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "e278f9a58294", "title": "Israeli settlers beat press photographer in West Bank", "first_seen": "2026-10-07T03:45:24Z", "last_seen": "2026-10-07T03:45:24Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "49f4c933ee58", "title": "Merz pledges support for Israel on anniversary", "first_seen": "2026-10-07T03:45:24Z", "last_seen": "2026-10-07T03:45:24Z", "model": "claude-sonnet-5", "cv": "c1"}
