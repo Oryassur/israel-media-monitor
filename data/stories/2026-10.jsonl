@@ -44,7 +44,7 @@
 {"id": "b97125198881", "title": "Germany debates criminalizing denial of Israel's existence", "first_seen": "2026-10-05T14:45:27Z", "last_seen": "2026-10-05T14:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "6f8e9abdea25", "title": "Knife attacker jailed for Israeli embassy plot", "first_seen": "2026-10-05T15:45:25Z", "last_seen": "2026-10-05T15:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "5db310a21e14", "title": "Pope questions Gaza parish priest on war", "first_seen": "2026-10-05T15:45:25Z", "last_seen": "2026-10-06T10:45:09Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "f0c280d06c54", "title": "UK threatens Israeli diplomats over consulate closure", "first_seen": "2026-10-05T19:45:42Z", "last_seen": "2026-10-07T22:14:49Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "f0c280d06c54", "title": "UK threatens Israeli diplomats over consulate closure", "first_seen": "2026-10-05T19:45:42Z", "last_seen": "2026-10-08T06:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "34051eb9686f", "title": "NYC teacher criticized for pro-Hamas comments", "first_seen": "2026-10-05T21:45:26Z", "last_seen": "2026-10-05T21:45:26Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "624467dbfa07", "title": "MEP accuses Rima Hassan of flag incident", "first_seen": "2026-10-05T21:45:26Z", "last_seen": "2026-10-07T06:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "ccfdcd508382", "title": "Former hostages share message of peace", "first_seen": "2026-10-06T02:45:24Z", "last_seen": "2026-10-07T04:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -68,7 +68,7 @@
 {"id": "991e048cf4cc", "title": "Israel destroys Gaza tunnel after Oct 7", "first_seen": "2026-10-06T20:45:25Z", "last_seen": "2026-10-07T08:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "5f126c75b6aa", "title": "US warns against Israel boycott retaliation", "first_seen": "2026-10-06T21:45:26Z", "last_seen": "2026-10-07T06:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "50311255ded5", "title": "Mother recounts hostage daughter's killing in Gaza", "first_seen": "2026-10-06T23:45:27Z", "last_seen": "2026-10-06T23:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "815a4661a766", "title": "Former hostage Luis Har's life after captivity", "first_seen": "2026-10-07T01:45:27Z", "last_seen": "2026-10-07T13:45:32Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "815a4661a766", "title": "Former hostage Luis Har's life after captivity", "first_seen": "2026-10-07T01:45:27Z", "last_seen": "2026-10-08T06:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "e278f9a58294", "title": "Israeli settlers beat press photographer in West Bank", "first_seen": "2026-10-07T03:45:24Z", "last_seen": "2026-10-07T14:45:30Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "49f4c933ee58", "title": "Merz pledges support for Israel on anniversary", "first_seen": "2026-10-07T03:45:24Z", "last_seen": "2026-10-07T11:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "38a7fecaf565", "title": "Questions over Netanyahu's foreknowledge of Oct 7", "first_seen": "2026-10-07T04:45:25Z", "last_seen": "2026-10-07T12:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -107,3 +107,5 @@
 {"id": "afa3ac7895a0", "title": "Gaza rebuilding will take over a decade", "first_seen": "2026-10-08T02:14:51Z", "last_seen": "2026-10-08T02:14:51Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "05d0a76a07a0", "title": "Pro-Palestinian protests across US on Oct 7", "first_seen": "2026-10-08T05:45:30Z", "last_seen": "2026-10-08T05:45:30Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "417a61d63243", "title": "Berlin pro-Palestine protest clashes on Oct 7", "first_seen": "2026-10-08T05:45:30Z", "last_seen": "2026-10-08T05:45:30Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "b4dd1c12bb63", "title": "Gaza strikes continue despite ceasefire deal", "first_seen": "2026-10-08T06:45:25Z", "last_seen": "2026-10-08T06:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "a8f0cffbb704", "title": "French candidate accuses Israel of state terrorism", "first_seen": "2026-10-08T06:45:25Z", "last_seen": "2026-10-08T06:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
