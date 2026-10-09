@@ -103,7 +103,7 @@
 {"id": "9e811490b539", "title": "Palestinian killed by settlers during olive harvest", "first_seen": "2026-10-07T22:14:49Z", "last_seen": "2026-10-07T22:14:49Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "a1c259cd9780", "title": "Son of slain peace activist speaks on Gaza war", "first_seen": "2026-10-07T22:14:49Z", "last_seen": "2026-10-07T22:14:49Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "84c169b39531", "title": "Gaza faces uncertain future elections", "first_seen": "2026-10-07T23:45:25Z", "last_seen": "2026-10-07T23:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "639eb451b2eb", "title": "Palestinians describe daily life amid Gaza ruins", "first_seen": "2026-10-08T00:45:30Z", "last_seen": "2026-10-08T08:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "639eb451b2eb", "title": "Palestinians describe daily life amid Gaza ruins", "first_seen": "2026-10-08T00:45:30Z", "last_seen": "2026-10-09T09:36:06Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "afa3ac7895a0", "title": "Gaza rebuilding will take over a decade", "first_seen": "2026-10-08T02:14:51Z", "last_seen": "2026-10-08T02:14:51Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "05d0a76a07a0", "title": "Pro-Palestinian protests across US on Oct 7", "first_seen": "2026-10-08T05:45:30Z", "last_seen": "2026-10-08T05:45:30Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "417a61d63243", "title": "Berlin pro-Palestine protest clashes on Oct 7", "first_seen": "2026-10-08T05:45:30Z", "last_seen": "2026-10-08T05:45:30Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -125,3 +125,6 @@
 {"id": "8a6fb9951a43", "title": "Protest targets Mamdani over Gaza stance", "first_seen": "2026-10-09T02:32:27Z", "last_seen": "2026-10-09T02:32:27Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "0acc0b84a364", "title": "Israel topic shapes Michigan Senate debate", "first_seen": "2026-10-09T03:45:28Z", "last_seen": "2026-10-09T09:00:02Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "09aa7c46004d", "title": "Proposals to end Israel's international isolation", "first_seen": "2026-10-09T05:45:25Z", "last_seen": "2026-10-09T05:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "cd9878e1583c", "title": "Mamdani's students criticized over Israel stance", "first_seen": "2026-10-09T09:36:06Z", "last_seen": "2026-10-09T09:36:06Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "3e74cc43a101", "title": "UK health body drops Israeli drug firm", "first_seen": "2026-10-09T09:36:06Z", "last_seen": "2026-10-09T09:36:06Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "0bebace4d35a", "title": "Navi Pillay wins Nobel Peace Prize", "first_seen": "2026-10-09T09:36:06Z", "last_seen": "2026-10-09T09:36:06Z", "model": "claude-sonnet-5", "cv": "c1"}
