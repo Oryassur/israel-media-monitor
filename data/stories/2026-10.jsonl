@@ -40,7 +40,7 @@
 {"id": "2eab388fba36", "title": "Italian union opposes Israeli teachers' school visit", "first_seen": "2026-10-05T08:54:17Z", "last_seen": "2026-10-05T11:45:26Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "48136b9132c0", "title": "Biden-Trump partnership secures Gaza ceasefire", "first_seen": "2026-10-05T09:45:31Z", "last_seen": "2026-10-05T09:45:31Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "3a905bc64776", "title": "Analysis of Netanyahu's hold on power", "first_seen": "2026-10-05T09:45:31Z", "last_seen": "2026-10-06T06:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "58147d99b245", "title": "Pro-Palestinian rallies planned across Italy", "first_seen": "2026-10-05T10:45:28Z", "last_seen": "2026-10-10T13:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "58147d99b245", "title": "Pro-Palestinian rallies planned across Italy", "first_seen": "2026-10-05T10:45:28Z", "last_seen": "2026-10-10T15:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "b97125198881", "title": "Germany debates criminalizing denial of Israel's existence", "first_seen": "2026-10-05T14:45:27Z", "last_seen": "2026-10-05T14:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "6f8e9abdea25", "title": "Knife attacker jailed for Israeli embassy plot", "first_seen": "2026-10-05T15:45:25Z", "last_seen": "2026-10-05T15:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "5db310a21e14", "title": "Pope questions Gaza parish priest on war", "first_seen": "2026-10-05T15:45:25Z", "last_seen": "2026-10-06T10:45:09Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -138,3 +138,4 @@
 {"id": "761818c5f3df", "title": "NHS staff made antisemitic remarks exposed", "first_seen": "2026-10-10T13:45:29Z", "last_seen": "2026-10-10T13:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "32751c5d0025", "title": "Violence at London pro-Palestinian march", "first_seen": "2026-10-10T14:41:42Z", "last_seen": "2026-10-10T14:41:42Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "36d0473fd22a", "title": "Abbas postpones Palestinian legislative elections", "first_seen": "2026-10-10T14:41:42Z", "last_seen": "2026-10-10T14:41:42Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "934408c15cae", "title": "UK protesters arrested at war memorial", "first_seen": "2026-10-10T15:45:27Z", "last_seen": "2026-10-10T15:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
