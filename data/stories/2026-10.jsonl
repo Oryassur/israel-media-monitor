@@ -123,7 +123,7 @@
 {"id": "ae16dc033467", "title": "Wisconsin candidate arrested after anti-Israel rant", "first_seen": "2026-10-08T23:45:28Z", "last_seen": "2026-10-08T23:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "4fe3afbda32b", "title": "Israeli fire kills seven in Gaza", "first_seen": "2026-10-09T01:45:27Z", "last_seen": "2026-10-09T01:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "8a6fb9951a43", "title": "Protest targets Mamdani over Gaza stance", "first_seen": "2026-10-09T02:32:27Z", "last_seen": "2026-10-09T02:32:27Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "0acc0b84a364", "title": "Israel topic shapes Michigan Senate debate", "first_seen": "2026-10-09T03:45:28Z", "last_seen": "2026-10-09T22:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "0acc0b84a364", "title": "Israel topic shapes Michigan Senate debate", "first_seen": "2026-10-09T03:45:28Z", "last_seen": "2026-10-10T16:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "09aa7c46004d", "title": "Proposals to end Israel's international isolation", "first_seen": "2026-10-09T05:45:25Z", "last_seen": "2026-10-09T05:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "cd9878e1583c", "title": "Mamdani's students criticized over Israel stance", "first_seen": "2026-10-09T09:36:06Z", "last_seen": "2026-10-09T09:36:06Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "3e74cc43a101", "title": "UK health body drops Israeli drug firm", "first_seen": "2026-10-09T09:36:06Z", "last_seen": "2026-10-09T09:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -139,3 +139,4 @@
 {"id": "32751c5d0025", "title": "Violence at London pro-Palestinian march", "first_seen": "2026-10-10T14:41:42Z", "last_seen": "2026-10-10T14:41:42Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "36d0473fd22a", "title": "Abbas postpones Palestinian legislative elections", "first_seen": "2026-10-10T14:41:42Z", "last_seen": "2026-10-10T14:41:42Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "934408c15cae", "title": "UK protesters arrested at war memorial", "first_seen": "2026-10-10T15:45:27Z", "last_seen": "2026-10-10T15:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "d77ba85af411", "title": "Clashes at pro-Palestinian protests in Italy", "first_seen": "2026-10-10T16:45:25Z", "last_seen": "2026-10-10T16:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
