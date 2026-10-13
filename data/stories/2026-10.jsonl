@@ -127,7 +127,7 @@
 {"id": "09aa7c46004d", "title": "Proposals to end Israel's international isolation", "first_seen": "2026-10-09T05:45:25Z", "last_seen": "2026-10-09T05:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "cd9878e1583c", "title": "Mamdani's students criticized over Israel stance", "first_seen": "2026-10-09T09:36:06Z", "last_seen": "2026-10-09T09:36:06Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "3e74cc43a101", "title": "UK health body drops Israeli drug firm", "first_seen": "2026-10-09T09:36:06Z", "last_seen": "2026-10-09T09:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "0bebace4d35a", "title": "Navi Pillay wins Nobel Peace Prize", "first_seen": "2026-10-09T09:36:06Z", "last_seen": "2026-10-10T14:41:42Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "0bebace4d35a", "title": "Navi Pillay wins Nobel Peace Prize", "first_seen": "2026-10-09T09:36:06Z", "last_seen": "2026-10-13T11:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "bd4a6e29b5ed", "title": "Hannoun's Hamas-linked appeal rejected in Italy", "first_seen": "2026-10-09T17:45:24Z", "last_seen": "2026-10-09T19:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "da23395cb0fd", "title": "Hamas-supporting teacher reinstated in Germany", "first_seen": "2026-10-09T18:45:27Z", "last_seen": "2026-10-09T18:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "896fe9f5edd3", "title": "Opinion roundup on NYC and Gaza", "first_seen": "2026-10-10T00:45:28Z", "last_seen": "2026-10-10T00:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -137,7 +137,7 @@
 {"id": "74f97670d125", "title": "Profile of Gaza visitor warning on Iran", "first_seen": "2026-10-10T10:45:24Z", "last_seen": "2026-10-10T10:45:24Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "761818c5f3df", "title": "NHS staff made antisemitic remarks exposed", "first_seen": "2026-10-10T13:45:29Z", "last_seen": "2026-10-10T13:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "32751c5d0025", "title": "Violence at London pro-Palestinian march", "first_seen": "2026-10-10T14:41:42Z", "last_seen": "2026-10-10T18:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "36d0473fd22a", "title": "Abbas postpones Palestinian legislative elections", "first_seen": "2026-10-10T14:41:42Z", "last_seen": "2026-10-12T09:06:16Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "36d0473fd22a", "title": "Abbas postpones Palestinian legislative elections", "first_seen": "2026-10-10T14:41:42Z", "last_seen": "2026-10-13T11:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "934408c15cae", "title": "UK protesters arrested at war memorial", "first_seen": "2026-10-10T15:45:27Z", "last_seen": "2026-10-10T15:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "d77ba85af411", "title": "Clashes at pro-Palestinian protests in Italy", "first_seen": "2026-10-10T16:45:25Z", "last_seen": "2026-10-10T16:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "8d1a96d2bc9e", "title": "Greta Thunberg attends pro-Palestine show in Naples", "first_seen": "2026-10-10T21:45:26Z", "last_seen": "2026-10-10T21:45:26Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -156,3 +156,4 @@
 {"id": "300a6d12fcf4", "title": "IDF statement on military operations", "first_seen": "2026-10-12T17:45:28Z", "last_seen": "2026-10-12T17:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "7ee9102d24c1", "title": "Bomb alert reported at Tel Aviv airport", "first_seen": "2026-10-13T06:45:30Z", "last_seen": "2026-10-13T07:45:26Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "bc8ed8747ebb", "title": "Clashes between Houthi and pro-Saudi forces", "first_seen": "2026-10-13T09:20:18Z", "last_seen": "2026-10-13T09:20:18Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "b3d24555e362", "title": "Call to free imprisoned doctor Abu Safiya", "first_seen": "2026-10-13T11:45:25Z", "last_seen": "2026-10-13T11:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
