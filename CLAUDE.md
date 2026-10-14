@@ -155,6 +155,14 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   during a render, so a window starting on it (the 30d preset) flips between the
   hourly and daily pools mid-render. Card figures are means over the chart's buckets,
   so they still shift by ~0.1pt between granularities on the same window.
+- **Deep links** (2026-10-14): the view state rides in the query string — `p` (preset),
+  `from`/`to` (custom range, YYYY-MM-DD), `g` (only when the user picked a granularity),
+  `split`, `region`/`lean`/`src` (sorted comma lists), `list`. Defaults are omitted and
+  sets sorted, so one view has exactly one URL; `render()` ends with `syncUrl()`
+  (replaceState — Back is not wired) and `boot()` calls `applyUrl()` before
+  `buildControls()`. Unknown keys/values are dropped, not errors. Query, not hash:
+  Pages serves index.html for any query string, and `#method` already owns the hash.
+  A *path* route (/30d/bbc) is the one thing Pages cannot do without a 404.html hack.
 - Dashboard reads only `docs/data/*.json`; keep it dependency-free (the one
   external resource is the Fraunces display font from Google Fonts, with a
   Georgia fallback; the masthead uses the self-hosted "Old London" TTF in docs/fonts/) and light/dark-safe — three CSS token blocks (light,

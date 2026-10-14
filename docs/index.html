@@ -626,6 +626,8 @@ footer li b{color:var(--ink2);font-weight:600}
     <ul>
       <li><b>Period:</b> 24 hours, 7, 30 or 90 days, all time, or a custom range. Every figure, the top
         stories and the headline list recompute for the selection.</li>
+      <li><b>Sharing a view:</b> the URL carries the whole selection — <code>?p=30d&amp;g=hourly&amp;split=lean&amp;src=bbc,cnn</code>
+        — and is rewritten as you change filters, so copying the address bar shares exactly what you see.</li>
       <li><b>Granularity:</b> hourly, daily or weekly bars. Hourly detail is published for the last
         30 days and can be shown on any window that reaches into it; the chart then starts where the
         detail starts.</li>
@@ -640,6 +642,8 @@ footer li b{color:var(--ink2);font-weight:600}
 
     <h3>Changelog</h3>
     <ul>
+      <li><b>2026-10-14 · links.</b> The address bar follows the view: period, granularity, split, filters
+        and the story-list mode all live in the URL, so any view can be bookmarked or shared.</li>
       <li><b>2026-09-30 · chart.</b> Hourly bars available on every window that reaches the last 30 days
         (was: 14 days, and only on windows shorter than that).</li>
       <li><b>2026-09-15 · data.</b> CNN and USA Today are measured on the front page they edit for
@@ -746,6 +750,7 @@ async function boot(){
     ?gen.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"})
     :gen.toLocaleString(undefined,{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});
   mountChartInfo();
+  applyUrl();
   buildControls();render();
 }
 
@@ -825,6 +830,54 @@ function syncCustomInputs(){
   $("#dEnd").value=state.end!=null?new Date(state.end-864e5).toISOString().slice(0,10):"";
 }
 
+/* ---------- deep links ---------- */
+// GitHub Pages serves index.html whatever the query string is, so the whole view
+// rides in the query (the hash stays free for #method). One view has exactly one
+// URL: defaults are omitted, set members sorted, key order fixed.
+const isoDay=ms=>new Date(ms).toISOString().slice(0,10);
+const vals=pairs=>pairs.map(p=>p[1]);
+function viewQuery(){
+  const q=new URLSearchParams();
+  if(state.preset!=="7d")q.set("p",state.preset);
+  if(state.preset==="custom"){
+    if(state.start!=null)q.set("from",isoDay(state.start));
+    if(state.end!=null)q.set("to",isoDay(state.end-864e5));
+  }
+  if(state.granManual)q.set("g",state.gran);          // only an explicit choice pins it
+  if(state.split!=="none")q.set("split",state.split);
+  for(const [k,set] of [["region",state.regions],["lean",state.leans],["src",state.sources]])
+    if(set.size)q.set(k,[...set].sort().join(","));
+  if(listState.mode!=="story")q.set("list",listState.mode);
+  return q.toString().replace(/%2C/g,",");  // commas are legal and these links are read by people
+}
+function syncUrl(){
+  const q=viewQuery();
+  const want=location.pathname+(q?"?"+q:"")+location.hash;
+  if(want!==location.pathname+location.search+location.hash)history.replaceState(null,"",want);
+}
+// Read the query once at boot. Anything unknown is ignored rather than breaking the
+// page: a retired outlet or a hand-edited link degrades to the default view.
+function applyUrl(){
+  const q=new URLSearchParams(location.search);
+  const pick=(k,allowed,set)=>{const v=q.get(k);if(v&&allowed.includes(v))set(v)};
+  pick("p",vals(PRESETS),v=>state.preset=v);
+  if(state.preset==="custom"){
+    const day=k=>{const v=q.get(k);const ms=v&&/^\d{4}-\d{2}-\d{2}$/.test(v)?Date.parse(v+"T00:00:00Z"):NaN;
+      return isFinite(ms)?ms:null};
+    state.start=day("from");
+    const to=day("to");state.end=to!=null?to+864e5:null;
+    if(state.start!=null&&state.end!=null&&state.end<=state.start)state.start=state.end=null;
+  }
+  pick("g",vals(GRANS),v=>{state.gran=v;state.granManual=true});
+  pick("split",vals(SPLITS),v=>state.split=v);
+  const known={region:new Set(REGION_ORDER),lean:new Set(["left","center","right"]),
+               src:new Set(META.sources.map(s=>s.name))};
+  for(const [k,set] of [["region",state.regions],["lean",state.leans],["src",state.sources]])
+    for(const v of (q.get(k)||"").split(",")) if(known[k].has(v))set.add(v);
+  pick("list",vals(LIST_MODES),setListMode);  // moves the buttons too
+  if(!state.granManual){const i=resolveInterval();state.gran=defaultGran((i.end-i.start)/864e5)}
+}
+
 const segDefs=[];
 function buildControls(){
   segDefs.length=0;singles.length=0;
@@ -870,6 +923,7 @@ $("#resetBtn").onclick=()=>{
   state.preset="7d";state.start=null;state.end=null;
   state.gran="hourly";state.granManual=false;state.split="none";
   state.regions.clear();state.leans.clear();state.sources.clear();
+  setListMode("story");  // reset means the default view, URL included
   closePop(false);buildControls();render();
 };
 $("#filtersBtn").onclick=()=>{
@@ -1669,13 +1723,17 @@ function groupByStory(list){
 // Two list modes: grouped by story (each story expandable) or latest first. State is reset by render().
 const listState={mode:"story",expanded:new Set(),allGroups:false,shownLatest:40,last:null};
 const LIST_MODES=[["By theme","story"],["Latest","latest"]];
+function setListMode(val){
+  listState.mode=val;
+  for(const b of $("#listMode").children)b.setAttribute("aria-pressed",String(b.dataset.val===val));
+}
 (function buildListMode(){
   const el=$("#listMode");
   for(const [label,val] of LIST_MODES){
     const b=document.createElement("button");b.type="button";b.textContent=label;b.dataset.val=val;
     b.setAttribute("aria-pressed",String(listState.mode===val));
-    b.onclick=()=>{listState.mode=val;for(const x of el.children)x.setAttribute("aria-pressed",String(x===b));
-      if(listState.last)renderStories(listState.last.list,listState.last.title,listState.last.sub)};
+    b.onclick=()=>{setListMode(val);
+      if(listState.last)renderStories(listState.last.list,listState.last.title,listState.last.sub);syncUrl()};
     el.appendChild(b);
   }
 })();
@@ -1875,6 +1933,7 @@ function render(){
   renderStories(list,"All stories",
     cap(PRESET_LABEL[state.preset])+(partial?` · headlines within the last ${ITEMS_KEPT_DAYS} days`:""));
   dataTable(S);
+  syncUrl();
 }
 
 const goWorld=()=>$("#worldCard").scrollIntoView({behavior:reducedMotion()||document.visibilityState!=="visible"?"auto":"smooth",block:"start"});
