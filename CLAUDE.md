@@ -155,6 +155,9 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   during a render, so a window starting on it (the 30d preset) flips between the
   hourly and daily pools mid-render. Card figures are means over the chart's buckets,
   so they still shift by ~0.1pt between granularities on the same window.
+- **Reset** (2026-10-14) belongs to the Filters drawer it sits in: it clears region,
+  lean and source only, and is hidden unless one of them is set. The period, custom
+  range, granularity, split and story-list mode are chosen elsewhere and survive it.
 - **Deep links** (2026-10-14): the view state rides in the query string — `p` (preset),
   `from`/`to` (custom range, YYYY-MM-DD), `g` (only when the user picked a granularity),
   `split`, `region`/`lean`/`src` (sorted comma lists), `list`. Defaults are omitted and

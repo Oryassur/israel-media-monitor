@@ -642,6 +642,8 @@ footer li b{color:var(--ink2);font-weight:600}
 
     <h3>Changelog</h3>
     <ul>
+      <li><b>2026-10-14 · controls.</b> Reset clears the outlet filters only — the period, granularity,
+        split and list mode stay — and appears only when a filter is set.</li>
       <li><b>2026-10-14 · links.</b> The address bar follows the view: period, granularity, split, filters
         and the story-list mode all live in the URL, so any view can be bookmarked or shared.</li>
       <li><b>2026-09-30 · chart.</b> Hourly bars available on every window that reaches the last 30 days
@@ -919,11 +921,11 @@ function afterDateChange(){
 }
 $("#dStart").onchange=e=>{const v=e.target.value;state.start=v?Date.parse(v+"T00:00:00Z"):null;afterDateChange()};
 $("#dEnd").onchange=e=>{const v=e.target.value;state.end=v?Date.parse(v+"T00:00:00Z")+864e5:null;afterDateChange()};
+// Reset belongs to the Filters drawer: it clears the three outlet filters it sits
+// under and nothing else. The period, granularity, split and list mode are chosen
+// elsewhere and survive it.
 $("#resetBtn").onclick=()=>{
-  state.preset="7d";state.start=null;state.end=null;
-  state.gran="hourly";state.granManual=false;state.split="none";
   state.regions.clear();state.leans.clear();state.sources.clear();
-  setListMode("story");  // reset means the default view, URL included
   closePop(false);buildControls();render();
 };
 $("#filtersBtn").onclick=()=>{
@@ -942,11 +944,8 @@ function syncControls(interval,gran){
     s.sync();
   }
   $("#customRange").hidden=state.preset!=="custom";
-  const spanDays=(interval.end-interval.start)/864e5;
   const nFilters=state.regions.size+state.leans.size+state.sources.size;
-  const nonDefault=state.preset!=="7d"||state.split!=="none"||state.gran!==defaultGran(spanDays)
-    ||state.regions.size>0||state.leans.size>0||state.sources.size>0;
-  $("#resetBtn").hidden=!nonDefault;
+  $("#resetBtn").hidden=!nFilters;  // shown exactly when it has something to clear
   ghostLabel($("#filtersBtn"),"Filters",nFilters);
 }
 
