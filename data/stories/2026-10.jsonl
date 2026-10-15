@@ -122,7 +122,7 @@
 {"id": "84dba3f9b324", "title": "El Sayed courts Jewish voters in Michigan race", "first_seen": "2026-10-08T21:45:32Z", "last_seen": "2026-10-12T18:45:32Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "ae16dc033467", "title": "Wisconsin candidate arrested after anti-Israel rant", "first_seen": "2026-10-08T23:45:28Z", "last_seen": "2026-10-08T23:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "4fe3afbda32b", "title": "Israeli fire kills seven in Gaza", "first_seen": "2026-10-09T01:45:27Z", "last_seen": "2026-10-09T01:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "8a6fb9951a43", "title": "Protest targets Mamdani over Gaza stance", "first_seen": "2026-10-09T02:32:27Z", "last_seen": "2026-10-09T02:32:27Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "8a6fb9951a43", "title": "Protest targets Mamdani over Gaza stance", "first_seen": "2026-10-09T02:32:27Z", "last_seen": "2026-10-15T10:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "0acc0b84a364", "title": "Israel topic shapes Michigan Senate debate", "first_seen": "2026-10-09T03:45:28Z", "last_seen": "2026-10-10T16:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "09aa7c46004d", "title": "Proposals to end Israel's international isolation", "first_seen": "2026-10-09T05:45:25Z", "last_seen": "2026-10-09T05:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "cd9878e1583c", "title": "Mamdani's students criticized over Israel stance", "first_seen": "2026-10-09T09:36:06Z", "last_seen": "2026-10-09T09:36:06Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -183,3 +183,6 @@
 {"id": "4cefb9078975", "title": "BBC probes IDF investigations into Gaza killings", "first_seen": "2026-10-15T05:45:35Z", "last_seen": "2026-10-15T09:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "f2b388c32d22", "title": "Indonesian council urges canceling Bocelli concerts", "first_seen": "2026-10-15T06:45:26Z", "last_seen": "2026-10-15T06:45:26Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "58e7a87e2af1", "title": "Wong criticizes Israeli ambassador over Frankcom drone audio", "first_seen": "2026-10-15T07:21:40Z", "last_seen": "2026-10-15T09:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "98e99510b0ed", "title": "Israeli ad firm linked to Al Jazeera spyware", "first_seen": "2026-10-15T10:45:28Z", "last_seen": "2026-10-15T10:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "f4e59647d8ad", "title": "Secret pact between Abu Nidal and mafia", "first_seen": "2026-10-15T10:45:28Z", "last_seen": "2026-10-15T10:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "bb632720e593", "title": "Italian group accused of funding Gaza terrorists", "first_seen": "2026-10-15T10:45:28Z", "last_seen": "2026-10-15T10:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
