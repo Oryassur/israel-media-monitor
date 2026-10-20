@@ -217,7 +217,7 @@
 {"id": "26be1b4ce1f8", "title": "Activists vandalize UK defence executives' homes", "first_seen": "2026-10-18T12:45:28Z", "last_seen": "2026-10-18T12:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "d02398580187", "title": "Former Hamas hostage performs at Sydney Opera House", "first_seen": "2026-10-18T12:45:28Z", "last_seen": "2026-10-18T12:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "caaa59f5a65e", "title": "Settler attack on Washington Post photographer", "first_seen": "2026-10-18T14:32:10Z", "last_seen": "2026-10-18T16:06:51Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "fda37b0e3acf", "title": "Trump endorses Netanyahu ahead of Israeli election", "first_seen": "2026-10-18T15:45:29Z", "last_seen": "2026-10-19T12:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "fda37b0e3acf", "title": "Trump endorses Netanyahu ahead of Israeli election", "first_seen": "2026-10-18T15:45:29Z", "last_seen": "2026-10-20T01:16:27Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "85a69ecf0a68", "title": "Netanyahu disputes settler attack witnessed by Guardian", "first_seen": "2026-10-18T20:36:03Z", "last_seen": "2026-10-19T12:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "66c226a2388a", "title": "Bomb threat forces Tel Aviv flight emergency landing", "first_seen": "2026-10-19T00:27:04Z", "last_seen": "2026-10-19T07:42:06Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "eeccb1de77f5", "title": "Israeli airstrikes kill five in Gaza", "first_seen": "2026-10-19T04:45:29Z", "last_seen": "2026-10-19T04:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -231,4 +231,4 @@
 {"id": "bcb8f8036e2a", "title": "Opinion on state of Palestinian cause", "first_seen": "2026-10-19T15:32:42Z", "last_seen": "2026-10-19T15:32:42Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "8f008ebf2967", "title": "Calgary Opera performer replaced over Palestinian flag", "first_seen": "2026-10-19T20:45:34Z", "last_seen": "2026-10-20T00:45:26Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "3381feb651eb", "title": "Man arrested for running over Australian MP", "first_seen": "2026-10-19T23:45:28Z", "last_seen": "2026-10-19T23:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "e1f9c9f91677", "title": "El-Sayed says Israel not a US ally", "first_seen": "2026-10-20T00:45:26Z", "last_seen": "2026-10-20T00:45:26Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "e1f9c9f91677", "title": "El-Sayed says Israel not a US ally", "first_seen": "2026-10-20T00:45:26Z", "last_seen": "2026-10-20T01:16:27Z", "model": "claude-sonnet-5", "cv": "c1"}
