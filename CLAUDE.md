@@ -105,7 +105,8 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   account, programs…); sources may add `skip` CSS selectors (Spiegel) or a
   `selector` (Le Monde, Corriere…). Audit with `scripts/audit_headlines.py` —
   a link at the same rank for days is chrome unless the outlet is a slow weekly
-  (CS Monitor). Per-run rankings are not stored, so past rows could only be
+  (CS Monitor). Per-run rankings were not stored before 2026-10-21 (see the run
+  archive below), so past rows could only be
   re-estimated: snapshot rows with `approx=1` had their Israel weight re-scaled
   as if the chrome above each Israel item were gone (2026-09-09..15, 189 rows),
   and intl rows for those runs were rebuilt from presence windows (`approx`).
@@ -136,6 +137,24 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   message, or 0/N scored with errors), `source_down:<name>`, `source_empty:<name>`
   (all runs of the last 24h, ≥6 rows), `run_failed`. Every LLM batch except-block
   calls `note_llm_error`.
+  Parser canaries (2026-10-21) add `rank1_frozen:<name>` (same rank-1 item id in
+  every archived run of the last 4 days — needs ≥24 rows and an archive that
+  actually spans the window, CS Monitor exempt) and `headline_drop:<name>` (the
+  last 3 runs all extracted <50% of that outlet's own 7-day median, median ≥10,
+  sources already alerting as down/empty skipped). They are the loud half of
+  `scripts/audit_headlines.py`; its short/no-verb/hub-url signals stay manual
+  because they are too noisy to mail. Each canary is wrapped on its own so a bug
+  in one cannot swallow the conditions above.
+- **Run archive** (2026-10-21): `data/runs/YYYY-MM.jsonl` holds one row per
+  (run, source) — `{ts, source, ids}`, the top-20 item ids in rank order. Headline
+  and URL for an id live in `data/allitems`/`data/items`, so only the ORDER is new
+  (~30 rows/run, ~22k rows/month). Pruned to `store.RUN_RETENTION_DAYS` = 90 on
+  every write: month files wholly out of window are deleted, the cutoff month is
+  filtered row by row. Failed or empty fetches get no row — missing, never an empty
+  list. Best-effort like intl/enrich (`run.archive_run` never raises). This is what
+  makes a future parser repair exact instead of `approx`; the bot's `git add data`
+  already covers it. Rows written before a fix are still the only record of what
+  the old parser saw, so never rewrite them in place.
 - **Outage 2026-09-18 22:45 → 09-22 ~09:00 UTC** (API credits exhausted): no item
   scored/clustered/tagged, intl rows have uncl_w ≈ total_w, snapshot rows carry
   the candidates in w_u (attention slightly overstated by the LLM's usual ~3%
@@ -162,8 +181,17 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   `from`/`to` (custom range, YYYY-MM-DD), `g` (only when the user picked a granularity),
   `split`, `region`/`lean`/`src` (sorted comma lists), `list`. Defaults are omitted and
   sets sorted, so one view has exactly one URL; `render()` ends with `syncUrl()`
-  (replaceState — Back is not wired) and `boot()` calls `applyUrl()` before
-  `buildControls()`. Unknown keys/values are dropped, not errors. Query, not hash:
+  and `boot()` calls `applyUrl()` before `buildControls()`.
+  Back/Forward work (2026-10-21): `syncUrl` pushes only when the URL actually
+  differs (render syncs every time, so otherwise every render would stack a
+  duplicate), and the `replaceNext` flag makes the first sync of a page load and
+  the sync after a popstate replace instead of push. `popstate` calls `resetView()`
+  before `applyUrl()`, because Back hands over a whole URL, not a diff, and
+  `applyUrl` only overlays the keys the query carries — without the reset, filters
+  from the newer view would survive into the older one. Note `history.length` is a
+  poor probe for this: pushing while forward entries exist truncates them, so the
+  length can stay flat on a genuine push.
+  Unknown keys/values are dropped, not errors. Query, not hash:
   Pages serves index.html for any query string, and `#method` already owns the hash.
   A *path* route (/30d/bbc) is the one thing Pages cannot do without a 404.html hack.
 - Dashboard reads only `docs/data/*.json`; keep it dependency-free (the one

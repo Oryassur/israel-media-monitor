@@ -627,7 +627,8 @@ footer li b{color:var(--ink2);font-weight:600}
       <li><b>Period:</b> 24 hours, 7, 30 or 90 days, all time, or a custom range. Every figure, the top
         stories and the headline list recompute for the selection.</li>
       <li><b>Sharing a view:</b> the URL carries the whole selection — <code>?p=30d&amp;g=hourly&amp;split=lean&amp;src=bbc,cnn</code>
-        — and is rewritten as you change filters, so copying the address bar shares exactly what you see.</li>
+        — and is rewritten as you change filters, so copying the address bar shares exactly what you see.
+        The browser's Back button steps through the views you have looked at.</li>
       <li><b>Granularity:</b> hourly, daily or weekly bars. Hourly detail is published for the last
         30 days and can be shown on any window that reaches into it; the chart then starts where the
         detail starts.</li>
@@ -642,6 +643,8 @@ footer li b{color:var(--ink2);font-weight:600}
 
     <h3>Changelog</h3>
     <ul>
+      <li><b>2026-10-18 · links.</b> Back and Forward now step through the views you have looked at
+        instead of leaving the page — each change of period, split, filter or list mode is its own entry.</li>
       <li><b>2026-10-14 · controls.</b> Reset clears the outlet filters only — the period, granularity,
         split and list mode stay — and appears only when a filter is set.</li>
       <li><b>2026-10-14 · links.</b> The address bar follows the view: period, granularity, split, filters
@@ -697,8 +700,10 @@ const GRANS=[["Hourly","hourly"],["Daily","daily"],["Weekly","weekly"]];
 const SPLITS=[["Combined","none"],["By lean","lean"],["By region","region"]];
 let HOURLY_KEPT_DAYS=30,ITEMS_KEPT_DAYS=30;  // both set from meta in boot()
 let HOURLY_FROM=0;  // first published hourly bucket — the truth about hourly coverage
-const state={preset:"7d",start:null,end:null,gran:"hourly",granManual:false,
-  split:"none",regions:new Set(),leans:new Set(),sources:new Set()};
+// Scalar view defaults live apart from `state` because Back has to rebuild the
+// view from the defaults up: applyUrl() only overlays what the URL carries.
+const STATE_SCALARS={preset:"7d",start:null,end:null,gran:"hourly",granManual:false,split:"none"};
+const state={...STATE_SCALARS,regions:new Set(),leans:new Set(),sources:new Set()};
 let META,HOURLY,DAILY,ITEMS,STORIES,INTL,DISPN,SRC;
 
 const fmtPct=v=>v==null?"—":(v*100).toFixed(1)+"%";
@@ -852,13 +857,35 @@ function viewQuery(){
   if(listState.mode!=="story")q.set("list",listState.mode);
   return q.toString().replace(/%2C/g,",");  // commas are legal and these links are read by people
 }
+// render() syncs on every render, so only a URL that actually differs touches
+// history — otherwise every render would stack a duplicate entry. Genuine view
+// changes push (Back undoes the last one); the first sync of a page load and
+// the one that follows a Back/Forward replace instead, so neither adds an entry.
+let replaceNext=true;
 function syncUrl(){
   const q=viewQuery();
   const want=location.pathname+(q?"?"+q:"")+location.hash;
-  if(want!==location.pathname+location.search+location.hash)history.replaceState(null,"",want);
+  const replace=replaceNext;replaceNext=false;
+  if(want===location.pathname+location.search+location.hash)return;
+  if(replace)history.replaceState(null,"",want);else history.pushState(null,"",want);
 }
-// Read the query once at boot. Anything unknown is ignored rather than breaking the
-// page: a retired outlet or a hand-edited link degrades to the default view.
+// Back/Forward hand us a URL, not a diff: reset to the defaults first, because
+// applyUrl() only overlays the keys the query carries.
+function resetView(){
+  Object.assign(state,STATE_SCALARS);
+  state.regions.clear();state.leans.clear();state.sources.clear();
+  setListMode(LIST_MODES[0][1]);
+}
+window.addEventListener("popstate",()=>{
+  if(!META)return;  // data still loading; boot() will read the URL itself
+  closePop(false);
+  resetView();applyUrl();
+  replaceNext=true;  // this render restores a history entry, it must not create one
+  buildControls();render();
+});
+// Read the query at boot and on Back/Forward. Anything unknown is ignored rather
+// than breaking the page: a retired outlet or a hand-edited link degrades to the
+// default view.
 function applyUrl(){
   const q=new URLSearchParams(location.search);
   const pick=(k,allowed,set)=>{const v=q.get(k);if(v&&allowed.includes(v))set(v)};
