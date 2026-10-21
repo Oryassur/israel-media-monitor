@@ -240,7 +240,7 @@
 {"id": "2b19ff8c4f9d", "title": "Hegseth makes unannounced visit to Israel", "first_seen": "2026-10-20T11:45:29Z", "last_seen": "2026-10-21T08:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "8130eef51b01", "title": "Palestine poppy creator identity revealed", "first_seen": "2026-10-20T11:45:29Z", "last_seen": "2026-10-20T11:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "74f455354221", "title": "Vance declines to endorse Netanyahu for reelection", "first_seen": "2026-10-20T12:45:28Z", "last_seen": "2026-10-20T12:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "d2a2090fbcab", "title": "Israel kills Shani Louk's kidnapper", "first_seen": "2026-10-20T19:45:29Z", "last_seen": "2026-10-21T14:45:31Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "d2a2090fbcab", "title": "Israel kills Shani Louk's kidnapper", "first_seen": "2026-10-20T19:45:29Z", "last_seen": "2026-10-21T20:05:53Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "f16533821491", "title": "Israel's response to international scrutiny criticized", "first_seen": "2026-10-20T23:45:25Z", "last_seen": "2026-10-20T23:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "a52a55120ed7", "title": "CNN investigation using Peace Now data", "first_seen": "2026-10-21T04:36:36Z", "last_seen": "2026-10-21T04:36:36Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "d681870b7fb1", "title": "Foreign company withdraws from Jerusalem cable car project", "first_seen": "2026-10-21T07:45:32Z", "last_seen": "2026-10-21T13:45:33Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -255,3 +255,4 @@
 {"id": "bbb8567835a8", "title": "Israel's regional map redrawn since Oct 7", "first_seen": "2026-10-21T18:45:31Z", "last_seen": "2026-10-21T19:36:26Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "0d9937388b3a", "title": "Italian activists arrested, expelled from West Bank", "first_seen": "2026-10-21T19:36:26Z", "last_seen": "2026-10-21T19:36:26Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "6fa3c8c86a0e", "title": "Ex-hostage sends message to Bondi attack survivors", "first_seen": "2026-10-21T19:45:28Z", "last_seen": "2026-10-21T19:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "919d87ace845", "title": "Commentary on Obama, Omar, and settler violence", "first_seen": "2026-10-21T20:05:53Z", "last_seen": "2026-10-21T20:05:53Z", "model": "claude-sonnet-5", "cv": "c1"}
