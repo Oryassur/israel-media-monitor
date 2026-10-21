@@ -227,7 +227,7 @@
 {"id": "355254299146", "title": "Israelis and Jews in UAE face insecurity", "first_seen": "2026-10-19T10:45:29Z", "last_seen": "2026-10-19T10:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "ad46bbb9236f", "title": "Gaza teacher threatened for refusing to teach hatred", "first_seen": "2026-10-19T11:13:04Z", "last_seen": "2026-10-19T11:13:04Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "02bd2509f6f1", "title": "Analysis of settler influence on West Bank policy", "first_seen": "2026-10-19T13:45:32Z", "last_seen": "2026-10-20T22:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "ffe32922fcad", "title": "Arab candidate could help oust Netanyahu", "first_seen": "2026-10-19T14:45:34Z", "last_seen": "2026-10-19T14:45:34Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "ffe32922fcad", "title": "Arab candidate could help oust Netanyahu", "first_seen": "2026-10-19T14:45:34Z", "last_seen": "2026-10-21T17:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "bcb8f8036e2a", "title": "Opinion on state of Palestinian cause", "first_seen": "2026-10-19T15:32:42Z", "last_seen": "2026-10-19T15:32:42Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "8f008ebf2967", "title": "Calgary Opera performer replaced over Palestinian flag", "first_seen": "2026-10-19T20:45:34Z", "last_seen": "2026-10-20T00:45:26Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "3381feb651eb", "title": "Man arrested for running over Australian MP", "first_seen": "2026-10-19T23:45:28Z", "last_seen": "2026-10-20T02:45:31Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -248,5 +248,6 @@
 {"id": "a18594edf263", "title": "Macron criticizes Trump and Netanyahu remarks", "first_seen": "2026-10-21T10:45:27Z", "last_seen": "2026-10-21T10:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "3b0f04a72363", "title": "Mélenchon defends Rima Hassan against criticism", "first_seen": "2026-10-21T11:45:29Z", "last_seen": "2026-10-21T11:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "417694b59b17", "title": "Italian Green politician calls for Israel boycott", "first_seen": "2026-10-21T11:45:29Z", "last_seen": "2026-10-21T11:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "6783ef48d190", "title": "Brad Lander detained by IDF in West Bank", "first_seen": "2026-10-21T12:45:28Z", "last_seen": "2026-10-21T16:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "be1550c770b2", "title": "US congressional candidate detained in West Bank", "first_seen": "2026-10-21T15:45:32Z", "last_seen": "2026-10-21T16:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "6783ef48d190", "title": "Brad Lander detained by IDF in West Bank", "first_seen": "2026-10-21T12:45:28Z", "last_seen": "2026-10-21T17:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "be1550c770b2", "title": "US congressional candidate detained in West Bank", "first_seen": "2026-10-21T15:45:32Z", "last_seen": "2026-10-21T17:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "6e283e55c996", "title": "Pro-Palestinian protests erupt in Paris", "first_seen": "2026-10-21T17:45:29Z", "last_seen": "2026-10-21T17:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
