@@ -194,6 +194,25 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   Unknown keys/values are dropped, not errors. Query, not hash:
   Pages serves index.html for any query string, and `#method` already owns the hash.
   A *path* route (/30d/bbc) is the one thing Pages cannot do without a 404.html hack.
+- **Lean blocs / "Where outlets diverge"** (2026-10-21, client-side only, no pipeline
+  change): per story cluster, items are grouped by the outlet's `lean` from
+  `META.sources` into left/center/right. A bloc carries weight (Σ `w`), outlets
+  (distinct `src`) and framing (Σ`w·s`/Σ`w` over scored items — the same
+  prominence-weighted mean as bundle sentiment). Divergence Δ = max − min framing
+  over blocs that have one; undefined below two. Both marks are driven by one
+  quantity, the bloc's **share of the story's weight** — never raw weight on one
+  and share on the other. The row mark normalises that share **per row** (the
+  story's largest bloc fills 18px, floored at 3px: a global ceiling flattens every
+  ordinary story, since per-outlet weight spans ~110×). Colour comes from `dvMix`,
+  the single sentiment→colour rule the chips also use; a bloc with weight but
+  nothing scored is `--dv-u`. **Omission** (weight 0) draws no bar at all, only a
+  2px `--dv-n2` tick on the baseline — "covered it lightly" must stay distinct from
+  "did not cover it", which is why the 3px floor exists. The **Divided** list mode
+  sorts by Δ desc; a story needs ≥2 framed blocs and `MIN_SCORED` (4) scored
+  headlines to get a figure, else it draws bars, shows nothing and does not rank.
+  Exactly one missing bloc has no full Δ: it ranks on the gap between the two that
+  are present and reads "no L/C/R" — never a synthesised Δ, never forced to the top.
+  That rule lives in one place, `blocStats`.
 - Dashboard reads only `docs/data/*.json`; keep it dependency-free (the one
   external resource is the Fraunces display font from Google Fonts, with a
   Georgia fallback; the masthead uses the self-hosted "Old London" TTF in docs/fonts/) and light/dark-safe — three CSS token blocks (light,

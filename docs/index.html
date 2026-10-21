@@ -299,9 +299,35 @@ svg text.ann{font-size:11px}
 .items{border-top:1px solid var(--grid);padding:18px 0 0;margin-top:22px;scroll-margin-top:210px}
 .items h2{font:600 22px/1.2 var(--font-display);margin:0 0 4px}
 .items .sub{font-size:12.5px;color:var(--muted);margin:0 0 12px}
-.storyhead{font:600 15px/1.3 var(--font-display);margin:16px 0 3px;color:var(--ink)}
+.storyhead{font:600 15px/1.3 var(--font-display);margin:16px 0 3px;color:var(--ink);
+  display:flex;align-items:flex-end;gap:10px}
 .storyhead:first-of-type{margin-top:6px}
+.storyhead .t{flex:1 1 auto;min-width:0}
 .storyhead .m{font:400 12px var(--font-ui);color:var(--muted)}
+/* the divergence figure: alert colour on a wide gap, muted on a narrow one */
+.storyhead .dl{flex:0 0 auto;min-width:44px;text-align:right;color:var(--dv-n2);
+  font:700 12.5px/1.3 var(--font-ui);font-variant-numeric:tabular-nums}
+.storyhead .dl.calm{color:var(--muted)}
+.storyhead .dl.gap{font-size:11px}
+/* lean blocs on a story row: three bars from one baseline, always left, center, right.
+   Height is the bloc's share of the story's attention normalised to its own largest
+   bloc; colour is that bloc's framing. A bloc that never carried the story draws no
+   bar at all — just a tick on the baseline. */
+.vb{display:flex;align-items:flex-end;gap:2px;height:18px;flex:0 0 auto;
+  border-bottom:1px solid var(--baseline);cursor:default}
+.vb span{display:block;width:5px;min-height:3px;border-radius:1.5px 1.5px 0 0}
+.vb span.off{min-height:0;height:0;border-radius:0;border-bottom:2px solid var(--dv-n2)}
+/* the same three blocs unrolled in a story's expansion */
+.cgrid{display:grid;grid-template-columns:44px minmax(0,1fr) 48px 62px;gap:5px 10px;
+  align-items:center;margin:7px 0 2px;font-variant-numeric:tabular-nums}
+.cgrid .lab{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--muted);text-align:right}
+.cgrid .track{background:var(--grid);border-radius:3px;height:15px;overflow:hidden}
+.cgrid .fill{height:15px;border-radius:3px;min-width:3px}
+.cgrid .val{font-size:12.5px;font-weight:600;color:var(--ink2);text-align:right}
+.cgrid .out{font-size:11.5px;color:var(--muted)}
+.cgrid .none{font-size:11.5px;color:var(--dv-n2);font-weight:600;display:flex;
+  align-items:center;height:15px}
 .item{display:flex;gap:11px;align-items:baseline;padding:7px 0;border-top:1px solid var(--grid)}
 .item .score{flex:0 0 36px;text-align:center;padding:1px 0}
 .item .h{min-width:0}
@@ -383,6 +409,10 @@ footer li b{color:var(--ink2);font-weight:600}
   .items,footer{scroll-margin-top:170px}
   .legend{gap:10px;font-size:11.5px}
   .items{padding:14px 0 0}
+  .cgrid{grid-template-columns:40px minmax(0,1fr) 44px;gap:5px 8px}
+  .cgrid .out{display:none}
+  .storyhead{gap:8px}
+  .storyhead .dl{min-width:40px}
 }
 </style>
 </head>
@@ -622,6 +652,26 @@ footer li b{color:var(--ink2);font-weight:600}
         from the headline archive.</li>
     </ul>
 
+    <h3>Where outlets diverge</h3>
+    <ul>
+      <li>Every story in the list carries three bars on one baseline — left, center, right, always in that
+        order. Bar <b>height</b> is the share of the story's front-page weight that lean bloc gave it,
+        normalised to the story's own largest bloc, so the split is legible on a small story as well as on a
+        big one; the row already prints the story's size as a number. Bar <b>colour</b> is that bloc's
+        prominence-weighted mean framing, on the same scale as the sentiment chips. A bloc that carried the
+        story but has no score yet is gray.</li>
+      <li>A bloc that never carried the story draws <b>no bar at all</b> — only a red tick on the baseline.
+        A bloc that carried it barely keeps a minimum bar, so "covered it lightly" is never shown as "did not
+        cover it". Hover the bars for the three framing figures.</li>
+      <li>Expanding a story unrolls the same three blocs: each bloc's share of the story's attention as a
+        horizontal bar, its framing to two decimals and how many outlets it had.</li>
+      <li><b>Divided</b> orders the list by the gap between the most and least favourable bloc (Δ, the figure
+        at the end of each row). A story needs weight in at least two blocs and at least four scored
+        headlines to get a figure; below that the bars still draw and the story does not rank. A gap of 0.75
+        or more is coloured as a divergence. Where exactly one bloc skipped the story there is no full Δ, so
+        the row ranks on the gap between the two blocs that did carry it and reads "no L", "no C" or "no R".</li>
+    </ul>
+
     <h3>Filters and breakdowns</h3>
     <ul>
       <li><b>Period:</b> 24 hours, 7, 30 or 90 days, all time, or a custom range. Every figure, the top
@@ -643,6 +693,12 @@ footer li b{color:var(--ink2);font-weight:600}
 
     <h3>Changelog</h3>
     <ul>
+      <li><b>2026-10-21 · stories.</b> Where outlets diverge: every story row carries a left / center / right
+        mark (height = that bloc's share of the story's attention, colour = its framing, no bar where the bloc
+        skipped the story), its expansion unrolls the three blocs with framing and outlet counts, and a third
+        list mode, <b>Divided</b>, ranks stories by the gap between the most and least favourable bloc. The
+        row bars and the expanded bars are both driven by share of the story's weight — the row bars were
+        going to use raw weight, which would have given the two marks different denominators.</li>
       <li><b>2026-10-18 · links.</b> Back and Forward now step through the views you have looked at
         instead of leaving the page — each change of period, split, filter or list mode is its own entry.</li>
       <li><b>2026-10-14 · controls.</b> Reset clears the outlet filters only — the period, granularity,
@@ -1559,17 +1615,113 @@ const storyTitle=st=>(STORIES[st]&&STORIES[st].t)||"";
 // cut at a word boundary, "…" marks the cut
 const trunc=(s,n)=>{s=(s||"").trim();if(s.length<=n)return s;const c=s.slice(0,n-1);const i=c.lastIndexOf(" ");return (i>n*.6?c.slice(0,i):c).replace(/[\s,;:—–-]+$/,"")+"…"};
 const fmtSent1=v=>Math.abs(v)<.05?"0.0":v<0?"−"+(-v).toFixed(1):"+"+v.toFixed(1);
+// Sentiment → colour, the one place it is decided: the five-step dv scale read
+// continuously, |v|/2 of the hostile or sympathetic end token mixed over neutral
+// (so ±1 lands halfway, ±2 solid). Used by the chips and by the lean bloc marks.
+const dvStrength=v=>Math.min(100,Math.round(Math.abs(v)/2*100));
+const dvMix=v=>`color-mix(in srgb, var(${v<0?"--dv-n2":"--dv-p2"}) ${dvStrength(v)}%, var(--dv-0))`;
 // sentiment chip: per-headline integer score, or a bundle mean (1 decimal)
 function sentChip(v,mean){
   const el=document.createElement("span");el.className="chip";
   if(v==null){el.textContent="·";el.classList.add("u");el.title="not yet scored";return el}
   el.textContent=mean?fmtSent1(v):(v>0?"+":"")+v;
-  const P=Math.min(100,Math.round(Math.abs(v)/2*100));
-  if(P>0)el.style.background=`color-mix(in srgb, var(${v<0?"--dv-n2":"--dv-p2"}) ${P}%, var(--dv-0))`;
+  const P=dvStrength(v);
+  if(P>0)el.style.background=dvMix(v);
   if(P>=55)el.classList.add("w");
   return el;
 }
 const fmtWhen=ts=>new Date(ts).toLocaleString(undefined,{month:"short",day:"numeric",hour:"numeric"});
+
+/* ---------- where outlets diverge: one story read by lean bloc ---------- */
+// Per story, group its headlines by the outlet's lean (from meta.sources) and read
+// two numbers off each bloc: attention (its share of the story's prominence weight)
+// and framing (the same prominence-weighted mean sentiment the bundle chip shows).
+// Both marks — the row bars and the expansion's fills — are driven by that one
+// share, so they never disagree about what a bloc's slice of a story is.
+const LEAN_SHORT={left:"L",center:"C",right:"R"};
+const DELTA_FLAG=0.75;   // Δ at or above this is coloured as a divergence, below it stays muted
+const MIN_SCORED=4;      // scored headlines a story needs before it gets a figure or ranks
+function blocStats(items){
+  const acc={};
+  for(const L of LEAN_ORDER)acc[L]={w:0,outlets:new Set(),sn:0,sd:0};
+  let total=0,scored=0;
+  for(const it of items){
+    const e=acc[(SRC[it.src]||{}).lean];
+    if(!e)continue;
+    e.w+=it.w;e.outlets.add(it.src);total+=it.w;
+    if(it.s!=null){e.sn+=it.s*it.w;e.sd+=it.w;scored++}
+  }
+  const blocs=LEAN_ORDER.map(L=>({lean:L,w:acc[L].w,n:acc[L].outlets.size,
+    f:acc[L].sd?acc[L].sn/acc[L].sd:null,share:total?acc[L].w/total:0}));
+  const framed=blocs.filter(b=>b.w>0&&b.f!=null).map(b=>b.f);
+  const missing=blocs.filter(b=>b.w===0).map(b=>b.lean);
+  const gap=framed.length>1?Math.max(...framed)-Math.min(...framed):null;
+  // The one rule for the figure, kept in one place: a full Δ when every bloc carried
+  // the story; when exactly one did not, the gap between the two that did, labelled
+  // "no R / no L / no C" rather than a synthesised Δ; nothing at all below the floor
+  // of two framed blocs and MIN_SCORED headlines, in which case the story does not rank.
+  const rankable=gap!=null&&scored>=MIN_SCORED&&missing.length<2;
+  return {blocs,total,scored,gap,missing,rankable,
+    label:!rankable?null:missing.length?"no "+LEAN_SHORT[missing[0]]:"Δ"+gap.toFixed(2)};
+}
+// terse tooltip, no sentences
+const blocTip=S=>S.blocs.map(b=>b.w===0?b.lean+" not carried"
+  :b.f==null?b.lean+" unscored":b.lean+" "+fmtSent(b.f)).join(" · ");
+const blocFill=b=>b.f==null?"var(--dv-u)":dvMix(b.f);
+// Height is attention, normalised per row — the story's largest bloc fills the mark,
+// floored at 3px so "covered it lightly" never renders as "did not cover it". That
+// distinction belongs to the omission tick alone. Story size is already in the row text.
+function blocMark(S){
+  const el=document.createElement("span");el.className="vb";el.title=blocTip(S);
+  const top=Math.max(...S.blocs.map(b=>b.share));
+  for(const b of S.blocs){
+    const bar=document.createElement("span");
+    if(b.w===0)bar.className="off";
+    else{bar.style.height=Math.max(3,Math.round(18*(top?b.share/top:0)))+"px";
+      bar.style.background=blocFill(b)}
+    el.appendChild(bar);
+  }
+  return el;
+}
+function blocDelta(S){
+  if(!S.rankable)return null;
+  const d=document.createElement("span");d.className="dl";d.textContent=S.label;d.title=blocTip(S);
+  if(S.missing.length)d.classList.add("gap");
+  else if(S.gap<DELTA_FLAG)d.classList.add("calm");
+  return d;
+}
+function blocDetail(S){
+  const g=document.createElement("div");g.className="cgrid";
+  for(const b of S.blocs){
+    const lab=document.createElement("span");lab.className="lab";lab.textContent=b.lean;g.appendChild(lab);
+    if(b.w===0){
+      const none=document.createElement("div");none.className="none";none.textContent="not carried";g.appendChild(none);
+    }else{
+      const tr=document.createElement("div");tr.className="track";
+      const fl=document.createElement("div");fl.className="fill";
+      fl.style.width=(b.share*100).toFixed(1)+"%";fl.style.background=blocFill(b);
+      tr.appendChild(fl);g.appendChild(tr);
+    }
+    const v=document.createElement("span");v.className="val";v.textContent=fmtSent(b.f);g.appendChild(v);
+    const o=document.createElement("span");o.className="out";
+    o.textContent=b.n+" outlet"+(b.n===1?"":"s");g.appendChild(o);
+  }
+  return g;
+}
+// Story heading: title and counts, the lean mark, and the gap figure — on the row only
+// in Divided mode, in an expansion's header always.
+function storyHead(title,meta,S,showDelta){
+  const head=document.createElement("div");head.className="storyhead";
+  const t=document.createElement("span");t.className="t";
+  t.appendChild(document.createTextNode(title));
+  if(meta){const m=document.createElement("span");m.className="m";m.textContent=meta;t.appendChild(m)}
+  head.appendChild(t);
+  if(S){
+    head.appendChild(blocMark(S));
+    if(showDelta){const d=blocDelta(S);if(d)head.appendChild(d)}
+  }
+  return head;
+}
 
 /* ---------- stories ---------- */
 function makeItemRow(it){
@@ -1655,11 +1807,10 @@ function toggleBundle(b){
   for(const [st,{btn}] of expand.btns)btn.setAttribute("aria-expanded",String(st===b.st&&expand.open!==b.st));
   if(expand.open===b.st){el.hidden=true;expand.open=null;return}
   el.innerHTML="";
-  const head=document.createElement("div");head.className="storyhead";
-  const tt=document.createElement("span");tt.textContent=b.title;
-  const n=document.createElement("span");n.className="m";
-  n.textContent=` · ${b.items.length} headlines · ${b.nSources} outlet${b.nSources>1?"s":""}`;
-  head.append(tt,n);el.appendChild(head);
+  const S=blocStats(b.items);
+  el.appendChild(storyHead(b.title,
+    ` · ${b.items.length} headlines · ${b.nSources} outlet${b.nSources>1?"s":""}`,S,true));
+  el.appendChild(blocDetail(S));
   for(const it of b.items)el.appendChild(makeItemRow(it));
   el.hidden=false;expand.open=b.st;
 }
@@ -1738,7 +1889,7 @@ function groupByStory(list){
   const groups=[];
   for(const [st,items] of by){
     if(items.length>1)groups.push({st,title:storyTitle(st)||"Untitled story",items:items.sort(byRank),
-      nSources:new Set(items.map(i=>i.src)).size});
+      nSources:new Set(items.map(i=>i.src)).size,S:blocStats(items)});
     else other.push(items[0]);
   }
   groups.sort((a,b)=>(b.items.length-a.items.length)||(b.items[0].w-a.items[0].w));
@@ -1746,9 +1897,20 @@ function groupByStory(list){
   return groups;
 }
 
-// Two list modes: grouped by story (each story expandable) or latest first. State is reset by render().
+// Three list modes: grouped by story (each story expandable), latest first, or by how
+// far the lean blocs diverged on the story. State is reset by render().
 const listState={mode:"story",expanded:new Set(),allGroups:false,shownLatest:40,last:null};
-const LIST_MODES=[["By theme","story"],["Latest","latest"]];
+const LIST_MODES=[["By theme","story"],["Latest","latest"],["Divided","divided"]];
+// Divided: the widest gap first. A story without a figure (one bloc, nothing framed
+// twice, or fewer than MIN_SCORED scored headlines) does not rank — it keeps the
+// default order behind everything that does.
+const byDivergence=(a,b)=>{
+  const ga=a.S&&a.S.rankable?a.S.gap:null,gb=b.S&&b.S.rankable?b.S.gap:null;
+  if(ga==null&&gb==null)return 0;
+  if(ga==null)return 1;
+  if(gb==null)return -1;
+  return gb-ga;
+};
 function setListMode(val){
   listState.mode=val;
   for(const b of $("#listMode").children)b.setAttribute("aria-pressed",String(b.dataset.val===val));
@@ -1779,15 +1941,16 @@ function renderStories(list,title,sub){
     return;
   }
   const groups=groupByStory(list);
+  const divided=listState.mode==="divided";
+  if(divided)groups.sort(byDivergence);
   const shown=listState.allGroups?groups:groups.slice(0,5);
   for(const g of shown){
     const key=g.st||"__other";
-    const head=document.createElement("div");head.className="storyhead";
-    const tt=document.createElement("span");tt.textContent=g.title;
-    const n=document.createElement("span");n.className="m";
-    n.textContent=` · ${g.items.length} headline${g.items.length>1?"s":""}`+(g.nSources?` · ${g.nSources} outlet${g.nSources>1?"s":""}`:"");
-    head.append(tt,n);el.appendChild(head);
     const open=listState.expanded.has(key);
+    el.appendChild(storyHead(g.title,
+      ` · ${g.items.length} headline${g.items.length>1?"s":""}`+(g.nSources?` · ${g.nSources} outlet${g.nSources>1?"s":""}`:""),
+      g.S,divided||open));
+    if(g.S&&open)el.appendChild(blocDetail(g.S));
     const rows=open?g.items:g.items.slice(0,3);
     for(const it of rows)el.appendChild(makeItemRow(it));
     if(!open&&g.items.length>3)
