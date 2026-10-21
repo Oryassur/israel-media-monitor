@@ -252,4 +252,5 @@
 {"id": "be1550c770b2", "title": "US congressional candidate detained in West Bank", "first_seen": "2026-10-21T15:45:32Z", "last_seen": "2026-10-21T17:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "6e283e55c996", "title": "Pro-Palestinian protests erupt in Paris", "first_seen": "2026-10-21T17:45:29Z", "last_seen": "2026-10-21T17:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "e003c7dfd4e2", "title": "Retrospective on Ariel Sharon's Gaza legacy", "first_seen": "2026-10-21T18:45:31Z", "last_seen": "2026-10-21T18:45:31Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "bbb8567835a8", "title": "Israel's regional map redrawn since Oct 7", "first_seen": "2026-10-21T18:45:31Z", "last_seen": "2026-10-21T18:45:31Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "bbb8567835a8", "title": "Israel's regional map redrawn since Oct 7", "first_seen": "2026-10-21T18:45:31Z", "last_seen": "2026-10-21T19:36:26Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "0d9937388b3a", "title": "Italian activists arrested, expelled from West Bank", "first_seen": "2026-10-21T19:36:26Z", "last_seen": "2026-10-21T19:36:26Z", "model": "claude-sonnet-5", "cv": "c1"}
