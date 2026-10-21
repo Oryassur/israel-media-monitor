@@ -9,19 +9,34 @@
   for the international benchmark (partitioned/rewritten like items)
 - data/intl/YYYY-MM.jsonl : international-coverage aggregates, one row per
   source per run (append-only)
+- data/runs/YYYY-MM.jsonl : each run's ranked top-20, one row per source per
+  run (append-only, pruned to RUN_RETENTION_DAYS)
 """
 import csv
 import json
 import os
 from collections import defaultdict
+from datetime import datetime, timedelta
 
-from .common import DATA, month_key, read_jsonl, write_jsonl
+from .common import DATA, item_id, month_key, read_jsonl, write_jsonl
 
 ITEMS_DIR = DATA / "items"
 SNAPS_DIR = DATA / "snapshots"
 STORIES_DIR = DATA / "stories"
 ALLITEMS_DIR = DATA / "allitems"
 INTL_DIR = DATA / "intl"
+RUNS_DIR = DATA / "runs"
+
+TS_FMT = "%Y-%m-%dT%H:%M:%SZ"
+
+# Ranked run archive. Everything else in data/ keeps aggregates or per-item
+# windows (first_seen/last_seen), so the per-run ORDER used to be lost the
+# moment a run ended — which is why every past repair of a parser break had to
+# approximate the rows it rewrote (`approx`). One row per (run, source) holds
+# the item ids of ranks 1..20 in order; headline and URL for an id live in
+# data/allitems and data/items. ~30 rows/run, ~22k rows/month.
+RUN_FIELDS = ["ts", "source", "ids"]
+RUN_RETENTION_DAYS = 90  # pruned on write, so the store cannot grow without bound
 
 # w_n2..w_p2: Israel prominence weight in each sentiment bucket that run;
 # w_u: present but unscored (related not yet decided). Sum == israel_weight.
@@ -114,6 +129,84 @@ def append_intl(ts, rows):
     with open(path, "a") as f:
         for r in rows:
             f.write(json.dumps(r, ensure_ascii=False) + "\n")
+
+
+def run_rows(ts, sources, per_source):
+    """This run's archive rows: one per fetched source, its top-20 item ids in
+    rank order (rank 1 first). Failed or empty fetches get no row — missing,
+    never an empty list."""
+    rows = []
+    for src in sources:
+        ps = per_source.get(src["name"]) or {}
+        if not ps.get("ok") or not ps.get("top20"):
+            continue
+        ordered = sorted(ps["top20"], key=lambda t: t[1])  # (headline, rank, weight)
+        rows.append({"ts": ts, "source": src["name"],
+                     "ids": [item_id(src["name"], h) for h, _, _ in ordered]})
+    return rows
+
+
+def _run_cutoff(ts, days=RUN_RETENTION_DAYS):
+    return (datetime.strptime(ts, TS_FMT) - timedelta(days=days)).strftime(TS_FMT)
+
+
+def prune_runs(ts, days=RUN_RETENTION_DAYS):
+    """Drop archived run rows older than `days` (relative to `ts`).
+
+    Month files entirely out of the window are deleted; the month the cutoff
+    falls in is filtered row by row. Returns the number of rows dropped.
+    """
+    if not RUNS_DIR.exists():
+        return 0
+    cutoff = _run_cutoff(ts, days)
+    cut_month = month_key(cutoff)
+    dropped = 0
+    for path in sorted(RUNS_DIR.glob("*.jsonl")):
+        if path.stem > cut_month:  # YYYY-MM sorts lexicographically
+            continue
+        rows = read_jsonl(path)
+        keep = [r for r in rows if r.get("ts", "") >= cutoff]
+        if len(keep) == len(rows):
+            continue
+        dropped += len(rows) - len(keep)
+        if keep:
+            write_jsonl(path, keep)
+        else:
+            path.unlink()
+    return dropped
+
+
+def append_runs(ts, rows, retention_days=RUN_RETENTION_DAYS):
+    """Append this run's ranked rows ({ts, source, ids}), then prune the store."""
+    path = RUNS_DIR / f"{month_key(ts)}.jsonl"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "a") as f:
+        for r in rows:
+            f.write(json.dumps({k: r[k] for k in RUN_FIELDS}, ensure_ascii=False) + "\n")
+    prune_runs(ts, retention_days)
+
+
+def load_recent_runs(since_ts):
+    """Archived run rows with ts >= since_ts, oldest first."""
+    out = []
+    if not RUNS_DIR.exists():
+        return out
+    since_month = month_key(since_ts)
+    for path in sorted(RUNS_DIR.glob("*.jsonl")):
+        if path.stem < since_month:
+            continue
+        out.extend(r for r in read_jsonl(path) if r.get("ts", "") >= since_ts)
+    out.sort(key=lambda r: r["ts"])
+    return out
+
+
+def load_all_runs():
+    out = []
+    if not RUNS_DIR.exists():
+        return out
+    for path in sorted(RUNS_DIR.glob("*.jsonl")):
+        out.extend(read_jsonl(path))
+    return out
 
 
 def _ensure_snapshot_schema(path):

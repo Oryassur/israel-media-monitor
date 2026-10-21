@@ -20,12 +20,32 @@ from .common import (CLUSTER_VERSION, LOGS, RUBRIC_VERSION, SCORE_RETRY_WINDOW_H
 from .detect import match_keyword
 from .extract import extract_items, fetch_feed, fetch_html, prominence_weight
 from .score import score_items
-from .store import (append_snapshots, load_recent_items, load_recent_stories,
-                    save_items, save_stories)
+from .store import (append_runs, append_snapshots, load_recent_items,
+                    load_recent_stories, run_rows, save_items, save_stories)
 
 
 def log(msg):
     print(msg, flush=True)
+
+
+def archive_run(ts, sources, per_source, log=log):
+    """Append the ranked archive of this run's top-20 per source (ids only —
+    the headline and URL behind an id live in data/allitems / data/items).
+
+    data/runs is the only record of per-run ORDER: without it, every repair of
+    a parser break has to approximate the rows it rewrites. Best-effort like
+    intl/enrich — it must never fail the hourly run, so it never raises.
+    Returns the number of rows written.
+    """
+    try:
+        rows = run_rows(ts, sources, per_source)
+        if rows:
+            append_runs(ts, rows)
+            log(f"runs: archived ranked top-20 for {len(rows)} sources")
+        return len(rows)
+    except Exception as e:  # noqa: BLE001
+        log(f"runs: archive failed ({e}); continuing")
+        return 0
 
 
 def run(no_llm=False, no_enrich=False, retry_hours=None):
@@ -216,6 +236,7 @@ def run(no_llm=False, no_enrich=False, retry_hours=None):
             **comp,
         })
 
+    archive_run(ts, sources, per_source)
     save_items(items_idx)
     append_snapshots(ts, snaps)
     publish.build()
