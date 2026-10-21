@@ -248,7 +248,7 @@
 {"id": "a18594edf263", "title": "Macron criticizes Trump and Netanyahu remarks", "first_seen": "2026-10-21T10:45:27Z", "last_seen": "2026-10-21T10:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "3b0f04a72363", "title": "Mélenchon defends Rima Hassan against criticism", "first_seen": "2026-10-21T11:45:29Z", "last_seen": "2026-10-21T11:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "417694b59b17", "title": "Italian Green politician calls for Israel boycott", "first_seen": "2026-10-21T11:45:29Z", "last_seen": "2026-10-21T11:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "6783ef48d190", "title": "Brad Lander detained by IDF in West Bank", "first_seen": "2026-10-21T12:45:28Z", "last_seen": "2026-10-21T18:45:31Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "6783ef48d190", "title": "Brad Lander detained by IDF in West Bank", "first_seen": "2026-10-21T12:45:28Z", "last_seen": "2026-10-21T23:16:59Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "be1550c770b2", "title": "US congressional candidate detained in West Bank", "first_seen": "2026-10-21T15:45:32Z", "last_seen": "2026-10-21T17:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "6e283e55c996", "title": "Pro-Palestinian protests erupt in Paris", "first_seen": "2026-10-21T17:45:29Z", "last_seen": "2026-10-21T17:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "e003c7dfd4e2", "title": "Retrospective on Ariel Sharon's Gaza legacy", "first_seen": "2026-10-21T18:45:31Z", "last_seen": "2026-10-21T18:45:31Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -257,4 +257,5 @@
 {"id": "6fa3c8c86a0e", "title": "Ex-hostage sends message to Bondi attack survivors", "first_seen": "2026-10-21T19:45:28Z", "last_seen": "2026-10-21T19:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "919d87ace845", "title": "Commentary on Obama, Omar, and settler violence", "first_seen": "2026-10-21T20:05:53Z", "last_seen": "2026-10-21T20:05:53Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "53ab58339104", "title": "US political parties' stance on Israel debated", "first_seen": "2026-10-21T21:45:31Z", "last_seen": "2026-10-21T21:45:31Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "e399faf86039", "title": "AIPAC shifts fundraising amid voter frustration", "first_seen": "2026-10-21T22:44:52Z", "last_seen": "2026-10-21T22:44:52Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "e399faf86039", "title": "AIPAC shifts fundraising amid voter frustration", "first_seen": "2026-10-21T22:44:52Z", "last_seen": "2026-10-21T23:16:59Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "f0ff5ee73edb", "title": "US and Israel plan renewed strikes on Iran", "first_seen": "2026-10-21T23:16:59Z", "last_seen": "2026-10-21T23:16:59Z", "model": "claude-sonnet-5", "cv": "c1"}
