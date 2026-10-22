@@ -19,6 +19,10 @@
   --grid:#e8e2d5; --baseline:#c9c3b4; --border:rgba(26,23,18,.10);
   --dv-n2:#9e2b25; --dv-n1:#d98d80; --dv-0:#d8d0bd; --dv-p1:#8fb4dc; --dv-p2:#2b5fa8;
   --dv-u:rgba(138,133,122,.35); --ok:#2e8f63;
+  /* pivot for the bloc bars only: --dv-0 de-yellowed to the --grid chroma level, so a
+     bloc at 0.00 reads as the middle of the scale, not the quiet end of the red half.
+     The chips keep --dv-0 — there the warmth sits behind a printed number. */
+  --dv-pivot:#d6d0c3;
   --shadow-pop:0 6px 24px rgba(46,38,23,.14);
 }
 @media (prefers-color-scheme: dark){
@@ -28,6 +32,7 @@
     --grid:#2b2822; --baseline:#3b382f; --border:rgba(242,237,226,.10);
     --dv-n2:#e2574f; --dv-n1:#a3574f; --dv-0:#4d4a41; --dv-p1:#4e6f96; --dv-p2:#6aa1ee;
     --dv-u:rgba(143,136,120,.32); --ok:#3fb27f;
+    --dv-pivot:#4d4a41;  /* dark --dv-0 is already low-chroma; no correction needed */
     --shadow-pop:0 8px 28px rgba(0,0,0,.55);
   }
 }
@@ -37,6 +42,7 @@
   --grid:#2b2822; --baseline:#3b382f; --border:rgba(242,237,226,.10);
   --dv-n2:#e2574f; --dv-n1:#a3574f; --dv-0:#4d4a41; --dv-p1:#4e6f96; --dv-p2:#6aa1ee;
   --dv-u:rgba(143,136,120,.32); --ok:#3fb27f;
+  --dv-pivot:#4d4a41;
   --shadow-pop:0 8px 28px rgba(0,0,0,.55);
 }
 *{box-sizing:border-box}
@@ -210,6 +216,18 @@ a{color:inherit}
 /* bundle sentiment as an overlay on the card image: solid surface so it reads over any photo */
 .chip.ov{position:absolute;box-shadow:0 1px 4px rgba(0,0,0,.25);font-size:15px;padding:2px 9px;left:10px;bottom:10px}
 .th .chip.ov{font-size:11.5px;padding:0 6px;left:auto;bottom:auto;right:4px;top:4px;border-radius:5px}
+/* compound chip on a bundle card: the mean and its three blocs as one object. The plate
+   is neutral because the number already carries the sentiment; the bars take the colour. */
+.chip2{display:inline-flex;align-items:center;gap:8px;background:var(--surface);
+  border-radius:6px;padding:4px 8px 4px 9px}
+.chip2 .n2{font:600 15px/1 var(--font-display);font-variant-numeric:lining-nums tabular-nums}
+.chip2 .vb{height:14px}
+.chip2 .vb span{width:4px}
+.chip2.ov{position:absolute;left:10px;bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+.th .chip2.ov{left:auto;right:4px;top:4px;bottom:auto;gap:5px;padding:3px 5px 3px 6px;border-radius:5px}
+.th .chip2 .n2{font-size:11.5px}
+.th .chip2 .vb{height:11px}
+.th .chip2 .vb span{width:3px}
 .more{border:0;background:none;font:inherit;font-size:inherit;color:var(--ink2);cursor:pointer;padding:0;
   text-decoration:underline;text-decoration-color:var(--baseline);text-underline-offset:2px;white-space:nowrap}
 .more:hover{color:var(--ink)}
@@ -315,7 +333,7 @@ svg text.ann{font-size:11px}
    bar at all — just a tick on the baseline. */
 .vb{display:flex;align-items:flex-end;gap:2px;height:18px;flex:0 0 auto;
   border-bottom:1px solid var(--baseline);cursor:default}
-.vb span{display:block;width:5px;min-height:3px;border-radius:1.5px 1.5px 0 0}
+.vb span{display:block;width:6px;min-height:3px;border-radius:1.5px 1.5px 0 0}
 .vb span.off{min-height:0;height:0;border-radius:0;border-bottom:2px solid var(--dv-n2)}
 /* the same three blocs unrolled in a story's expansion */
 .cgrid{display:grid;grid-template-columns:44px minmax(0,1fr) 48px 62px;gap:5px 10px;
@@ -658,13 +676,18 @@ footer li b{color:var(--ink2);font-weight:600}
         order. Bar <b>height</b> is the share of the story's front-page weight that lean bloc gave it,
         normalised to the story's own largest bloc, so the split is legible on a small story as well as on a
         big one; the row already prints the story's size as a number. Bar <b>colour</b> is that bloc's
-        prominence-weighted mean framing, on the same scale as the sentiment chips. A bloc that carried the
-        story but has no score yet is gray.</li>
+        prominence-weighted mean framing. The bars use a steeper ramp than the sentiment chips do: a chip
+        prints its number, so colour there is only a hint, while a bar has no number and colour is its whole
+        signal. &plusmn;0.5 reaches the full mid tone, &plusmn;1 the full end tone &mdash; a bloc mean of
+        &plusmn;1 means every outlet in it framed the story the same way &mdash; and beyond that the colour
+        deepens rather than brightens. A bloc that carried the story but has no score yet is gray.</li>
       <li>A bloc that never carried the story draws <b>no bar at all</b> — only a red tick on the baseline.
         A bloc that carried it barely keeps a minimum bar, so "covered it lightly" is never shown as "did not
         cover it". Hover the bars for the three framing figures.</li>
       <li>Expanding a story unrolls the same three blocs: each bloc's share of the story's attention as a
         horizontal bar, its framing to two decimals and how many outlets it had.</li>
+      <li>The four top stories carry the same three bars, beside the story's mean on the card image &mdash;
+        one object, so the average and the spread behind it are read together rather than in two places.</li>
       <li><b>Divided</b> orders the list by the gap between the most and least favourable bloc (Δ, the figure
         at the end of each row). A story needs weight in at least two blocs and at least four scored
         headlines to get a figure; below that the bars still draw and the story does not rank. A gap of 0.75
@@ -693,6 +716,12 @@ footer li b{color:var(--ink2);font-weight:600}
 
     <h3>Changelog</h3>
     <ul>
+      <li><b>2026-10-22 · stories.</b> The lean bars got a colour ramp of their own, steeper than the
+        chips', because a bar carries no number to lean on: &plusmn;0.5 now reaches the full mid tone and
+        &plusmn;1 the full end tone. Their zero sits on a less yellow neutral, so a bloc at 0.00 reads as the
+        middle of the scale rather than the quiet end of the red half. The top four stories carry the bars
+        too, inside the sentiment chip on the card image: the plate turned neutral and the colour it was
+        spending on a number it already printed now goes to the bars.</li>
       <li><b>2026-10-21 · stories.</b> Where outlets diverge: every story row carries a left / center / right
         mark (height = that bloc's share of the story's attention, colour = its framing, no bar where the bloc
         skipped the story), its expansion unrolls the three blocs with framing and outlet counts, and a third
@@ -1620,6 +1649,19 @@ const fmtSent1=v=>Math.abs(v)<.05?"0.0":v<0?"−"+(-v).toFixed(1):"+"+v.toFixed(
 // (so ±1 lands halfway, ±2 solid). Used by the chips and by the lean bloc marks.
 const dvStrength=v=>Math.min(100,Math.round(Math.abs(v)/2*100));
 const dvMix=v=>`color-mix(in srgb, var(${v<0?"--dv-n2":"--dv-p2"}) ${dvStrength(v)}%, var(--dv-0))`;
+// A chip prints its number, so colour there is only a hint and dvMix's gentle tint is
+// right. A bar has no number — colour is its whole signal — so it gets its own ramp,
+// reading the five dv tokens as real stops instead of one long fade through neutral:
+// ±0.5 lands on the full mid token, ±1 on the full end token, and past that it deepens
+// toward ink rather than brightening. It saturates at ±1 because a bloc mean of ±1
+// means every outlet in that bloc framed the story the same way — that already is the
+// extreme. Pivots on --dv-pivot, not --dv-0, so 0.00 sits in the middle of the scale.
+function dvBar(v){
+  const a=Math.min(2,Math.abs(v)),mid=v<0?"--dv-n1":"--dv-p1",end=v<0?"--dv-n2":"--dv-p2";
+  if(a<=.5)return `color-mix(in srgb, var(${mid}) ${Math.round(a/.5*100)}%, var(--dv-pivot))`;
+  if(a<=1)return `color-mix(in srgb, var(${end}) ${Math.round((a-.5)/.5*100)}%, var(${mid}))`;
+  return `color-mix(in srgb, var(--ink) ${Math.round((a-1)*30)}%, var(${end}))`;
+}
 // sentiment chip: per-headline integer score, or a bundle mean (1 decimal)
 function sentChip(v,mean){
   const el=document.createElement("span");el.className="chip";
@@ -1667,7 +1709,7 @@ function blocStats(items){
 // terse tooltip, no sentences
 const blocTip=S=>S.blocs.map(b=>b.w===0?b.lean+" not carried"
   :b.f==null?b.lean+" unscored":b.lean+" "+fmtSent(b.f)).join(" · ");
-const blocFill=b=>b.f==null?"var(--dv-u)":dvMix(b.f);
+const blocFill=b=>b.f==null?"var(--dv-u)":dvBar(b.f);
 // Height is attention, normalised per row — the story's largest bloc fills the mark,
 // floored at 3px so "covered it lightly" never renders as "did not cover it". That
 // distinction belongs to the omission tick alone. Story size is already in the row text.
@@ -1681,6 +1723,19 @@ function blocMark(S){
       bar.style.background=blocFill(b)}
     el.appendChild(bar);
   }
+  return el;
+}
+// On a card, the average and its breakdown are one object, not two: the plate goes
+// neutral (the number already states the sentiment — it was saying it twice, once as
+// a figure and once as the colour behind it) and the freed colour channel is what the
+// bars spend. Sits where the chip already sat, so sentiment stays scannable.
+function blocChip(v,S){
+  const el=document.createElement("span");el.className="chip2";
+  const n=document.createElement("span");n.className="n2";
+  n.textContent=v==null?"·":fmtSent1(v);
+  n.style.color=v==null?"var(--muted)":Math.abs(v)<.05?"var(--ink)":v<0?"var(--dv-n2)":"var(--dv-p2)";
+  el.appendChild(n);el.appendChild(blocMark(S));
+  el.title=blocTip(S);
   return el;
 }
 function blocDelta(S){
@@ -1710,14 +1765,14 @@ function blocDetail(S){
 }
 // Story heading: title and counts, the lean mark, and the gap figure — on the row only
 // in Divided mode, in an expansion's header always.
-function storyHead(title,meta,S,showDelta){
+function storyHead(title,meta,S,showDelta,showMark=true){
   const head=document.createElement("div");head.className="storyhead";
   const t=document.createElement("span");t.className="t";
   t.appendChild(document.createTextNode(title));
   if(meta){const m=document.createElement("span");m.className="m";m.textContent=meta;t.appendChild(m)}
   head.appendChild(t);
   if(S){
-    head.appendChild(blocMark(S));
+    if(showMark)head.appendChild(blocMark(S));
     if(showDelta){const d=blocDelta(S);if(d)head.appendChild(d)}
   }
   return head;
@@ -1759,15 +1814,16 @@ function topBundles(list,n){
     b.title=storyTitle(b.st)||"Untitled story";
     b.items.sort(byRank);
     b.lead=b.items[0];b.card=b.items.find(it=>it.img)||b.lead;
-    b.sent=b.sd?b.sn/b.sd:null;b.nSources=b.srcs.size;
+    b.sent=b.sd?b.sn/b.sd:null;b.nSources=b.srcs.size;b.S=blocStats(b.items);
   }
   bundles.sort((a,b)=>(b.score-a.score)||(b.items.length-a.items.length));
   return bundles.slice(0,n);
 }
 
-function imageBox(cls,it,src,sent,mean=true){
+function imageBox(cls,it,src,sent,mean=true,S=null){
   const box=document.createElement("div");box.className=cls;
-  const chip=sentChip(sent,mean);chip.classList.add("ov");
+  // a bundle card carries the compound chip (mean + blocs); a single article keeps the plain one
+  const chip=S?blocChip(sent,S):sentChip(sent,mean);chip.classList.add("ov");
   const fallback=()=>{box.innerHTML="";box.classList.add("noimg");box.appendChild(logoEl(src));box.appendChild(chip)};
   if(it.img){
     const im=document.createElement("img");im.alt="";im.loading="eager";im.decoding="async";im.referrerPolicy="no-referrer";
@@ -1807,9 +1863,9 @@ function toggleBundle(b){
   for(const [st,{btn}] of expand.btns)btn.setAttribute("aria-expanded",String(st===b.st&&expand.open!==b.st));
   if(expand.open===b.st){el.hidden=true;expand.open=null;return}
   el.innerHTML="";
-  const S=blocStats(b.items);
+  const S=b.S||blocStats(b.items);
   el.appendChild(storyHead(b.title,
-    ` · ${b.items.length} headlines · ${b.nSources} outlet${b.nSources>1?"s":""}`,S,true));
+    ` · ${b.items.length} headlines · ${b.nSources} outlet${b.nSources>1?"s":""}`,S,true,false));
   el.appendChild(blocDetail(S));
   for(const it of b.items)el.appendChild(makeItemRow(it));
   el.hidden=false;expand.open=b.st;
@@ -1835,7 +1891,7 @@ function renderFront(list){
   }
   side.hidden=false;
   const b=bundles[0],src=SRC[b.card.src]||{display:b.card.src};
-  lead.appendChild(imageBox("img",b.card,src,b.sent));
+  lead.appendChild(imageBox("img",b.card,src,b.sent,true,b.S));
   lead.appendChild(kickerEl(b.title));
   lead.appendChild(headlineEl(b.card));
   if(b.card.d){const d=document.createElement("p");d.className="dek";d.textContent=trunc(b.card.d,150);lead.appendChild(d)}
@@ -1843,7 +1899,7 @@ function renderFront(list){
   lead.appendChild(bundleMeta(b));
   for(const sb of bundles.slice(1)){
     const row=document.createElement("div");row.className="srow";
-    row.appendChild(imageBox("th",sb.card,SRC[sb.card.src]||{display:sb.card.src},sb.sent));
+    row.appendChild(imageBox("th",sb.card,SRC[sb.card.src]||{display:sb.card.src},sb.sent,true,sb.S));
     const body=document.createElement("div");
     body.appendChild(kickerEl(sb.title));body.appendChild(headlineEl(sb.card));
     body.appendChild(bundleMeta(sb));

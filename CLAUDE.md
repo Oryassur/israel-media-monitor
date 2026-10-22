@@ -203,13 +203,32 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   quantity, the bloc's **share of the story's weight** — never raw weight on one
   and share on the other. The row mark normalises that share **per row** (the
   story's largest bloc fills 18px, floored at 3px: a global ceiling flattens every
-  ordinary story, since per-outlet weight spans ~110×). Colour comes from `dvMix`,
-  the single sentiment→colour rule the chips also use; a bloc with weight but
+  ordinary story, since per-outlet weight spans ~110×). Colour comes from `dvBar`,
+  **not** the chips' `dvMix` (2026-10-22): a chip prints its number so colour there
+  is only a hint, while a bar has no number and colour is its whole signal, so the
+  gentle `|v|/2` tint rendered every story the same beige. `dvBar` reads the five
+  `--dv-*` tokens as real stops — ±0.5 = full mid token, ±1 = full end token, past
+  that it mixes toward `--ink` — and saturates at ±1 because a bloc mean of ±1 means
+  every outlet in that bloc framed the story identically. It pivots on `--dv-pivot`,
+  `--dv-0` de-yellowed to the `--grid` chroma level (light `#d6d0c3`; the dark
+  `--dv-0` is already low-chroma, so dark reuses it), because `--dv-0` at chroma 10.4
+  pulls 0.00 toward the red half. Do not "fix" that pivot by greying it: the blue
+  stops sit closer to grey than the red ones, so a true grey swings the scale's
+  imbalance from 5% to 21% the other way. `--dv-0` still paints the chips, where the
+  warmth sits behind a printed number and costs nothing. A bloc with weight but
   nothing scored is `--dv-u`. **Omission** (weight 0) draws no bar at all, only a
   2px `--dv-n2` tick on the baseline — "covered it lightly" must stay distinct from
   "did not cover it", which is why the 3px floor exists. The **Divided** list mode
   sorts by Δ desc; a story needs ≥2 framed blocs and `MIN_SCORED` (4) scored
   headlines to get a figure, else it draws bars, shows nothing and does not rank.
+  The **top four** cards carry the same bars inside the image chip (`blocChip`, 2026-10-22):
+  one object holding the bundle mean and its blocs, because the average on the image
+  with the breakdown elsewhere reads as two unrelated things. Its plate is `--surface`,
+  not a sentiment colour — the chip used to state its sentiment twice, as the number
+  and as the plate behind it, and that freed channel is what the bars spend. Single
+  articles (opinion cards) keep the plain coloured `sentChip`: no bloc data. The
+  front-unit expansion head therefore passes `showMark=false` — the card above it
+  already shows the bars and its own `blocDetail` grid is the breakdown.
   Exactly one missing bloc has no full Δ: it ranks on the gap between the two that
   are present and reads "no L/C/R" — never a synthesised Δ, never forced to the top.
   That rule lives in one place, `blocStats`.
