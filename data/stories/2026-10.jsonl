@@ -196,7 +196,7 @@
 {"id": "f4e50f5cdb83", "title": "China urges Israel to halt West Bank settlements", "first_seen": "2026-10-16T09:45:32Z", "last_seen": "2026-10-16T12:22:24Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "915b13ccbdf4", "title": "Jonathan Glazer criticizes Israel's retaliation", "first_seen": "2026-10-16T12:22:24Z", "last_seen": "2026-10-16T12:22:24Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "19cf66fd1e49", "title": "Two years since Yahya Sinwar's death", "first_seen": "2026-10-16T12:22:24Z", "last_seen": "2026-10-16T12:22:24Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "984c6874190e", "title": "Settler attack injures journalist during West Bank olive harvest", "first_seen": "2026-10-16T13:45:27Z", "last_seen": "2026-10-21T22:44:52Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "984c6874190e", "title": "Settler attack injures journalist during West Bank olive harvest", "first_seen": "2026-10-16T13:45:27Z", "last_seen": "2026-10-23T17:45:32Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "85616bd55171", "title": "Ultra-Orthodox military service debate in Israel", "first_seen": "2026-10-16T14:45:27Z", "last_seen": "2026-10-20T10:45:30Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "5b4c98e08598", "title": "DSA plans to block Israel weapons shipments", "first_seen": "2026-10-16T15:45:28Z", "last_seen": "2026-10-16T15:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "b1c56202c283", "title": "Outrage over advisor's wife supporting Palestine Action", "first_seen": "2026-10-16T15:45:28Z", "last_seen": "2026-10-16T20:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -270,3 +270,4 @@
 {"id": "50e96d0b6df0", "title": "Gaza rebuilding halted amid material restrictions", "first_seen": "2026-10-23T10:45:29Z", "last_seen": "2026-10-23T10:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "f36e8dca1153", "title": "Özil compares Israel to Russia", "first_seen": "2026-10-23T11:45:31Z", "last_seen": "2026-10-23T11:45:31Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "6f14d2b5958a", "title": "Netanyahu announces West Bank military operation", "first_seen": "2026-10-23T12:45:27Z", "last_seen": "2026-10-23T14:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "61fcca0db889", "title": "Israeli soldiers kill Hamas terrorists in West Bank", "first_seen": "2026-10-23T17:45:32Z", "last_seen": "2026-10-23T17:45:32Z", "model": "claude-sonnet-5", "cv": "c1"}
