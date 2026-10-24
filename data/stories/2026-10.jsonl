@@ -266,7 +266,7 @@
 {"id": "a17f9650b3b9", "title": "Netanyahu uses AI video in campaign", "first_seen": "2026-10-23T07:45:35Z", "last_seen": "2026-10-23T07:45:35Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "1063b2abbb8c", "title": "Shooting attack injures Israelis in West Bank", "first_seen": "2026-10-23T07:54:30Z", "last_seen": "2026-10-23T09:45:39Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "5c616c10c443", "title": "Young Israelis reflect on trauma and future", "first_seen": "2026-10-23T09:45:39Z", "last_seen": "2026-10-23T13:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "436418e30913", "title": "Israel orders West Bank lockdown after attack", "first_seen": "2026-10-23T09:59:21Z", "last_seen": "2026-10-24T07:45:30Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "436418e30913", "title": "Israel orders West Bank lockdown after attack", "first_seen": "2026-10-23T09:59:21Z", "last_seen": "2026-10-24T10:45:26Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "50e96d0b6df0", "title": "Gaza rebuilding halted amid material restrictions", "first_seen": "2026-10-23T10:45:29Z", "last_seen": "2026-10-23T10:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "f36e8dca1153", "title": "Özil compares Israel to Russia", "first_seen": "2026-10-23T11:45:31Z", "last_seen": "2026-10-23T11:45:31Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "6f14d2b5958a", "title": "Netanyahu announces West Bank military operation", "first_seen": "2026-10-23T12:45:27Z", "last_seen": "2026-10-24T09:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -276,3 +276,4 @@
 {"id": "cc34f1cc8b91", "title": "Palestine supporter Sarah Helm sparks UK controversy", "first_seen": "2026-10-24T03:45:28Z", "last_seen": "2026-10-24T03:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "bae3af8d76db", "title": "West Bank residents' views on Hamas and Iran", "first_seen": "2026-10-24T05:45:29Z", "last_seen": "2026-10-24T05:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "581925f6192d", "title": "Pro-Netanyahu Israeli city reconsiders support", "first_seen": "2026-10-24T05:45:29Z", "last_seen": "2026-10-24T05:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "570bd7a5e9f8", "title": "French pro-Palestine activist's rape comment sparks outrage", "first_seen": "2026-10-24T10:45:26Z", "last_seen": "2026-10-24T10:45:26Z", "model": "claude-sonnet-5", "cv": "c1"}
