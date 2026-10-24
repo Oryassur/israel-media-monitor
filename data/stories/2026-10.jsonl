@@ -200,7 +200,7 @@
 {"id": "85616bd55171", "title": "Ultra-Orthodox military service debate in Israel", "first_seen": "2026-10-16T14:45:27Z", "last_seen": "2026-10-20T10:45:30Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "5b4c98e08598", "title": "DSA plans to block Israel weapons shipments", "first_seen": "2026-10-16T15:45:28Z", "last_seen": "2026-10-16T15:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "b1c56202c283", "title": "Outrage over advisor's wife supporting Palestine Action", "first_seen": "2026-10-16T15:45:28Z", "last_seen": "2026-10-16T20:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "ac76aec7b92a", "title": "Opinion on Trump and Netanyahu's political survival", "first_seen": "2026-10-16T18:45:26Z", "last_seen": "2026-10-23T16:45:36Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "ac76aec7b92a", "title": "Opinion on Trump and Netanyahu's political survival", "first_seen": "2026-10-16T18:45:26Z", "last_seen": "2026-10-24T14:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "ade47096a97c", "title": "German Green Party divided over Israel policy", "first_seen": "2026-10-17T02:45:26Z", "last_seen": "2026-10-17T02:45:26Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "398fae3caba9", "title": "Couples separated by Gaza war", "first_seen": "2026-10-17T11:45:31Z", "last_seen": "2026-10-17T18:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "1212ecfafecf", "title": "Washington Post responds to Netanyahu criticism", "first_seen": "2026-10-17T12:45:27Z", "last_seen": "2026-10-17T12:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -247,7 +247,7 @@
 {"id": "1fd15a6436de", "title": "Trump denies Ada Colau entry over flotilla", "first_seen": "2026-10-21T08:45:28Z", "last_seen": "2026-10-21T09:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "a18594edf263", "title": "Macron criticizes Trump and Netanyahu remarks", "first_seen": "2026-10-21T10:45:27Z", "last_seen": "2026-10-21T10:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "3b0f04a72363", "title": "Mélenchon defends Rima Hassan against criticism", "first_seen": "2026-10-21T11:45:29Z", "last_seen": "2026-10-21T11:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "417694b59b17", "title": "Italian Green politician calls for Israel boycott", "first_seen": "2026-10-21T11:45:29Z", "last_seen": "2026-10-21T11:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "417694b59b17", "title": "Italian Green politician calls for Israel boycott", "first_seen": "2026-10-21T11:45:29Z", "last_seen": "2026-10-24T14:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "6783ef48d190", "title": "Brad Lander detained by IDF in West Bank", "first_seen": "2026-10-21T12:45:28Z", "last_seen": "2026-10-21T23:16:59Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "be1550c770b2", "title": "US congressional candidate detained in West Bank", "first_seen": "2026-10-21T15:45:32Z", "last_seen": "2026-10-21T17:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "6e283e55c996", "title": "Pro-Palestinian protests erupt in Paris", "first_seen": "2026-10-21T17:45:29Z", "last_seen": "2026-10-21T17:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -277,3 +277,5 @@
 {"id": "bae3af8d76db", "title": "West Bank residents' views on Hamas and Iran", "first_seen": "2026-10-24T05:45:29Z", "last_seen": "2026-10-24T05:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "581925f6192d", "title": "Pro-Netanyahu Israeli city reconsiders support", "first_seen": "2026-10-24T05:45:29Z", "last_seen": "2026-10-24T05:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "570bd7a5e9f8", "title": "French pro-Palestine activist's rape comment sparks outrage", "first_seen": "2026-10-24T10:45:26Z", "last_seen": "2026-10-24T10:45:26Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "b56f4d6aa53b", "title": "Israel removes Palestinian families from Hebron", "first_seen": "2026-10-24T14:45:27Z", "last_seen": "2026-10-24T14:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "37e79342b4c2", "title": "Israeli emigration rises ahead of election", "first_seen": "2026-10-24T14:45:27Z", "last_seen": "2026-10-24T14:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
