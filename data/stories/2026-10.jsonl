@@ -266,7 +266,7 @@
 {"id": "a17f9650b3b9", "title": "Netanyahu uses AI video in campaign", "first_seen": "2026-10-23T07:45:35Z", "last_seen": "2026-10-23T07:45:35Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "1063b2abbb8c", "title": "Shooting attack injures Israelis in West Bank", "first_seen": "2026-10-23T07:54:30Z", "last_seen": "2026-10-23T09:45:39Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "5c616c10c443", "title": "Young Israelis reflect on trauma and future", "first_seen": "2026-10-23T09:45:39Z", "last_seen": "2026-10-23T13:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "436418e30913", "title": "Israel orders West Bank lockdown after attack", "first_seen": "2026-10-23T09:59:21Z", "last_seen": "2026-10-24T18:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "436418e30913", "title": "Israel orders West Bank lockdown after attack", "first_seen": "2026-10-23T09:59:21Z", "last_seen": "2026-10-25T03:45:33Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "50e96d0b6df0", "title": "Gaza rebuilding halted amid material restrictions", "first_seen": "2026-10-23T10:45:29Z", "last_seen": "2026-10-23T10:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "f36e8dca1153", "title": "Özil compares Israel to Russia", "first_seen": "2026-10-23T11:45:31Z", "last_seen": "2026-10-23T11:45:31Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "6f14d2b5958a", "title": "Netanyahu announces West Bank military operation", "first_seen": "2026-10-23T12:45:27Z", "last_seen": "2026-10-25T02:45:33Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -280,3 +280,4 @@
 {"id": "b56f4d6aa53b", "title": "Israel removes Palestinian families from Hebron", "first_seen": "2026-10-24T14:45:27Z", "last_seen": "2026-10-24T19:45:31Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "37e79342b4c2", "title": "Israeli emigration rises ahead of election", "first_seen": "2026-10-24T14:45:27Z", "last_seen": "2026-10-24T15:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "5a85eb2c6308", "title": "Israel demolishes homes in West Bank crackdown", "first_seen": "2026-10-24T20:45:28Z", "last_seen": "2026-10-24T20:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "776506af951a", "title": "Nadia Sawalha sues ITV over pro-Palestine views", "first_seen": "2026-10-25T03:45:33Z", "last_seen": "2026-10-25T03:45:33Z", "model": "claude-sonnet-5", "cv": "c1"}
