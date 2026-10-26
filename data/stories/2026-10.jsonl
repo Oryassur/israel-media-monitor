@@ -217,7 +217,7 @@
 {"id": "26be1b4ce1f8", "title": "Activists vandalize UK defence executives' homes", "first_seen": "2026-10-18T12:45:28Z", "last_seen": "2026-10-18T12:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "d02398580187", "title": "Former Hamas hostage performs at Sydney Opera House", "first_seen": "2026-10-18T12:45:28Z", "last_seen": "2026-10-18T12:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "caaa59f5a65e", "title": "Settler attack on Washington Post photographer", "first_seen": "2026-10-18T14:32:10Z", "last_seen": "2026-10-23T04:40:14Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "fda37b0e3acf", "title": "Trump endorses Netanyahu ahead of Israeli election", "first_seen": "2026-10-18T15:45:29Z", "last_seen": "2026-10-24T17:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "fda37b0e3acf", "title": "Trump endorses Netanyahu ahead of Israeli election", "first_seen": "2026-10-18T15:45:29Z", "last_seen": "2026-10-26T08:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "85a69ecf0a68", "title": "Netanyahu disputes settler attack witnessed by Guardian", "first_seen": "2026-10-18T20:36:03Z", "last_seen": "2026-10-19T12:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "66c226a2388a", "title": "Bomb threat forces Tel Aviv flight emergency landing", "first_seen": "2026-10-19T00:27:04Z", "last_seen": "2026-10-19T07:42:06Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "eeccb1de77f5", "title": "Israeli airstrikes kill five in Gaza", "first_seen": "2026-10-19T04:45:29Z", "last_seen": "2026-10-19T04:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -285,7 +285,7 @@
 {"id": "0b5ed14ee6ff", "title": "Arab minority's political awakening in Israel", "first_seen": "2026-10-25T10:06:26Z", "last_seen": "2026-10-25T11:17:36Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "5903ac370a46", "title": "El Salvador denies hostage bodies found in Haiti", "first_seen": "2026-10-25T11:17:36Z", "last_seen": "2026-10-25T11:17:36Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "0fa9597ca5c7", "title": "Protesters storm Roman Colosseum with Palestinian flags", "first_seen": "2026-10-25T11:45:29Z", "last_seen": "2026-10-25T21:12:16Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "7bc02c313214", "title": "Youssef Siher detained over Hamas financing links", "first_seen": "2026-10-25T13:45:27Z", "last_seen": "2026-10-25T21:12:16Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "7bc02c313214", "title": "Youssef Siher detained over Hamas financing links", "first_seen": "2026-10-25T13:45:27Z", "last_seen": "2026-10-26T08:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "0e7495957c9c", "title": "Israel holds election amid Gaza war aftermath", "first_seen": "2026-10-25T14:32:57Z", "last_seen": "2026-10-26T07:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "6f2ee5cbc705", "title": "Bread shortage worsens in Gaza", "first_seen": "2026-10-25T14:45:27Z", "last_seen": "2026-10-25T17:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "5e8b07b7d8c2", "title": "Adam Brody accuses Israel of genocide", "first_seen": "2026-10-25T15:45:28Z", "last_seen": "2026-10-25T15:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -301,3 +301,5 @@
 {"id": "1654a508e0aa", "title": "Israel holds surprise-attack drill amid 1973 warning", "first_seen": "2026-10-26T01:39:10Z", "last_seen": "2026-10-26T01:39:10Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "87ca55002cef", "title": "Packer payment tied to Netanyahu's corruption case lawyers", "first_seen": "2026-10-26T01:39:10Z", "last_seen": "2026-10-26T06:05:39Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "e385c8cfdb9a", "title": "Settlers seek to resettle ruined Gaza", "first_seen": "2026-10-26T05:45:28Z", "last_seen": "2026-10-26T08:05:33Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "ad62d961ddf6", "title": "Olmert says Israel returning to normalcy", "first_seen": "2026-10-26T08:45:27Z", "last_seen": "2026-10-26T08:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "fe339eed54d4", "title": "Netanyahu's controversial election social media posts", "first_seen": "2026-10-26T08:45:27Z", "last_seen": "2026-10-26T08:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
