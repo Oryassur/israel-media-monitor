@@ -163,7 +163,7 @@
 {"id": "32fca715dd6f", "title": "Susan Sarandon and Elly Schlein discuss Gaza", "first_seen": "2026-10-13T14:45:32Z", "last_seen": "2026-10-13T14:45:32Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "ce949cc77bb5", "title": "Israelis debate airing criticism abroad", "first_seen": "2026-10-13T16:45:27Z", "last_seen": "2026-10-13T16:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "54a1a831af7b", "title": "Jewish educators told to condemn Israel at conference", "first_seen": "2026-10-14T04:45:27Z", "last_seen": "2026-10-14T04:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "492856ec03d4", "title": "Bereaved general considered for Israeli leadership", "first_seen": "2026-10-14T07:31:17Z", "last_seen": "2026-10-26T17:45:34Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "492856ec03d4", "title": "Bereaved general considered for Israeli leadership", "first_seen": "2026-10-14T07:31:17Z", "last_seen": "2026-10-26T21:45:30Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "9d03273176e5", "title": "UN report on sexual violence in Gaza camps", "first_seen": "2026-10-14T07:31:17Z", "last_seen": "2026-10-14T07:31:17Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "cc609c457aca", "title": "Gaza donkey prices surge amid war", "first_seen": "2026-10-14T07:59:42Z", "last_seen": "2026-10-14T07:59:42Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "bfd8d50251d6", "title": "Pro-Palestinian protest group's terrorism ties probed", "first_seen": "2026-10-14T09:45:26Z", "last_seen": "2026-10-14T09:45:26Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -269,7 +269,7 @@
 {"id": "436418e30913", "title": "Israel orders West Bank lockdown after attack", "first_seen": "2026-10-23T09:59:21Z", "last_seen": "2026-10-25T03:45:33Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "50e96d0b6df0", "title": "Gaza rebuilding halted amid material restrictions", "first_seen": "2026-10-23T10:45:29Z", "last_seen": "2026-10-23T10:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "f36e8dca1153", "title": "Özil compares Israel to Russia", "first_seen": "2026-10-23T11:45:31Z", "last_seen": "2026-10-23T11:45:31Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "6f14d2b5958a", "title": "Netanyahu announces West Bank military operation", "first_seen": "2026-10-23T12:45:27Z", "last_seen": "2026-10-25T16:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "6f14d2b5958a", "title": "Netanyahu announces West Bank military operation", "first_seen": "2026-10-23T12:45:27Z", "last_seen": "2026-10-26T21:45:30Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "61fcca0db889", "title": "Israeli soldiers kill Hamas terrorists in West Bank", "first_seen": "2026-10-23T17:45:32Z", "last_seen": "2026-10-23T17:45:32Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "67e07f39f26e", "title": "Arab-run radio station in Israel profiled", "first_seen": "2026-10-23T20:45:29Z", "last_seen": "2026-10-26T17:45:34Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "f6b427c6c72c", "title": "Complaint alleges Israeli firms misled on settlements", "first_seen": "2026-10-23T23:45:30Z", "last_seen": "2026-10-24T03:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -317,7 +317,8 @@
 {"id": "d0bd8490b966", "title": "Gaza deaths; Israel accused of West Bank extermination", "first_seen": "2026-10-26T17:45:34Z", "last_seen": "2026-10-26T20:43:52Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "cfb23c040946", "title": "Montreal drops charges against pro-Palestinian protesters", "first_seen": "2026-10-26T18:45:28Z", "last_seen": "2026-10-26T18:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "a2fa4f7156a3", "title": "Israeli military denies feud with Netanyahu", "first_seen": "2026-10-26T19:13:37Z", "last_seen": "2026-10-26T19:13:37Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "425b494cba63", "title": "PAC ad on Israel aid sparks dispute", "first_seen": "2026-10-26T19:45:28Z", "last_seen": "2026-10-26T19:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "425b494cba63", "title": "PAC ad on Israel aid sparks dispute", "first_seen": "2026-10-26T19:45:28Z", "last_seen": "2026-10-26T21:45:30Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "68ad0c1d56e8", "title": "Russian-speaking Israelis eye election opportunity", "first_seen": "2026-10-26T20:43:52Z", "last_seen": "2026-10-26T20:43:52Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "b57c510de0c0", "title": "Expat Israelis could influence election outcome", "first_seen": "2026-10-26T20:43:52Z", "last_seen": "2026-10-26T20:43:52Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "2208c8f1f0de", "title": "UN commission accuses Israel of Gaza genocide", "first_seen": "2026-10-26T20:43:52Z", "last_seen": "2026-10-26T20:43:52Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "2208c8f1f0de", "title": "UN commission accuses Israel of Gaza genocide", "first_seen": "2026-10-26T20:43:52Z", "last_seen": "2026-10-26T21:45:30Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "7cc33665ade9", "title": "Macklemore launches Free Palestine concert tour", "first_seen": "2026-10-26T21:45:30Z", "last_seen": "2026-10-26T21:45:30Z", "model": "claude-sonnet-5", "cv": "c1"}
