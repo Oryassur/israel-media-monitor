@@ -258,7 +258,7 @@
 {"id": "919d87ace845", "title": "Commentary on Obama, Omar, and settler violence", "first_seen": "2026-10-21T20:05:53Z", "last_seen": "2026-10-21T20:05:53Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "53ab58339104", "title": "US political parties' stance on Israel debated", "first_seen": "2026-10-21T21:45:31Z", "last_seen": "2026-10-22T05:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "e399faf86039", "title": "AIPAC shifts fundraising amid voter frustration", "first_seen": "2026-10-21T22:44:52Z", "last_seen": "2026-10-23T07:45:35Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "f0ff5ee73edb", "title": "US and Israel plan renewed strikes on Iran", "first_seen": "2026-10-21T23:16:59Z", "last_seen": "2026-10-24T01:33:44Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "f0ff5ee73edb", "title": "US and Israel plan renewed strikes on Iran", "first_seen": "2026-10-21T23:16:59Z", "last_seen": "2026-10-26T13:45:31Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "1f87ad28024a", "title": "Israeli recognition of Somaliland examined", "first_seen": "2026-10-22T09:45:29Z", "last_seen": "2026-10-22T11:45:32Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "1d1bd7689950", "title": "Palestine Action promotes violence in US", "first_seen": "2026-10-22T09:45:29Z", "last_seen": "2026-10-22T11:45:32Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "6fc598334998", "title": "Ultra-Orthodox city voting follows rabbis' guidance", "first_seen": "2026-10-22T14:45:30Z", "last_seen": "2026-10-22T14:45:30Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -306,6 +306,7 @@
 {"id": "dec1434711f9", "title": "Netanyahu backs Argentina's Falklands claim", "first_seen": "2026-10-26T09:45:32Z", "last_seen": "2026-10-26T09:45:32Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "c7f21ed3b80e", "title": "Commentary on Israeli democracy perceptions abroad", "first_seen": "2026-10-26T09:45:32Z", "last_seen": "2026-10-26T09:45:32Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "39ff94cf37f1", "title": "Netanyahu advisor's ties to German CDU probed", "first_seen": "2026-10-26T11:45:30Z", "last_seen": "2026-10-26T11:45:30Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "a802de73387b", "title": "Italian communist's Hamas remark embarrasses Schlein", "first_seen": "2026-10-26T11:45:30Z", "last_seen": "2026-10-26T11:45:30Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "a802de73387b", "title": "Italian communist's Hamas remark embarrasses Schlein", "first_seen": "2026-10-26T11:45:30Z", "last_seen": "2026-10-26T13:45:31Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "f6d797e091f4", "title": "Israeli minister proposes resettling Palestinians to Europe", "first_seen": "2026-10-26T12:45:30Z", "last_seen": "2026-10-26T12:45:30Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "ed9afee671f8", "title": "Israel Philharmonic head criticizes Netanyahu government", "first_seen": "2026-10-26T12:56:32Z", "last_seen": "2026-10-26T12:56:32Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "5b152204bcae", "title": "American Jews emigrate to Israel ahead of election", "first_seen": "2026-10-26T13:45:31Z", "last_seen": "2026-10-26T13:45:31Z", "model": "claude-sonnet-5", "cv": "c1"}
