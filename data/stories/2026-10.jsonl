@@ -302,7 +302,7 @@
 {"id": "87ca55002cef", "title": "Packer payment tied to Netanyahu's corruption case lawyers", "first_seen": "2026-10-26T01:39:10Z", "last_seen": "2026-10-26T14:45:30Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "e385c8cfdb9a", "title": "Settlers seek to resettle ruined Gaza", "first_seen": "2026-10-26T05:45:28Z", "last_seen": "2026-10-26T08:05:33Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "ad62d961ddf6", "title": "Olmert says Israel returning to normalcy", "first_seen": "2026-10-26T08:45:27Z", "last_seen": "2026-10-26T08:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "fe339eed54d4", "title": "Netanyahu's controversial election social media posts", "first_seen": "2026-10-26T08:45:27Z", "last_seen": "2026-10-26T10:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "fe339eed54d4", "title": "Netanyahu's controversial election social media posts", "first_seen": "2026-10-26T08:45:27Z", "last_seen": "2026-10-28T01:16:06Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "dec1434711f9", "title": "Netanyahu backs Argentina's Falklands claim", "first_seen": "2026-10-26T09:45:32Z", "last_seen": "2026-10-26T09:45:32Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "c7f21ed3b80e", "title": "Commentary on Israeli democracy perceptions abroad", "first_seen": "2026-10-26T09:45:32Z", "last_seen": "2026-10-27T11:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "39ff94cf37f1", "title": "Netanyahu advisor's ties to German CDU probed", "first_seen": "2026-10-26T11:45:30Z", "last_seen": "2026-10-26T11:45:30Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -333,4 +333,4 @@
 {"id": "4f851bd12ab4", "title": "Netherlands to boycott Eurovision over Israel", "first_seen": "2026-10-27T13:32:25Z", "last_seen": "2026-10-27T13:32:25Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "188f2e57b924", "title": "Greta Thunberg links climate and Gaza activism", "first_seen": "2026-10-27T18:45:40Z", "last_seen": "2026-10-27T18:45:40Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "54cc766eeda6", "title": "Netanyahu's bid to extend voting hours denied", "first_seen": "2026-10-27T18:56:00Z", "last_seen": "2026-10-27T21:16:32Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "2f0922f5c6d8", "title": "Israeli election exit polls show no clear winner", "first_seen": "2026-10-27T21:16:32Z", "last_seen": "2026-10-28T00:45:30Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "2f0922f5c6d8", "title": "Israeli election exit polls show no clear winner", "first_seen": "2026-10-27T21:16:32Z", "last_seen": "2026-10-28T01:16:06Z", "model": "claude-sonnet-5", "cv": "c1"}
