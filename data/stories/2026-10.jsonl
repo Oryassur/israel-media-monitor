@@ -197,7 +197,7 @@
 {"id": "915b13ccbdf4", "title": "Jonathan Glazer criticizes Israel's retaliation", "first_seen": "2026-10-16T12:22:24Z", "last_seen": "2026-10-16T12:22:24Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "19cf66fd1e49", "title": "Two years since Yahya Sinwar's death", "first_seen": "2026-10-16T12:22:24Z", "last_seen": "2026-10-16T12:22:24Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "984c6874190e", "title": "Settler attack injures journalist during West Bank olive harvest", "first_seen": "2026-10-16T13:45:27Z", "last_seen": "2026-10-25T15:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "85616bd55171", "title": "Ultra-Orthodox military service debate in Israel", "first_seen": "2026-10-16T14:45:27Z", "last_seen": "2026-10-24T23:40:15Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "85616bd55171", "title": "Ultra-Orthodox military service debate in Israel", "first_seen": "2026-10-16T14:45:27Z", "last_seen": "2026-10-29T09:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "5b4c98e08598", "title": "DSA plans to block Israel weapons shipments", "first_seen": "2026-10-16T15:45:28Z", "last_seen": "2026-10-16T15:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "b1c56202c283", "title": "Outrage over advisor's wife supporting Palestine Action", "first_seen": "2026-10-16T15:45:28Z", "last_seen": "2026-10-16T20:45:25Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "ac76aec7b92a", "title": "Opinion on Trump and Netanyahu's political survival", "first_seen": "2026-10-16T18:45:26Z", "last_seen": "2026-10-29T07:00:04Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -333,7 +333,7 @@
 {"id": "4f851bd12ab4", "title": "Netherlands to boycott Eurovision over Israel", "first_seen": "2026-10-27T13:32:25Z", "last_seen": "2026-10-27T13:32:25Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "188f2e57b924", "title": "Greta Thunberg links climate and Gaza activism", "first_seen": "2026-10-27T18:45:40Z", "last_seen": "2026-10-27T18:45:40Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "54cc766eeda6", "title": "Netanyahu's bid to extend voting hours denied", "first_seen": "2026-10-27T18:56:00Z", "last_seen": "2026-10-27T21:16:32Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "2f0922f5c6d8", "title": "Israeli election exit polls show no clear winner", "first_seen": "2026-10-27T21:16:32Z", "last_seen": "2026-10-29T08:45:32Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "2f0922f5c6d8", "title": "Israeli election exit polls show no clear winner", "first_seen": "2026-10-27T21:16:32Z", "last_seen": "2026-10-29T09:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "309d078f6eb3", "title": "NY governor race ties to Israel stance", "first_seen": "2026-10-28T02:33:37Z", "last_seen": "2026-10-28T03:45:32Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "b34f3c00e695", "title": "Attacker killed outside Israeli embassy in Serbia", "first_seen": "2026-10-28T08:21:54Z", "last_seen": "2026-10-28T12:45:31Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "d7454b079f7e", "title": "Gaza refugee children barred from Alberta schools", "first_seen": "2026-10-28T15:45:33Z", "last_seen": "2026-10-28T15:45:33Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -343,3 +343,4 @@
 {"id": "45a92ffe9839", "title": "Nithya Raman faces backlash over Israel boycott stance", "first_seen": "2026-10-28T22:45:32Z", "last_seen": "2026-10-28T22:45:32Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "23b3ac3b4484", "title": "Eralp fears Israel-haters controversy", "first_seen": "2026-10-29T06:45:28Z", "last_seen": "2026-10-29T06:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "74b5c6245d3c", "title": "Call for German politician to sign Israel pledge", "first_seen": "2026-10-29T07:38:55Z", "last_seen": "2026-10-29T07:38:55Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "cdc606798bc4", "title": "Trump may intervene in Israeli coalition talks", "first_seen": "2026-10-29T09:45:29Z", "last_seen": "2026-10-29T09:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
