@@ -282,7 +282,7 @@
 {"id": "5a85eb2c6308", "title": "Israel demolishes homes in West Bank crackdown", "first_seen": "2026-10-24T20:45:28Z", "last_seen": "2026-10-25T06:03:09Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "776506af951a", "title": "Nadia Sawalha sues ITV over pro-Palestine views", "first_seen": "2026-10-25T03:45:33Z", "last_seen": "2026-10-25T03:45:33Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "797c8730fa4d", "title": "Israel closes West Bank crossings for election day", "first_seen": "2026-10-25T05:45:27Z", "last_seen": "2026-10-27T07:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "0b5ed14ee6ff", "title": "Arab minority's political awakening in Israel", "first_seen": "2026-10-25T10:06:26Z", "last_seen": "2026-10-29T11:45:34Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "0b5ed14ee6ff", "title": "Arab minority's political awakening in Israel", "first_seen": "2026-10-25T10:06:26Z", "last_seen": "2026-10-29T15:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "5903ac370a46", "title": "El Salvador denies hostage bodies found in Haiti", "first_seen": "2026-10-25T11:17:36Z", "last_seen": "2026-10-25T11:17:36Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "0fa9597ca5c7", "title": "Protesters storm Roman Colosseum with Palestinian flags", "first_seen": "2026-10-25T11:45:29Z", "last_seen": "2026-10-25T21:12:16Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "7bc02c313214", "title": "Youssef Siher detained over Hamas financing links", "first_seen": "2026-10-25T13:45:27Z", "last_seen": "2026-10-29T11:45:34Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -349,3 +349,4 @@
 {"id": "36d2f5e61036", "title": "German opinion urges policy shift if Netanyahu wins", "first_seen": "2026-10-29T14:11:48Z", "last_seen": "2026-10-29T14:11:48Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "3b26b1ce32d7", "title": "Italian judge's Gaza appeal sparks controversy", "first_seen": "2026-10-29T14:11:48Z", "last_seen": "2026-10-29T14:11:48Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "bc8f14bea524", "title": "DSA blocked from West Bank school visit", "first_seen": "2026-10-29T14:45:33Z", "last_seen": "2026-10-29T14:45:33Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "fc3bf42b75d3", "title": "Analysis of Netanyahu's election victory tactics", "first_seen": "2026-10-29T15:45:29Z", "last_seen": "2026-10-29T15:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
