@@ -227,7 +227,7 @@
 {"id": "355254299146", "title": "Israelis and Jews in UAE face insecurity", "first_seen": "2026-10-19T10:45:29Z", "last_seen": "2026-10-19T10:45:29Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "ad46bbb9236f", "title": "Gaza teacher threatened for refusing to teach hatred", "first_seen": "2026-10-19T11:13:04Z", "last_seen": "2026-10-19T11:13:04Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "02bd2509f6f1", "title": "Analysis of settler influence on West Bank policy", "first_seen": "2026-10-19T13:45:32Z", "last_seen": "2026-10-27T14:45:28Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "ffe32922fcad", "title": "Arab candidate could help oust Netanyahu", "first_seen": "2026-10-19T14:45:34Z", "last_seen": "2026-10-30T08:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "ffe32922fcad", "title": "Arab candidate could help oust Netanyahu", "first_seen": "2026-10-19T14:45:34Z", "last_seen": "2026-10-30T22:45:31Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "bcb8f8036e2a", "title": "Opinion on state of Palestinian cause", "first_seen": "2026-10-19T15:32:42Z", "last_seen": "2026-10-19T15:32:42Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "8f008ebf2967", "title": "Calgary Opera performer replaced over Palestinian flag", "first_seen": "2026-10-19T20:45:34Z", "last_seen": "2026-10-20T00:45:26Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "3381feb651eb", "title": "Man arrested for running over Australian MP", "first_seen": "2026-10-19T23:45:28Z", "last_seen": "2026-10-20T02:45:31Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -359,3 +359,4 @@
 {"id": "ca05b0c07014", "title": "Accusations target Netanyahu's election campaign tactics", "first_seen": "2026-10-30T14:45:32Z", "last_seen": "2026-10-30T14:45:32Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "56bfa0ae855b", "title": "Palestine Action activists defy DOJ subpoenas", "first_seen": "2026-10-30T16:45:32Z", "last_seen": "2026-10-30T16:45:32Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "68fa25b2896b", "title": "Met Police to arrest Palestine Action protesters", "first_seen": "2026-10-30T18:49:32Z", "last_seen": "2026-10-30T18:49:32Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "5a66d3c8260a", "title": "Italian commentary on police and Gaza protests", "first_seen": "2026-10-30T22:45:31Z", "last_seen": "2026-10-30T22:45:31Z", "model": "claude-sonnet-5", "cv": "c1"}
