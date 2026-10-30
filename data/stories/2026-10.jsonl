@@ -262,7 +262,7 @@
 {"id": "1f87ad28024a", "title": "Israeli recognition of Somaliland examined", "first_seen": "2026-10-22T09:45:29Z", "last_seen": "2026-10-22T11:45:32Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "1d1bd7689950", "title": "Palestine Action promotes violence in US", "first_seen": "2026-10-22T09:45:29Z", "last_seen": "2026-10-22T11:45:32Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "6fc598334998", "title": "Ultra-Orthodox city voting follows rabbis' guidance", "first_seen": "2026-10-22T14:45:30Z", "last_seen": "2026-10-22T14:45:30Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "d2a4215ea16d", "title": "Israeli opposition unites to defeat Netanyahu", "first_seen": "2026-10-22T21:45:35Z", "last_seen": "2026-10-30T06:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "d2a4215ea16d", "title": "Israeli opposition unites to defeat Netanyahu", "first_seen": "2026-10-22T21:45:35Z", "last_seen": "2026-10-30T19:18:03Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "a17f9650b3b9", "title": "Netanyahu uses AI video in campaign", "first_seen": "2026-10-23T07:45:35Z", "last_seen": "2026-10-23T07:45:35Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "1063b2abbb8c", "title": "Shooting attack injures Israelis in West Bank", "first_seen": "2026-10-23T07:54:30Z", "last_seen": "2026-10-25T10:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "5c616c10c443", "title": "Young Israelis reflect on trauma and future", "first_seen": "2026-10-23T09:45:39Z", "last_seen": "2026-10-27T21:16:32Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -352,7 +352,7 @@
 {"id": "fc3bf42b75d3", "title": "Analysis of Netanyahu's election victory tactics", "first_seen": "2026-10-29T15:45:29Z", "last_seen": "2026-10-30T18:45:31Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "6cd145463d4e", "title": "Berlin mayoral candidate fears pro-Hamas backlash", "first_seen": "2026-10-29T17:45:31Z", "last_seen": "2026-10-29T17:45:31Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "1c9b2072d391", "title": "Polymarket probes bets on Israeli election", "first_seen": "2026-10-29T23:45:32Z", "last_seen": "2026-10-29T23:45:32Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "3d49b125acd8", "title": "Pelosi criticizes progressive Democrats over Israel stance", "first_seen": "2026-10-30T00:45:27Z", "last_seen": "2026-10-30T16:45:32Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "3d49b125acd8", "title": "Pelosi criticizes progressive Democrats over Israel stance", "first_seen": "2026-10-30T00:45:27Z", "last_seen": "2026-10-30T19:18:03Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "504fab88e48b", "title": "Trump associates hoped for Netanyahu defeat", "first_seen": "2026-10-30T05:45:30Z", "last_seen": "2026-10-30T05:45:30Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "49ff27daad82", "title": "Italian trial sought for Hamas financing case", "first_seen": "2026-10-30T08:45:27Z", "last_seen": "2026-10-30T08:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "6fb8fa53031b", "title": "Netanyahu's bloc loses majority in election results", "first_seen": "2026-10-30T12:45:27Z", "last_seen": "2026-10-30T17:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
