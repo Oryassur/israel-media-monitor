@@ -258,7 +258,7 @@
 {"id": "919d87ace845", "title": "Commentary on Obama, Omar, and settler violence", "first_seen": "2026-10-21T20:05:53Z", "last_seen": "2026-10-21T20:05:53Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "53ab58339104", "title": "US political parties' stance on Israel debated", "first_seen": "2026-10-21T21:45:31Z", "last_seen": "2026-10-22T05:45:27Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "e399faf86039", "title": "AIPAC shifts fundraising amid voter frustration", "first_seen": "2026-10-21T22:44:52Z", "last_seen": "2026-10-23T07:45:35Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "f0ff5ee73edb", "title": "US and Israel plan renewed strikes on Iran", "first_seen": "2026-10-21T23:16:59Z", "last_seen": "2026-10-28T18:45:32Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "f0ff5ee73edb", "title": "US and Israel plan renewed strikes on Iran", "first_seen": "2026-10-21T23:16:59Z", "last_seen": "2026-10-31T12:16:18Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "1f87ad28024a", "title": "Israeli recognition of Somaliland examined", "first_seen": "2026-10-22T09:45:29Z", "last_seen": "2026-10-22T11:45:32Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "1d1bd7689950", "title": "Palestine Action promotes violence in US", "first_seen": "2026-10-22T09:45:29Z", "last_seen": "2026-10-22T11:45:32Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "6fc598334998", "title": "Ultra-Orthodox city voting follows rabbis' guidance", "first_seen": "2026-10-22T14:45:30Z", "last_seen": "2026-10-22T14:45:30Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -362,3 +362,4 @@
 {"id": "5a66d3c8260a", "title": "Italian commentary on police and Gaza protests", "first_seen": "2026-10-30T22:45:31Z", "last_seen": "2026-10-30T22:45:31Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "7ab5deb05ea7", "title": "Iran braces for potential future conflict", "first_seen": "2026-10-31T10:45:36Z", "last_seen": "2026-10-31T10:45:36Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "99dc639c040c", "title": "Ex-Palestine supporter criticizes pro-Palestine movement", "first_seen": "2026-10-31T11:45:40Z", "last_seen": "2026-10-31T11:45:40Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "a4973fba9a55", "title": "Iran and Hamas channels cheer riots", "first_seen": "2026-10-31T12:16:18Z", "last_seen": "2026-10-31T12:16:18Z", "model": "claude-sonnet-5", "cv": "c1"}
