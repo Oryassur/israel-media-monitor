@@ -248,8 +248,14 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   Headlines use `ht` (translation) when present, clamped to 3 lines. `+ N news sites` opens `#bundleDlg` (every headline
   plus the bloc grid); the old inline `#frontExpand` panel is gone. The lead image carries the plain
   `sentChip` (the bundle mean), **not** the compound chip: the lean rows state each bloc's framing
-  and bar height stood for prominence weight, which the card no longer prints. The side rows keep
-  `blocChip`, since their bars are the only bloc reading they have. The lead image cross-fades
+  and bar height stood for prominence weight, which the card no longer prints. The side rows (stories 2-4, 2026-11-05)
+  follow the lead: same kicker, the cluster title as the headline, and one quoted article in the
+  lead's row format. With a single quote the left column states the **whole story** — its mean plus
+  `blocMark` — rather than a lean, and the picture carries no chip at all
+  (`imageBox(..., withChip=false)`). The quote is `voiceFor({f: b.sent}, b.items)`: the same
+  typicality rule as a lean row, applied story-wide. `.vb` is 19px, not 18, because border-box plus
+  the 1px baseline rule would otherwise leave a 17px content area for the 18px scale `blocMark`
+  draws to. The lead image cross-fades
   through up to three outlets' photographs from the story (`leadImage`, pure CSS; a
   `prefers-reduced-motion` viewer sees only the first frame) and carries **no outlet credit** —
   the card speaks for the bundle, so crediting one outlet would imply its lean over the rest, and

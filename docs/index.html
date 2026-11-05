@@ -244,6 +244,17 @@ a{color:inherit}
 .voice .att .badge{vertical-align:-3px}
 .voice .att .logo{width:62px;height:13px}
 .voice .att .more{font-size:11.5px}
+/* a side card's single row: the left column states the whole story — its mean and
+   the three blocs — because the picture no longer carries either */
+.voices.one{border-top:0;margin-top:2px}
+.voices.one .voice{border-bottom:0;padding:0}
+.voices.one .wmcol{gap:5px}
+.srow .hl.agg{font-size:16.5px;line-height:1.22;margin:0 0 7px}
+.srow .voice .tx{font-size:13px}
+/* blocMark draws to an 18px scale, so the side rows keep it rather than shrinking
+   the box out from under the bars */
+.srow .wmcol{flex:0 0 58px;width:58px}
+.srow .bsc{font-size:12.5px;padding:1px 7px}
 .voice .tx.none{color:var(--muted);font-style:italic}
 /* the lead image cross-fades through up to three outlets' photographs */
 .rot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -371,7 +382,9 @@ svg text.ann{font-size:11px}
    Height is the bloc's share of the story's attention normalised to its own largest
    bloc; colour is that bloc's framing. A bloc that never carried the story draws no
    bar at all — just a tick on the baseline. */
-.vb{display:flex;align-items:flex-end;gap:2px;height:18px;flex:0 0 auto;
+/* 19px, not 18: border-box plus the 1px baseline rule would otherwise leave a
+   17px content area for the 18px scale blocMark draws to */
+.vb{display:flex;align-items:flex-end;gap:2px;height:19px;flex:0 0 auto;
   border-bottom:1px solid var(--baseline);cursor:default}
 .vb span{display:block;width:6px;min-height:3px;border-radius:1.5px 1.5px 0 0}
 .vb span.off{min-height:0;height:0;border-radius:0;border-bottom:2px solid var(--dv-n2)}
@@ -762,6 +775,11 @@ footer li b{color:var(--ink2);font-weight:600}
 
     <h3>Changelog</h3>
     <ul>
+      <li><b>2026-11-05 · stories two to four.</b> The three cards beside the lead now follow it:
+        outlet count and start date above, the story's own title as the headline, and one quoted
+        article naming its placement and outlet underneath. Because there is only one quote, the
+        figure beside it is the whole story's mean rather than any one bloc's, with the three lean
+        bars next to it — both moved off the photograph, which now carries no chip.</li>
       <li><b>2026-11-05 · lead image.</b> The sentiment chip on the lead photograph is the story's
         mean again, without the three bars: the lean rows underneath now state each bloc's framing,
         and the bars' height stood for prominence weight, which the card no longer shows.</li>
@@ -1882,10 +1900,14 @@ function topBundles(list,n){
   return bundles.slice(0,n);
 }
 
-function imageBox(cls,it,src,sent,mean=true,S=null){
+function imageBox(cls,it,src,sent,mean=true,S=null,withChip=true){
   const box=document.createElement("div");box.className=cls;
-  // a bundle card carries the compound chip (mean + blocs); a single article keeps the plain one
-  const chip=S?blocChip(sent,S):sentChip(sent,mean);chip.classList.add("ov");
+  // a bundle card carries the compound chip (mean + blocs); a single article keeps
+  // the plain one; withChip=false is a bare picture, for cards that carry the
+  // figure in the row instead
+  const chip=!withChip?document.createComment("")
+    :S?blocChip(sent,S):sentChip(sent,mean);
+  if(chip.nodeType===1)chip.classList.add("ov");
   const fallback=()=>{box.innerHTML="";box.classList.add("noimg");box.appendChild(logoEl(src));box.appendChild(chip)};
   if(it.img){
     const im=document.createElement("img");im.alt="";im.loading="eager";im.decoding="async";im.referrerPolicy="no-referrer";
@@ -2021,6 +2043,39 @@ function voiceLine(bloc,it,b){
   body.appendChild(att);row.appendChild(body);
   return row;
 }
+// A side card has room for one quote, so its row stands for the whole story: the
+// left column carries the story's own mean and the three-bloc mark (the lean and
+// attention reading that used to sit on the picture). The quote itself is picked
+// by the lead's rule applied story-wide — the best-placed headline whose score
+// matches where the story's mean sits, never an outright opinion piece.
+function storyVoiceEl(b){
+  const wrap=document.createElement("div");wrap.className="voices one";
+  const it=voiceFor({f:b.sent}, b.items);
+  const row=document.createElement("div");row.className="voice";
+  const col=document.createElement("span");col.className="wmcol";
+  const sc=sentChip(b.sent,true);sc.classList.add("bsc");
+  sc.title="Mean framing across all "+b.items.length+" headlines";
+  col.appendChild(sc);col.appendChild(blocMark(b.S));
+  row.appendChild(col);
+  const body=document.createElement("span");body.className="vbody";
+  const a=document.createElement("a");a.className="tx";a.href=it.u;a.target="_blank";a.rel="noopener";
+  const full=it.ht||it.h;a.textContent=full;a.title=it.ht?it.h:full;
+  body.appendChild(a);
+  const att=document.createElement("span");att.className="att";
+  att.append(document.createTextNode(placementOf(it)+" at "),srcBadge(it.src));
+  const more=b.nSources-1;
+  if(more>0){
+    const btn=document.createElement("button");btn.type="button";btn.className="more";
+    btn.textContent=`+ ${more} more site${more===1?"":"s"}`;
+    btn.title=`All ${b.items.length} headlines in this story`;
+    btn.setAttribute("aria-haspopup","dialog");
+    btn.onclick=()=>openBundle(b);
+    att.appendChild(btn);
+  }
+  body.appendChild(att);row.appendChild(body);
+  wrap.appendChild(row);
+  return wrap;
+}
 function voicesEl(b){
   const wrap=document.createElement("div");wrap.className="voices";
   for(const {bloc,it} of pickVoices(b))wrap.appendChild(voiceLine(bloc,it,b));
@@ -2083,10 +2138,15 @@ function renderFront(list){
   lead.appendChild(bundleMeta(b,false,false));  // credit and count now live on each lean row
   for(const sb of bundles.slice(1)){
     const row=document.createElement("div");row.className="srow";
-    row.appendChild(imageBox("th",sb.card,SRC[sb.card.src]||{display:sb.card.src},sb.sent,true,sb.S));
+    // no chip on the picture: the figure and the blocs sit in the row below it
+    row.appendChild(imageBox("th",sb.card,SRC[sb.card.src]||{display:sb.card.src},
+                             sb.sent,true,null,false));
     const body=document.createElement("div");
-    body.appendChild(kickerEl(sb.title));body.appendChild(headlineEl(sb.card));
-    body.appendChild(bundleMeta(sb));
+    const since=(STORIES[sb.st]||{}).fs;
+    body.appendChild(kickerEl(`${sb.nSources} outlet${sb.nSources>1?"s":""}`
+      +(since?` · since ${fmtSince(since)}`:"")));
+    body.appendChild(storyTitleEl(sb));
+    body.appendChild(storyVoiceEl(sb));
     row.appendChild(body);side.appendChild(row);
   }
 }
