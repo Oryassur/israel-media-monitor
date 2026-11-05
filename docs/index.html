@@ -235,10 +235,15 @@ a{color:inherit}
 /* the lead card's three quoted outlets. The wordmark sits in a fixed column so
    all three headlines start on the same left edge; each is clamped to 3 lines. */
 .voices{border-top:1px solid var(--grid);margin:10px 0 0}
-.voice .wmcol{flex:0 0 76px;width:76px}
-.voice .wmcol .badge{display:block}
-.voice .ln{display:block;text-align:center;margin-top:3px;font:700 9px/1.2 var(--font-ui);
-  letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-variant-numeric:tabular-nums}
+.voice .wmcol{flex:0 0 76px;width:76px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.voice .ln{font:700 9.5px/1.2 var(--font-ui);letter-spacing:.09em;text-transform:uppercase;
+  color:var(--muted)}
+.voice .bsc{font-size:13px;padding:1px 8px}
+.voice .vbody{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+.voice .att{font-size:11.5px;color:var(--muted);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.voice .att .badge{vertical-align:-3px}
+.voice .att .logo{width:62px;height:13px}
+.voice .att .more{font-size:11.5px}
 .voice .tx.none{color:var(--muted);font-style:italic}
 /* the lead image cross-fades through up to three outlets' photographs */
 .rot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -250,12 +255,12 @@ a{color:inherit}
 @keyframes rot3c{0%,62%{opacity:0}66%,95%{opacity:1}100%{opacity:0}}
 @media (prefers-reduced-motion:reduce){.rot img.l2,.rot img.l3{animation:none;opacity:0}}
 .voice{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--grid)}
-.voice .logo{width:76px;height:15px}
+
 .voice .tx{flex:1;min-width:0;font:400 13.5px/1.38 var(--font-ui);color:var(--ink);
   text-decoration:none;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;
   overflow:hidden;overflow-wrap:anywhere}
 .voice .tx:hover{text-decoration:underline}
-.voice .vsc{flex:0 0 auto;margin-top:1px}
+
 /* the aggregating title is the hero now; three lines at most */
 .hl.agg{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 /* every headline in the story, as an overlay */
@@ -757,6 +762,10 @@ footer li b{color:var(--ink2);font-weight:600}
 
     <h3>Changelog</h3>
     <ul>
+      <li><b>2026-11-05 · lean rows.</b> Each row on the lead card now stands for a lean bloc rather
+        than for one article: the figure beside the lean is that bloc's own mean framing — the same
+        number its bar is coloured by — and the quoted headline names its outlet and placement
+        underneath, with how many more outlets in that bloc carried the story.</li>
       <li><b>2026-11-05 · top stories.</b> The lead card leads with the story, not with one paper.
         The aggregating title is the headline, the kicker counts the outlets and dates the story, and
         one outlet from each of the three leans is quoted underneath in its own words, heaviest bloc
@@ -1890,18 +1899,21 @@ const peakRank=it=>it.r!=null?it.r:it.w>=10?1:it.w>=5?5:it.w>=3?10:20;
 const posLabel=it=>{const r=peakRank(it);return r===1?"Top story":r<=5?"Top 5":r<=10?"Top 10":"Top 20"};
 const placementOf=it=>{const r=it.r!=null?it.r:it.w>=10?1:it.w>=5?5:it.w>=3?10:20;
   return r===1?"The top story":r<=5?"A top-5 story":r<=10?"A top-10 story":"A top-20 story"};
-function bundleMeta(b,credit=true){
+function bundleMeta(b,credit=true,count=true){
   const meta=document.createElement("div");meta.className="meta";
   const l=document.createElement("span");l.className="l";
   if(credit)l.append(document.createTextNode(placementOf(b.card)+" at "),srcBadge(b.card.src));
-  const others=b.nSources-1;
-  // "+ N news sites" opens the bundle's headline list in the shared row under the unit
-  const btn=document.createElement("button");btn.type="button";btn.className="more";
-  btn.textContent=others>0?`+ ${others} news site${others===1?"":"s"}`:`${b.items.length} headline${b.items.length===1?"":"s"}`;
-  btn.title=`All ${b.items.length} headlines in this story`;
-  btn.setAttribute("aria-haspopup","dialog");
-  btn.onclick=()=>openBundle(b);
-  l.appendChild(btn);
+  if(count){
+    // "+ N news sites" opens every headline in the story. The lead card passes
+    // count=false — there the count sits on each lean row instead.
+    const others=b.nSources-1;
+    const btn=document.createElement("button");btn.type="button";btn.className="more";
+    btn.textContent=others>0?`+ ${others} news site${others===1?"":"s"}`:`${b.items.length} headline${b.items.length===1?"":"s"}`;
+    btn.title=`All ${b.items.length} headlines in this story`;
+    btn.setAttribute("aria-haspopup","dialog");
+    btn.onclick=()=>openBundle(b);
+    l.appendChild(btn);
+  }
   const r=document.createElement("span");r.className="r";r.textContent=fmtWhen(b.card.fs);
   meta.append(l,r);
   return meta;
@@ -1965,13 +1977,22 @@ function pickVoices(b){
 }
 // one quoted outlet: wordmark over its lean and that bloc's weight, so a row the
 // reader meets out of L-C-R order still maps onto the bar above it
-function voiceLine(bloc,it){
+// A row stands for a lean bloc, not for one article. So the left column carries
+// the bloc: its name and ITS mean framing — the same number the bar above is
+// coloured by — and the quoted headline names its own outlet underneath, with how
+// many more outlets in that bloc carried the story. The article's own score is not
+// shown: the row is the bloc's position, and the quote is only its evidence.
+function voiceLine(bloc,it,b){
   const row=document.createElement("div");row.className="voice";
   const col=document.createElement("span");col.className="wmcol";
-  if(it)col.appendChild(srcBadge(it.src));
   const ln=document.createElement("span");ln.className="ln";
-  ln.textContent=LEAN_CAP[bloc.lean]+(bloc.w?" \u00b7 "+bloc.w:"");
-  col.appendChild(ln);row.appendChild(col);
+  ln.textContent=LEAN_CAP[bloc.lean];col.appendChild(ln);
+  if(bloc.w>0){
+    const sc=sentChip(bloc.f,true);sc.classList.add("bsc");
+    sc.title=bloc.f==null?"not yet scored":LEAN_CAP[bloc.lean]+" mean framing "+fmtSent1(bloc.f);
+    col.appendChild(sc);
+  }
+  row.appendChild(col);
   if(!it){
     // A bloc nobody carried keeps its slot and says so. The mark above draws a red
     // tick for exactly this; backfilling the row would contradict it.
@@ -1979,15 +2000,27 @@ function voiceLine(bloc,it){
     none.textContent=`no ${LEAN_WORD[bloc.lean]} outlet carried this`;
     row.appendChild(none);return row;
   }
+  const body=document.createElement("span");body.className="vbody";
   const a=document.createElement("a");a.className="tx";a.href=it.u;a.target="_blank";a.rel="noopener";
   const full=it.ht||it.h;a.textContent=full;a.title=it.ht?it.h:full;
-  row.appendChild(a);
-  const sc=sentChip(it.s);sc.classList.add("vsc");row.appendChild(sc);
+  body.appendChild(a);
+  const att=document.createElement("span");att.className="att";
+  att.append(document.createTextNode(placementOf(it)+" at "),srcBadge(it.src));
+  const more=bloc.n-1;
+  if(more>0){
+    const btn=document.createElement("button");btn.type="button";btn.className="more";
+    btn.textContent=`+ ${more} more site${more===1?"":"s"}`;
+    btn.title=`All ${b.items.length} headlines in this story`;
+    btn.setAttribute("aria-haspopup","dialog");
+    btn.onclick=()=>openBundle(b);
+    att.appendChild(btn);
+  }
+  body.appendChild(att);row.appendChild(body);
   return row;
 }
 function voicesEl(b){
   const wrap=document.createElement("div");wrap.className="voices";
-  for(const {bloc,it} of pickVoices(b))wrap.appendChild(voiceLine(bloc,it));
+  for(const {bloc,it} of pickVoices(b))wrap.appendChild(voiceLine(bloc,it,b));
   return wrap;
 }
 function storyTitleEl(b){
@@ -2042,7 +2075,7 @@ function renderFront(list){
     +(since?` \u00b7 since ${fmtSince(since)}`:"")));
   lead.appendChild(storyTitleEl(b));
   lead.appendChild(voicesEl(b));
-  lead.appendChild(bundleMeta(b,false));  // no outlet credit: the image is three outlets' now
+  lead.appendChild(bundleMeta(b,false,false));  // credit and count now live on each lean row
   for(const sb of bundles.slice(1)){
     const row=document.createElement("div");row.className="srow";
     row.appendChild(imageBox("th",sb.card,SRC[sb.card.src]||{display:sb.card.src},sb.sent,true,sb.S));

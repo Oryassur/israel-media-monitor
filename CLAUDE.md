@@ -239,8 +239,13 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   because a card only reads flat when all three blocs land on the same bucket. A bloc with weight 0 **keeps its row** and says
   no outlet of that lean carried the story; never backfilled from another bloc, because the mark
   above draws a red tick for exactly that and a backfilled row would contradict it.
-  Headlines use `ht` (translation) when present, clamped to 3 lines, with the wordmark
-  in a fixed 76px column so all three align. `+ N news sites` opens `#bundleDlg` (every headline
+  A row stands for the **bloc, not the article** (2026-11-05): the left column carries the lean
+  and that bloc's mean framing (the number its bar is coloured by), and the quoted article's own
+  score is not shown — the row is the bloc's position and the quote is only its evidence. The
+  article names itself underneath as `{placement} at {wordmark} + N more sites`, N being the other
+  outlets **in that bloc**; the card-level "+ N news sites" is gone (`bundleMeta(b,false,false)`).
+  Prominence weight is never printed — it is an internal unit.
+  Headlines use `ht` (translation) when present, clamped to 3 lines. `+ N news sites` opens `#bundleDlg` (every headline
   plus the bloc grid); the old inline `#frontExpand` panel is gone. The lead image cross-fades
   through up to three outlets' photographs from the story (`leadImage`, pure CSS; a
   `prefers-reduced-motion` viewer sees only the first frame) and carries **no outlet credit** —
