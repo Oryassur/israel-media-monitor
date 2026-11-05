@@ -244,16 +244,14 @@ a{color:inherit}
 .voice .att .badge{vertical-align:-3px}
 .voice .att .logo{width:62px;height:13px}
 .voice .att .more{font-size:11.5px}
-/* a side card's single row: the left column states the whole story — its mean and
-   the three blocs — because the picture no longer carries either */
+/* a side card states the whole story under its picture — mean, then the three
+   blocs — which leaves the headline column its full width */
+.thcol{display:flex;flex-direction:column;align-items:center;gap:7px}
+.thcol .figs{display:flex;flex-direction:column;align-items:center;gap:5px}
 .voices.one{border-top:0;margin-top:2px}
 .voices.one .voice{border-bottom:0;padding:0}
-.voices.one .wmcol{gap:5px}
 .srow .hl.agg{font-size:16.5px;line-height:1.22;margin:0 0 7px}
-.srow .voice .tx{font-size:13px}
-/* blocMark draws to an 18px scale, so the side rows keep it rather than shrinking
-   the box out from under the bars */
-.srow .wmcol{flex:0 0 58px;width:58px}
+.srow .voice .tx{font-size:13.2px}
 .srow .bsc{font-size:12.5px;padding:1px 7px}
 .voice .tx.none{color:var(--muted);font-style:italic}
 /* the lead image cross-fades through up to three outlets' photographs */
@@ -775,6 +773,12 @@ footer li b{color:var(--ink2);font-weight:600}
 
     <h3>Changelog</h3>
     <ul>
+      <li><b>2026-11-05 · quoting.</b> Newsletter digests are never quoted on a card. A
+        "Morning Rundown" link is several unrelated stories under one headline and sat at rank 1,
+        so it kept winning the slot; it still counts toward attention like any other front-page
+        link. On the three cards beside the lead the quote is now the best-placed headline from
+        whichever lean gave the story the most attention, and the story's figure and lean bars sit
+        under the picture so the headline gets the full column.</li>
       <li><b>2026-11-05 · stories two to four.</b> The three cards beside the lead now follow it:
         outlet count and start date above, the story's own title as the headline, and one quoted
         article naming its placement and outlet underneath. Because there is only one quote, the
@@ -1983,14 +1987,22 @@ function kickerEl(text){const k=document.createElement("p");k.className="skick";
 const VOICE_MID=0.2;   // owner, 2026-11-05: a bloc leans once its mean passes ±0.2
 const LEAN_CAP={left:"Left",center:"Centre",right:"Right"};
 const LEAN_WORD={left:"left-leaning",center:"centrist",right:"right-leaning"};
+// A newsletter digest is a front-page link like any other and keeps its weight,
+// but it must never be quoted: "Morning Rundown: Trump pushes to ramp up Alaska
+// Senate probes, what happens now after Israel's…" is four stories in a trench
+// coat, and it wins slots because it sits at rank 1. The prefix is the only
+// reliable signal — "What to Know" explainers are single-subject and stay.
+const DIGEST=/^\s*(?:\w+\s+){0,2}(?:rundown|round[- ]?up|briefing|digest|newsletter)\s*[:\u2013-]/i;
+const isDigest=it=>DIGEST.test(it.ht||it.h||"");
+const bestPlaced=list=>list.reduce((a,c)=>!a||c.w>a.w||(c.w===a.w&&c.fs>a.fs)?c:a,null);
 function voiceFor(bloc,pool){
-  const scored=pool.filter(i=>i.s!=null);
+  const scored=pool.filter(i=>i.s!=null&&!isDigest(i));
   const target=bloc.f==null?0:(bloc.f<=-VOICE_MID?-1:bloc.f>=VOICE_MID?1:0);
-  const best=list=>list.reduce((a,c)=>!a||c.w>a.w||(c.w===a.w&&c.fs>a.fs)?c:a,null);
+  const best=bestPlaced;
   const quotable=scored.filter(i=>i.s!==-2&&i.s!==2);
   return best(quotable.filter(i=>i.s===target))
       || best(quotable.filter(i=>Math.abs(i.s-target)===Math.min(...quotable.map(x=>Math.abs(x.s-target)))))
-      || best(scored) || best(pool);
+      || best(scored) || best(pool.filter(i=>!isDigest(i))) || best(pool);
 }
 function pickVoices(b){
   const pool={};
@@ -2048,15 +2060,18 @@ function voiceLine(bloc,it,b){
 // attention reading that used to sit on the picture). The quote itself is picked
 // by the lead's rule applied story-wide — the best-placed headline whose score
 // matches where the story's mean sits, never an outright opinion piece.
+// A side card quotes the bloc that gave the story the most attention, and that
+// bloc's best-placed headline — the loudest voice in the loudest room, rather
+// than the most typical one. Digests are skipped here too.
+function storyQuote(b){
+  const top=[...b.S.blocs].sort((x,y)=>y.w-x.w)[0];
+  const pool=b.items.filter(i=>(SRC[i.src]||{}).lean===(top||{}).lean&&!isDigest(i));
+  return bestPlaced(pool) || bestPlaced(b.items.filter(i=>!isDigest(i))) || bestPlaced(b.items);
+}
 function storyVoiceEl(b){
   const wrap=document.createElement("div");wrap.className="voices one";
-  const it=voiceFor({f:b.sent}, b.items);
+  const it=storyQuote(b);
   const row=document.createElement("div");row.className="voice";
-  const col=document.createElement("span");col.className="wmcol";
-  const sc=sentChip(b.sent,true);sc.classList.add("bsc");
-  sc.title="Mean framing across all "+b.items.length+" headlines";
-  col.appendChild(sc);col.appendChild(blocMark(b.S));
-  row.appendChild(col);
   const body=document.createElement("span");body.className="vbody";
   const a=document.createElement("a");a.className="tx";a.href=it.u;a.target="_blank";a.rel="noopener";
   const full=it.ht||it.h;a.textContent=full;a.title=it.ht?it.h:full;
@@ -2138,9 +2153,17 @@ function renderFront(list){
   lead.appendChild(bundleMeta(b,false,false));  // credit and count now live on each lean row
   for(const sb of bundles.slice(1)){
     const row=document.createElement("div");row.className="srow";
-    // no chip on the picture: the figure and the blocs sit in the row below it
-    row.appendChild(imageBox("th",sb.card,SRC[sb.card.src]||{display:sb.card.src},
-                             sb.sent,true,null,false));
+    // picture, then the story's figure and blocs beneath it — a narrow stack, so
+    // the headline and its attribution get the whole of the other column
+    const thcol=document.createElement("div");thcol.className="thcol";
+    thcol.appendChild(imageBox("th",sb.card,SRC[sb.card.src]||{display:sb.card.src},
+                               sb.sent,true,null,false));
+    const figs=document.createElement("div");figs.className="figs";
+    const fc=sentChip(sb.sent,true);fc.classList.add("bsc");
+    fc.title="Mean framing across all "+sb.items.length+" headlines";
+    figs.append(fc,blocMark(sb.S));
+    thcol.appendChild(figs);
+    row.appendChild(thcol);
     const body=document.createElement("div");
     const since=(STORIES[sb.st]||{}).fs;
     body.appendChild(kickerEl(`${sb.nSources} outlet${sb.nSources>1?"s":""}`

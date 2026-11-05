@@ -252,8 +252,15 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   follow the lead: same kicker, the cluster title as the headline, and one quoted article in the
   lead's row format. With a single quote the left column states the **whole story** — its mean plus
   `blocMark` — rather than a lean, and the picture carries no chip at all
-  (`imageBox(..., withChip=false)`). The quote is `voiceFor({f: b.sent}, b.items)`: the same
-  typicality rule as a lean row, applied story-wide. `.vb` is 19px, not 18, because border-box plus
+  (`imageBox(..., withChip=false)`). The quote is `storyQuote`: the best-placed headline
+  from the bloc with the most attention — the loudest voice in the loudest room, not the most
+  typical one (owner's rule, 2026-11-05). The figure and `blocMark` sit under the picture
+  (`.thcol`), not in the text column, so the headline keeps the full width.
+  **Digests are never quoted** anywhere (`isDigest`): a "Morning Rundown:" link is several
+  unrelated stories under one headline and sits at rank 1, so it kept winning slots. It still
+  counts toward attention like any other front-page link — the rule governs quoting only. The
+  prefix is the only reliable signal; "What to Know" explainers are single-subject and must stay
+  (4 matches across 3,498 related headlines, all genuine NBC digests, no false positives). `.vb` is 19px, not 18, because border-box plus
   the 1px baseline rule would otherwise leave a 17px content area for the 18px scale `blocMark`
   draws to. The lead image cross-fades
   through up to three outlets' photographs from the story (`leadImage`, pure CSS; a
