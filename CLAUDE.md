@@ -203,15 +203,17 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   story, so the rows mirror the bars above them. Each row prints its lean and that weight,
   because weight order is not the bars' fixed L-C-R order and a reader would otherwise map row 1
   to bar 1 and be wrong. Within a bloc the quote is chosen to be *typical* of it: target score 0
-  when the bloc's mean framing sits inside ±`VOICE_MID` (0.33), −1 or +1 below/above, then the
+  when the bloc's mean framing sits inside ±`VOICE_MID` (0.2 since 2026-11-05, owner's call;
+  was 0.33), −1 or +1 below/above, then the
   best-placed item carrying that score. **±2 items are never quoted** — they are opinion, and the
   Opinion & analysis strip is where they belong. The target bucket exists in 98% of bloc slots;
   the rest fall back to the nearest score, then to best placement.
   This shows *less* contrast than quoting each bloc's outlier would (measured spread 0.53 against
   2.33) and that is the intent: the bars measure the difference, the quotes illustrate what a bloc
   typically said. Expect ~60% of cards to show one score on all three rows, because 58% of bloc
-  means fall inside the band — the blocs agreeing, not the rule failing. Tightening the band is
-  not a useful lever (±0.10 only moves it to 52%). A bloc with weight 0 **keeps its row** and says
+  means fall inside the band — the blocs agreeing, not the rule failing. The band is a weak lever
+  on that figure: ±0.2 moves 14% of bloc slots off the 0 target but leaves flat cards at 60%,
+  because a card only reads flat when all three blocs land on the same bucket. A bloc with weight 0 **keeps its row** and says
   no outlet of that lean carried the story; never backfilled from another bloc, because the mark
   above draws a red tick for exactly that and a backfilled row would contradict it.
   Headlines use `ht` (translation) when present, clamped to 3 lines, with the wordmark
