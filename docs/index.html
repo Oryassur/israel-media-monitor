@@ -235,9 +235,22 @@ a{color:inherit}
 /* the lead card's three quoted outlets. The wordmark sits in a fixed column so
    all three headlines start on the same left edge; each is clamped to 3 lines. */
 .voices{border-top:1px solid var(--grid);margin:10px 0 0}
+.voice .wmcol{flex:0 0 76px;width:76px}
+.voice .wmcol .badge{display:block}
+.voice .ln{display:block;text-align:center;margin-top:3px;font:700 9px/1.2 var(--font-ui);
+  letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-variant-numeric:tabular-nums}
+.voice .tx.none{color:var(--muted);font-style:italic}
+/* the lead image cross-fades through up to three outlets' photographs */
+.rot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.rot.n2 img.l2{animation:rot2b 8s infinite}
+.rot.n3 img.l2{animation:rot3b 12s infinite}
+.rot.n3 img.l3{animation:rot3c 12s infinite}
+@keyframes rot2b{0%,44%{opacity:0}50%,94%{opacity:1}100%{opacity:0}}
+@keyframes rot3b{0%,29%{opacity:0}33%,62%{opacity:1}66%,100%{opacity:0}}
+@keyframes rot3c{0%,62%{opacity:0}66%,95%{opacity:1}100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.rot img.l2,.rot img.l3{animation:none;opacity:0}}
 .voice{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--grid)}
-.voice .badge{flex:0 0 72px;width:72px;display:flex;align-items:flex-start;padding-top:1px}
-.voice .logo{width:72px;height:15px}
+.voice .logo{width:76px;height:15px}
 .voice .tx{flex:1;min-width:0;font:400 13.5px/1.38 var(--font-ui);color:var(--ink);
   text-decoration:none;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;
   overflow:hidden;overflow-wrap:anywhere}
@@ -744,12 +757,14 @@ footer li b{color:var(--ink2);font-weight:600}
 
     <h3>Changelog</h3>
     <ul>
-      <li><b>2026-11-05 · top stories.</b> The four cards lead with the story, not with one paper.
+      <li><b>2026-11-05 · top stories.</b> The lead card leads with the story, not with one paper.
         The aggregating title is the headline, the kicker counts the outlets and dates the story, and
-        three of those outlets are quoted underneath in their own words with their own scores — the
-        two that gave the story the most prominence, plus the one framing it furthest from the
-        average. Before this, a card speaking for 27 outlets showed one outlet's headline, and which
-        outlet it was depended on who had published a picture. "+ N news sites" now opens every
+        one outlet from each of the three leans is quoted underneath in its own words, heaviest bloc
+        first. The quoted piece is chosen to be typical of its bloc — the best-placed headline whose
+        score matches where that bloc's average framing sits — and never an outright opinion piece,
+        which belongs in Opinion &amp; analysis. A lean that no outlet carried keeps its row and says
+        so rather than being filled in. The image cross-fades through three outlets' photographs,
+        uncredited, because the card speaks for the whole bundle. "+ N news sites" opens every
         headline in the story as an overlay.</li>
       <li><b>2026-10-22 · stories.</b> The lean bars got a colour ramp of their own, steeper than the
         chips', because a bar carries no number to lean on: &plusmn;0.5 now reaches the full mid tone and
@@ -1875,10 +1890,10 @@ const peakRank=it=>it.r!=null?it.r:it.w>=10?1:it.w>=5?5:it.w>=3?10:20;
 const posLabel=it=>{const r=peakRank(it);return r===1?"Top story":r<=5?"Top 5":r<=10?"Top 10":"Top 20"};
 const placementOf=it=>{const r=it.r!=null?it.r:it.w>=10?1:it.w>=5?5:it.w>=3?10:20;
   return r===1?"The top story":r<=5?"A top-5 story":r<=10?"A top-10 story":"A top-20 story"};
-function bundleMeta(b){
+function bundleMeta(b,credit=true){
   const meta=document.createElement("div");meta.className="meta";
   const l=document.createElement("span");l.className="l";
-  l.append(document.createTextNode(placementOf(b.card)+" at "),srcBadge(b.card.src));
+  if(credit)l.append(document.createTextNode(placementOf(b.card)+" at "),srcBadge(b.card.src));
   const others=b.nSources-1;
   // "+ N news sites" opens the bundle's headline list in the shared row under the unit
   const btn=document.createElement("button");btn.type="button";btn.className="more";
@@ -1914,42 +1929,56 @@ function headlineEl(it){
 function kickerEl(text){const k=document.createElement("p");k.className="skick";k.textContent=text;return k}
 
 // ---------- the lead card's three voices ----------
-// A bundle card speaks for up to 27 outlets, so it quotes three of them rather
-// than promoting one. Picking them, in order:
-//   1. one item per outlet (best placement, newest on ties) — four Corriere
-//      headlines in a story must not take three of the three slots;
-//   2. the two outlets with the most front-page prominence;
-//   3. the sharpest dissent: the scored item furthest from the bundle's mean
-//      that still sits in a top-10 slot (w >= VOICE_MIN_W). The floor matters —
-//      without it the slot fills with rank 11-20 strays. No eligible dissent
-//      (nothing scored, or a story carried by two outlets) falls back to the
-//      next most prominent outlet.
-// Displayed ordered by framing, most hostile first, so the card reads as a
-// spectrum and lines up with the colour of the bars above it.
-const VOICE_MIN_W=3,VOICES=3;
-function pickVoices(b){
-  const best=new Map();
-  for(const it of b.items){
-    const cur=best.get(it.src);
-    if(!cur||it.w>cur.w||(it.w===cur.w&&it.fs>cur.fs))best.set(it.src,it);
-  }
-  const byW=[...best.values()].sort((a,c)=>c.w-a.w||(a.fs<c.fs?1:-1));
-  const out=byW.slice(0,VOICES-1),taken=new Set(out.map(i=>i.src));
-  const mean=b.sent;
-  let third=null;
-  if(mean!=null){
-    third=byW.filter(i=>!taken.has(i.src)&&i.s!=null&&i.w>=VOICE_MIN_W)
-             .sort((a,c)=>Math.abs(c.s-mean)-Math.abs(a.s-mean)||c.w-a.w)[0]||null;
-  }
-  if(!third)third=byW.find(i=>!taken.has(i.src))||null;
-  if(third)out.push(third);
-  return out.sort((a,c)=>(a.s==null?0:a.s)-(c.s==null?0:c.s)||c.w-a.w);
+// One outlet per lean, so the card mirrors the bars above it, ordered by the
+// weight each bloc gave the story (heaviest first). Which item speaks for a
+// bloc is chosen to be *typical of that bloc*, not its loudest voice:
+//   target = 0 when the bloc's mean framing sits inside ±VOICE_MID,
+//            -1 or +1 when it sits below or above that band;
+//   ±2 items are never quoted here — they are opinion, and the Opinion &
+//   analysis strip is where they belong.
+// Then the highest-placed item carrying that score. The target bucket exists in
+// 98% of bloc slots; the rest fall back to the nearest available score, and a
+// bloc with nothing but ±2 or nothing scored falls back to its best placement.
+// This deliberately shows less contrast than picking each bloc's outlier would:
+// the bars measure the difference, these quotes illustrate what a bloc typically
+// said. On ~60% of stories all three land on 0, because 58% of bloc means sit
+// inside the band — that is the blocs agreeing, not the rule failing.
+const VOICE_MID=0.33;
+const LEAN_CAP={left:"Left",center:"Centre",right:"Right"};
+const LEAN_WORD={left:"left-leaning",center:"centrist",right:"right-leaning"};
+function voiceFor(bloc,pool){
+  const scored=pool.filter(i=>i.s!=null);
+  const target=bloc.f==null?0:(bloc.f<=-VOICE_MID?-1:bloc.f>=VOICE_MID?1:0);
+  const best=list=>list.reduce((a,c)=>!a||c.w>a.w||(c.w===a.w&&c.fs>a.fs)?c:a,null);
+  const quotable=scored.filter(i=>i.s!==-2&&i.s!==2);
+  return best(quotable.filter(i=>i.s===target))
+      || best(quotable.filter(i=>Math.abs(i.s-target)===Math.min(...quotable.map(x=>Math.abs(x.s-target)))))
+      || best(scored) || best(pool);
 }
-// one quoted outlet: wordmark in a fixed column so the three headlines align,
-// headline clamped to three lines, its own score on the right
-function voiceLine(it){
+function pickVoices(b){
+  const pool={};
+  for(const L of LEAN_ORDER)pool[L]=[];
+  for(const it of b.items){const L=(SRC[it.src]||{}).lean;if(pool[L])pool[L].push(it)}
+  // heaviest bloc first — the same weight the bars are drawn from
+  return [...b.S.blocs].sort((a,c)=>c.w-a.w)
+    .map(bloc=>({bloc,it:bloc.w>0?voiceFor(bloc,pool[bloc.lean]):null}));
+}
+// one quoted outlet: wordmark over its lean and that bloc's weight, so a row the
+// reader meets out of L-C-R order still maps onto the bar above it
+function voiceLine(bloc,it){
   const row=document.createElement("div");row.className="voice";
-  row.appendChild(srcBadge(it.src));
+  const col=document.createElement("span");col.className="wmcol";
+  if(it)col.appendChild(srcBadge(it.src));
+  const ln=document.createElement("span");ln.className="ln";
+  ln.textContent=LEAN_CAP[bloc.lean]+(bloc.w?" \u00b7 "+bloc.w:"");
+  col.appendChild(ln);row.appendChild(col);
+  if(!it){
+    // A bloc nobody carried keeps its slot and says so. The mark above draws a red
+    // tick for exactly this; backfilling the row would contradict it.
+    const none=document.createElement("span");none.className="tx none";
+    none.textContent=`no ${LEAN_WORD[bloc.lean]} outlet carried this`;
+    row.appendChild(none);return row;
+  }
   const a=document.createElement("a");a.className="tx";a.href=it.u;a.target="_blank";a.rel="noopener";
   const full=it.ht||it.h;a.textContent=full;a.title=it.ht?it.h:full;
   row.appendChild(a);
@@ -1958,16 +1987,41 @@ function voiceLine(it){
 }
 function voicesEl(b){
   const wrap=document.createElement("div");wrap.className="voices";
-  for(const it of pickVoices(b))wrap.appendChild(voiceLine(it));
+  for(const {bloc,it} of pickVoices(b))wrap.appendChild(voiceLine(bloc,it));
   return wrap;
 }
-// the aggregating title, three lines at most
 function storyTitleEl(b){
   const p=document.createElement("p");p.className="hl agg";
   p.textContent=b.title;p.title=b.title;
   return p;
 }
 const fmtSince=ts=>ts?new Date(ts).toLocaleDateString(undefined,{day:"numeric",month:"short"}):"";
+// The lead image cross-fades through up to three photographs from different
+// outlets in this story. No credit on them: the card speaks for the whole
+// bundle, so crediting one outlet would imply its lean over the rest. Pure CSS,
+// and prefers-reduced-motion pins it to the first frame.
+const ROT_MAX=3;
+function leadImage(b,src){
+  const seen=new Set(),pics=[];
+  for(const it of [...b.items].sort((x,y)=>y.w-x.w||(x.fs<y.fs?1:-1))){
+    if(it.img&&!seen.has(it.src)){seen.add(it.src);pics.push(it);if(pics.length===ROT_MAX)break}
+  }
+  if(pics.length<2)return imageBox("img",b.card,src,b.sent,true,b.S);
+  const box=imageBox("img",pics[0],src,b.sent,true,b.S);
+  box.classList.add("rot","n"+pics.length);
+  const first=box.querySelector("img");
+  if(first)first.className="l1";
+  // inserted before the chip and in order, so l1 < l2 < l3 paint bottom to top
+  // and the handoff between two fading layers never shows the older one on top
+  const chip=box.querySelector(".chip2,.chip");
+  pics.slice(1).forEach((it,i)=>{
+    const im=document.createElement("img");im.alt="";im.loading="lazy";im.decoding="async";
+    im.referrerPolicy="no-referrer";im.className="l"+(i+2);im.src=it.img;
+    im.onerror=()=>im.remove();
+    box.insertBefore(im,chip);
+  });
+  return box;
+}
 
 function renderFront(list){
   const lead=$("#lead"),side=$("#side");lead.innerHTML="";side.innerHTML="";
@@ -1979,7 +2033,7 @@ function renderFront(list){
   }
   side.hidden=false;
   const b=bundles[0],src=SRC[b.card.src]||{display:b.card.src};
-  lead.appendChild(imageBox("img",b.card,src,b.sent,true,b.S));
+  lead.appendChild(leadImage(b,src));
   // the aggregate leads: the story's own title, over three outlets in their own
   // words. Promoting one outlet's headline made a 27-outlet card speak with one
   // voice, and which voice was decided by who published a picture.
@@ -1988,7 +2042,7 @@ function renderFront(list){
     +(since?` \u00b7 since ${fmtSince(since)}`:"")));
   lead.appendChild(storyTitleEl(b));
   lead.appendChild(voicesEl(b));
-  lead.appendChild(bundleMeta(b));
+  lead.appendChild(bundleMeta(b,false));  // no outlet credit: the image is three outlets' now
   for(const sb of bundles.slice(1)){
     const row=document.createElement("div");row.className="srow";
     row.appendChild(imageBox("th",sb.card,SRC[sb.card.src]||{display:sb.card.src},sb.sent,true,sb.S));

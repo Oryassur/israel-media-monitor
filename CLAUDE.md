@@ -198,14 +198,30 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   27 outlets, so the card leads with the cluster's own title (`STORIES[st].t`), not with one
   member headline — promoting a member made the card speak with one voice, and which voice was
   decided by who published an image (the slot went to Il Giornale 8% of cards, NY Post 8%,
-  Washington Examiner 7%, i.e. whoever reliably carries pictures). `pickVoices` quotes three
-  outlets underneath: one item per outlet first (best placement, newest on ties — four Corriere
-  headlines must not take all three slots), then the two most prominent, then the scored item
-  furthest from the bundle mean **with `VOICE_MIN_W` = 3**; without that floor the dissent slot
-  fills with rank 11-20 strays. Displayed ordered by framing ascending so the card reads as a
-  spectrum. Headlines use `ht` (translation) when present, clamped to 3 lines, with the wordmark
-  in a fixed 72px column so all three align. `+ N news sites` opens `#bundleDlg` (every headline
-  plus the bloc grid); the old inline `#frontExpand` panel is gone. **Story titles are coined once
+  Washington Examiner 7%, i.e. whoever reliably carries pictures). `pickVoices` quotes
+  **one outlet per lean** (owner's rule, 2026-11-05), ordered by the weight each bloc gave the
+  story, so the rows mirror the bars above them. Each row prints its lean and that weight,
+  because weight order is not the bars' fixed L-C-R order and a reader would otherwise map row 1
+  to bar 1 and be wrong. Within a bloc the quote is chosen to be *typical* of it: target score 0
+  when the bloc's mean framing sits inside ±`VOICE_MID` (0.33), −1 or +1 below/above, then the
+  best-placed item carrying that score. **±2 items are never quoted** — they are opinion, and the
+  Opinion & analysis strip is where they belong. The target bucket exists in 98% of bloc slots;
+  the rest fall back to the nearest score, then to best placement.
+  This shows *less* contrast than quoting each bloc's outlier would (measured spread 0.53 against
+  2.33) and that is the intent: the bars measure the difference, the quotes illustrate what a bloc
+  typically said. Expect ~60% of cards to show one score on all three rows, because 58% of bloc
+  means fall inside the band — the blocs agreeing, not the rule failing. Tightening the band is
+  not a useful lever (±0.10 only moves it to 52%). A bloc with weight 0 **keeps its row** and says
+  no outlet of that lean carried the story; never backfilled from another bloc, because the mark
+  above draws a red tick for exactly that and a backfilled row would contradict it.
+  Headlines use `ht` (translation) when present, clamped to 3 lines, with the wordmark
+  in a fixed 76px column so all three align. `+ N news sites` opens `#bundleDlg` (every headline
+  plus the bloc grid); the old inline `#frontExpand` panel is gone. The lead image cross-fades
+  through up to three outlets' photographs from the story (`leadImage`, pure CSS; a
+  `prefers-reduced-motion` viewer sees only the first frame) and carries **no outlet credit** —
+  the card speaks for the bundle, so crediting one outlet would imply its lean over the rest, and
+  `bundleMeta(b,false)` drops the "Top story at X" line on the lead for the same reason.
+  **Story titles are coined once
   and never revisited** (see clustering), so the kicker dates the story — a 48-day-old title in
   21px needs the "since" anchor to read as an arc.
 - **Lean blocs / "Where outlets diverge"** (2026-10-21, client-side only, no pipeline
