@@ -232,6 +232,28 @@ a{color:inherit}
   text-decoration:underline;text-decoration-color:var(--baseline);text-underline-offset:2px;white-space:nowrap}
 .more:hover{color:var(--ink)}
 .bundle{grid-column:1/3;grid-row:3;border-top:1px solid var(--grid);margin-top:12px}
+/* the lead card's three quoted outlets. The wordmark sits in a fixed column so
+   all three headlines start on the same left edge; each is clamped to 3 lines. */
+.voices{border-top:1px solid var(--grid);margin:10px 0 0}
+.voice{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--grid)}
+.voice .badge{flex:0 0 72px;width:72px;display:flex;align-items:flex-start;padding-top:1px}
+.voice .logo{width:72px;height:15px}
+.voice .tx{flex:1;min-width:0;font:400 13.5px/1.38 var(--font-ui);color:var(--ink);
+  text-decoration:none;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;
+  overflow:hidden;overflow-wrap:anywhere}
+.voice .tx:hover{text-decoration:underline}
+.voice .vsc{flex:0 0 auto;margin-top:1px}
+/* the aggregating title is the hero now; three lines at most */
+.hl.agg{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+/* every headline in the story, as an overlay */
+.bundledlg{width:min(760px,calc(100vw - 48px));max-width:none;padding:16px 22px 20px;
+  border-radius:14px;box-shadow:var(--shadow-pop);color:var(--ink)}
+.bundledlg::backdrop{background:rgba(20,16,10,.38)}
+.bundledlg .hd{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:2px}
+.bundledlg .hd h2{margin:0}
+.bundledlg .sub{font-size:12.5px;color:var(--muted);margin:0 0 10px;font-variant-numeric:tabular-nums}
+.bundledlg .list{max-height:min(62vh,560px);overflow:auto;margin-top:4px}
+
 .bundle[hidden]{display:none}
 .bundle .storyhead{margin-top:12px}
 
@@ -520,6 +542,12 @@ footer li b{color:var(--ink2);font-weight:600}
 
 <div class="tooltip" id="tooltip"></div>
 
+<dialog class="card bundledlg" id="bundleDlg" aria-label="All headlines in this story">
+  <div class="hd"><h2 class="t2" id="bundleTitle"></h2><button type="button" class="close" id="bundleClose" title="Close">×</button></div>
+  <p class="sub" id="bundleSub"></p>
+  <div class="list" id="bundleList"></div>
+</dialog>
+
 <dialog class="card subjdlg" id="subjDlg" aria-label="Subjects">
   <div class="hd"><h2 class="t2">Subjects<span class="per" id="subjPer"></span></h2><button type="button" class="close" id="subjClose" title="Close">×</button></div>
   <svg class="cloud" id="subjBig" role="group" aria-label="Subjects, expanded"></svg>
@@ -716,6 +744,13 @@ footer li b{color:var(--ink2);font-weight:600}
 
     <h3>Changelog</h3>
     <ul>
+      <li><b>2026-11-05 · top stories.</b> The four cards lead with the story, not with one paper.
+        The aggregating title is the headline, the kicker counts the outlets and dates the story, and
+        three of those outlets are quoted underneath in their own words with their own scores — the
+        two that gave the story the most prominence, plus the one framing it furthest from the
+        average. Before this, a card speaking for 27 outlets showed one outlet's headline, and which
+        outlet it was depended on who had published a picture. "+ N news sites" now opens every
+        headline in the story as an overlay.</li>
       <li><b>2026-10-22 · stories.</b> The lean bars got a colour ramp of their own, steeper than the
         chips', because a bar carries no number to lean on: &plusmn;0.5 now reaches the full mid tone and
         &plusmn;1 the full end tone. Their zero sits on a less yellow neutral, so a bloc at 0.00 reads as the
@@ -1835,7 +1870,6 @@ function imageBox(cls,it,src,sent,mean=true,S=null){
 
 // meta row: "[placement] at [wordmark] + N news sites"  …  [date]
 // "+ N news sites" opens the whole bundle in the shared expansion row under the unit.
-const expand={el:null,open:null,btns:new Map()};
 // peak homepage position of a headline: rank when published, else inferred from its weight
 const peakRank=it=>it.r!=null?it.r:it.w>=10?1:it.w>=5?5:it.w>=3?10:20;
 const posLabel=it=>{const r=peakRank(it);return r===1?"Top story":r<=5?"Top 5":r<=10?"Top 10":"Top 20"};
@@ -1850,25 +1884,26 @@ function bundleMeta(b){
   const btn=document.createElement("button");btn.type="button";btn.className="more";
   btn.textContent=others>0?`+ ${others} news site${others===1?"":"s"}`:`${b.items.length} headline${b.items.length===1?"":"s"}`;
   btn.title=`All ${b.items.length} headlines in this story`;
-  btn.setAttribute("aria-expanded","false");btn.setAttribute("aria-controls","frontExpand");
-  btn.onclick=()=>toggleBundle(b);
-  expand.btns.set(b.st,{btn});
+  btn.setAttribute("aria-haspopup","dialog");
+  btn.onclick=()=>openBundle(b);
   l.appendChild(btn);
   const r=document.createElement("span");r.className="r";r.textContent=fmtWhen(b.card.fs);
   meta.append(l,r);
   return meta;
 }
-function toggleBundle(b){
-  const el=expand.el;
-  for(const [st,{btn}] of expand.btns)btn.setAttribute("aria-expanded",String(st===b.st&&expand.open!==b.st));
-  if(expand.open===b.st){el.hidden=true;expand.open=null;return}
-  el.innerHTML="";
+// "+ N news sites" opens every headline in the story as an overlay: the card
+// quotes three outlets, this is all of them, with the bloc breakdown on top.
+function openBundle(b){
   const S=b.S||blocStats(b.items);
-  el.appendChild(storyHead(b.title,
-    ` · ${b.items.length} headlines · ${b.nSources} outlet${b.nSources>1?"s":""}`,S,true,false));
-  el.appendChild(blocDetail(S));
-  for(const it of b.items)el.appendChild(makeItemRow(it));
-  el.hidden=false;expand.open=b.st;
+  $("#bundleTitle").textContent=b.title;
+  const since=(STORIES[b.st]||{}).fs;
+  $("#bundleSub").textContent=`${b.nSources} outlet${b.nSources>1?"s":""} · `
+    +`${b.items.length} headline${b.items.length>1?"s":""}`+(since?` · since ${fmtSince(since)}`:"")
+    +(S.label?` · ${S.label}`:"");
+  const list=$("#bundleList");list.innerHTML="";
+  list.appendChild(blocDetail(S));
+  for(const it of b.items)list.appendChild(makeItemRow(it));
+  $("#bundleDlg").showModal();
 }
 
 function headlineEl(it){
@@ -1878,11 +1913,64 @@ function headlineEl(it){
 }
 function kickerEl(text){const k=document.createElement("p");k.className="skick";k.textContent=text;return k}
 
+// ---------- the lead card's three voices ----------
+// A bundle card speaks for up to 27 outlets, so it quotes three of them rather
+// than promoting one. Picking them, in order:
+//   1. one item per outlet (best placement, newest on ties) — four Corriere
+//      headlines in a story must not take three of the three slots;
+//   2. the two outlets with the most front-page prominence;
+//   3. the sharpest dissent: the scored item furthest from the bundle's mean
+//      that still sits in a top-10 slot (w >= VOICE_MIN_W). The floor matters —
+//      without it the slot fills with rank 11-20 strays. No eligible dissent
+//      (nothing scored, or a story carried by two outlets) falls back to the
+//      next most prominent outlet.
+// Displayed ordered by framing, most hostile first, so the card reads as a
+// spectrum and lines up with the colour of the bars above it.
+const VOICE_MIN_W=3,VOICES=3;
+function pickVoices(b){
+  const best=new Map();
+  for(const it of b.items){
+    const cur=best.get(it.src);
+    if(!cur||it.w>cur.w||(it.w===cur.w&&it.fs>cur.fs))best.set(it.src,it);
+  }
+  const byW=[...best.values()].sort((a,c)=>c.w-a.w||(a.fs<c.fs?1:-1));
+  const out=byW.slice(0,VOICES-1),taken=new Set(out.map(i=>i.src));
+  const mean=b.sent;
+  let third=null;
+  if(mean!=null){
+    third=byW.filter(i=>!taken.has(i.src)&&i.s!=null&&i.w>=VOICE_MIN_W)
+             .sort((a,c)=>Math.abs(c.s-mean)-Math.abs(a.s-mean)||c.w-a.w)[0]||null;
+  }
+  if(!third)third=byW.find(i=>!taken.has(i.src))||null;
+  if(third)out.push(third);
+  return out.sort((a,c)=>(a.s==null?0:a.s)-(c.s==null?0:c.s)||c.w-a.w);
+}
+// one quoted outlet: wordmark in a fixed column so the three headlines align,
+// headline clamped to three lines, its own score on the right
+function voiceLine(it){
+  const row=document.createElement("div");row.className="voice";
+  row.appendChild(srcBadge(it.src));
+  const a=document.createElement("a");a.className="tx";a.href=it.u;a.target="_blank";a.rel="noopener";
+  const full=it.ht||it.h;a.textContent=full;a.title=it.ht?it.h:full;
+  row.appendChild(a);
+  const sc=sentChip(it.s);sc.classList.add("vsc");row.appendChild(sc);
+  return row;
+}
+function voicesEl(b){
+  const wrap=document.createElement("div");wrap.className="voices";
+  for(const it of pickVoices(b))wrap.appendChild(voiceLine(it));
+  return wrap;
+}
+// the aggregating title, three lines at most
+function storyTitleEl(b){
+  const p=document.createElement("p");p.className="hl agg";
+  p.textContent=b.title;p.title=b.title;
+  return p;
+}
+const fmtSince=ts=>ts?new Date(ts).toLocaleDateString(undefined,{day:"numeric",month:"short"}):"";
+
 function renderFront(list){
   const lead=$("#lead"),side=$("#side");lead.innerHTML="";side.innerHTML="";
-  if(!expand.el){expand.el=document.createElement("div");expand.el.className="bundle";expand.el.id="frontExpand";
-    expand.el.hidden=true;$("#front").appendChild(expand.el)}
-  expand.el.hidden=true;expand.open=null;expand.btns.clear();
   const bundles=topBundles(list,4);
   $("#frontTitle").hidden=!bundles.length;
   if(!bundles.length){
@@ -1892,10 +1980,14 @@ function renderFront(list){
   side.hidden=false;
   const b=bundles[0],src=SRC[b.card.src]||{display:b.card.src};
   lead.appendChild(imageBox("img",b.card,src,b.sent,true,b.S));
-  lead.appendChild(kickerEl(b.title));
-  lead.appendChild(headlineEl(b.card));
-  if(b.card.d){const d=document.createElement("p");d.className="dek";d.textContent=trunc(b.card.d,150);lead.appendChild(d)}
-  else if(b.card.ht){const d=document.createElement("p");d.className="dek orig";d.textContent=trunc(b.card.h,150);lead.appendChild(d)}
+  // the aggregate leads: the story's own title, over three outlets in their own
+  // words. Promoting one outlet's headline made a 27-outlet card speak with one
+  // voice, and which voice was decided by who published a picture.
+  const since=(STORIES[b.st]||{}).fs;
+  lead.appendChild(kickerEl(`${b.nSources} outlet${b.nSources>1?"s":""}`
+    +(since?` \u00b7 since ${fmtSince(since)}`:"")));
+  lead.appendChild(storyTitleEl(b));
+  lead.appendChild(voicesEl(b));
   lead.appendChild(bundleMeta(b));
   for(const sb of bundles.slice(1)){
     const row=document.createElement("div");row.className="srow";
@@ -2117,6 +2209,8 @@ function openSubjects(){
   layoutCloud(svg,subjState.terms.slice(0,60),W,W<600?380:440,12,W<600?30:46,pickTerm,$("#subjTip"));
 }
 $("#subjOpen").addEventListener("click",openSubjects);
+$("#bundleClose").addEventListener("click",()=>$("#bundleDlg").close());
+$("#bundleDlg").addEventListener("click",ev=>{if(ev.target===ev.currentTarget)ev.currentTarget.close()});
 $("#subjClose").addEventListener("click",()=>$("#subjDlg").close());
 $("#subjDlg").addEventListener("click",ev=>{if(ev.target===ev.currentTarget)ev.currentTarget.close()});
 document.fonts&&document.fonts.ready.then(()=>{if(subjState.terms.length)renderSubjects(subjState.list||[],subjState.periodLabel)});

@@ -194,6 +194,20 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   Unknown keys/values are dropped, not errors. Query, not hash:
   Pages serves index.html for any query string, and `#method` already owns the hash.
   A *path* route (/30d/bbc) is the one thing Pages cannot do without a 404.html hack.
+- **Lead card speaks for the bundle** (2026-11-05): the top-four cards are clusters of up to
+  27 outlets, so the card leads with the cluster's own title (`STORIES[st].t`), not with one
+  member headline — promoting a member made the card speak with one voice, and which voice was
+  decided by who published an image (the slot went to Il Giornale 8% of cards, NY Post 8%,
+  Washington Examiner 7%, i.e. whoever reliably carries pictures). `pickVoices` quotes three
+  outlets underneath: one item per outlet first (best placement, newest on ties — four Corriere
+  headlines must not take all three slots), then the two most prominent, then the scored item
+  furthest from the bundle mean **with `VOICE_MIN_W` = 3**; without that floor the dissent slot
+  fills with rank 11-20 strays. Displayed ordered by framing ascending so the card reads as a
+  spectrum. Headlines use `ht` (translation) when present, clamped to 3 lines, with the wordmark
+  in a fixed 72px column so all three align. `+ N news sites` opens `#bundleDlg` (every headline
+  plus the bloc grid); the old inline `#frontExpand` panel is gone. **Story titles are coined once
+  and never revisited** (see clustering), so the kicker dates the story — a 48-day-old title in
+  21px needs the "since" anchor to read as an arc.
 - **Lean blocs / "Where outlets diverge"** (2026-10-21, client-side only, no pipeline
   change): per story cluster, items are grouped by the outlet's `lean` from
   `META.sources` into left/center/right. A bloc carries weight (Σ `w`), outlets
