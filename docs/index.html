@@ -762,6 +762,9 @@ footer li b{color:var(--ink2);font-weight:600}
 
     <h3>Changelog</h3>
     <ul>
+      <li><b>2026-11-05 · lead image.</b> The sentiment chip on the lead photograph is the story's
+        mean again, without the three bars: the lean rows underneath now state each bloc's framing,
+        and the bars' height stood for prominence weight, which the card no longer shows.</li>
       <li><b>2026-11-05 · lean rows.</b> Each row on the lead card now stands for a lean bloc rather
         than for one article: the figure beside the lean is that bloc's own mean framing — the same
         number its bar is coloured by — and the quoted headline names its outlet and placement
@@ -2030,7 +2033,9 @@ function storyTitleEl(b){
 }
 const fmtSince=ts=>ts?new Date(ts).toLocaleDateString(undefined,{day:"numeric",month:"short"}):"";
 // The lead image cross-fades through up to three photographs from different
-// outlets in this story. No credit on them: the card speaks for the whole
+// outlets in this story. Its chip is the plain bundle mean: the lean rows below
+// already state each bloc's framing, and bar height encoded prominence weight,
+// which is no longer shown anywhere. No credit on them: the card speaks for the whole
 // bundle, so crediting one outlet would imply its lean over the rest. Pure CSS,
 // and prefers-reduced-motion pins it to the first frame.
 const ROT_MAX=3;
@@ -2039,8 +2044,8 @@ function leadImage(b,src){
   for(const it of [...b.items].sort((x,y)=>y.w-x.w||(x.fs<y.fs?1:-1))){
     if(it.img&&!seen.has(it.src)){seen.add(it.src);pics.push(it);if(pics.length===ROT_MAX)break}
   }
-  if(pics.length<2)return imageBox("img",b.card,src,b.sent,true,b.S);
-  const box=imageBox("img",pics[0],src,b.sent,true,b.S);
+  if(pics.length<2)return imageBox("img",b.card,src,b.sent,true);
+  const box=imageBox("img",pics[0],src,b.sent,true);
   box.classList.add("rot","n"+pics.length);
   const first=box.querySelector("img");
   if(first)first.className="l1";

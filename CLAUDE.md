@@ -246,7 +246,10 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   outlets **in that bloc**; the card-level "+ N news sites" is gone (`bundleMeta(b,false,false)`).
   Prominence weight is never printed — it is an internal unit.
   Headlines use `ht` (translation) when present, clamped to 3 lines. `+ N news sites` opens `#bundleDlg` (every headline
-  plus the bloc grid); the old inline `#frontExpand` panel is gone. The lead image cross-fades
+  plus the bloc grid); the old inline `#frontExpand` panel is gone. The lead image carries the plain
+  `sentChip` (the bundle mean), **not** the compound chip: the lean rows state each bloc's framing
+  and bar height stood for prominence weight, which the card no longer prints. The side rows keep
+  `blocChip`, since their bars are the only bloc reading they have. The lead image cross-fades
   through up to three outlets' photographs from the story (`leadImage`, pure CSS; a
   `prefers-reduced-motion` viewer sees only the first frame) and carries **no outlet credit** —
   the card speaks for the bundle, so crediting one outlet would imply its lean over the rest, and
