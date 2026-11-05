@@ -16,6 +16,42 @@ from .score import pick_backend
 BATCH_SIZE = 40
 # Stories with an assignment in this window are offered as clustering context
 ACTIVE_WINDOW_DAYS = 7
+# The registry runs to ~100 live stories. Offering every one of them as a bare
+# title made the model match a headline against a wall of labels with nothing
+# behind them, and near-identical phases of one event ("campaign gains momentum"
+# vs "holds election") became indistinguishable. So: fewer candidates, each with
+# evidence. The newest are always offered — a sibling cluster minted two hours
+# ago is exactly the one a lexical score would miss.
+ACTIVE_SHORTLIST = 30
+ACTIVE_RECENT_KEEP = 10
+STORY_SAMPLE = 2  # recent headlines shown per candidate story
+
+_WORD = re.compile(r"[^\W\d_]{3,}", re.UNICODE)
+_STOP = frozenset("""the a an and or of in on at to for from with over after as
+    its his her their this that new says said will amid against israeli israel
+    israels gaza war""".split())
+
+
+def _tokens(text):
+    return {w.lower() for w in _WORD.findall(text or "")} - _STOP
+
+
+def shortlist(active, batch, limit=ACTIVE_SHORTLIST, keep_recent=ACTIVE_RECENT_KEEP):
+    """The candidate stories to offer for this batch: the most recently seen,
+    plus whichever others share vocabulary with the headlines being assigned."""
+    if len(active) <= limit:
+        return active
+    want = set()
+    for it in batch:
+        want |= _tokens(it["ht"] if it.get("lang") != "en" and it.get("ht") else it["headline"])
+    by_recent = sorted(active, key=lambda s: s.get("last_seen") or "", reverse=True)
+    keep = by_recent[:keep_recent]
+    taken = {s["id"] for s in keep}
+    # newest first, then a stable sort by overlap: ties go to the fresher story,
+    # which is the one a batch arriving now is most likely to belong to
+    rest = [s for s in by_recent if s["id"] not in taken]
+    rest.sort(key=lambda s: -len(want & _tokens(" ".join([s["title"], *s.get("recent", [])]))))
+    return keep + rest[:max(0, limit - len(keep))]
 
 
 def _build_prompt(batch, active):
@@ -87,13 +123,16 @@ def _story_id(title, first_seen):
     return hashlib.sha1(f"{title}|{first_seen}".encode()).hexdigest()[:12]
 
 
-def cluster_items(items, stories, ts, backend=None, log=print):
+def cluster_items(items, stories, ts, backend=None, log=print, recent=None):
     """Assign a story id to each item in place; mint new stories into `stories`.
 
     Each item needs: source_display, lang, headline (ht used when present).
+    `recent` maps story id -> that story's newest headlines, used as evidence
+    behind each candidate title (the registry itself never holds item lists).
     Adds to items: story, cluster_v. Items left untouched on failure (they will
     be retried on a later run). Returns the number of items assigned.
     """
+    recent = recent or {}
     backend = backend or pick_backend()
     if not backend:
         log("clustering: no backend available — skipping")
@@ -107,8 +146,12 @@ def cluster_items(items, stories, ts, backend=None, log=print):
     for start in range(0, len(items), BATCH_SIZE):
         batch = items[start:start + BATCH_SIZE]
         # rebuilt per batch so stories minted by one batch are context for the next
-        active = [{"id": s["id"], "title": s["title"]}
+        active = [{"id": s["id"], "title": s["title"], "last_seen": s["last_seen"],
+                   **({"recent": recent[s["id"]][:STORY_SAMPLE]} if recent.get(s["id"]) else {})}
                   for s in stories.values() if s["last_seen"] >= active_cut]
+        active = shortlist(active, batch)
+        for a in active:
+            a.pop("last_seen", None)  # ordering input only; the model does not need it
         try:
             resp = call(_build_prompt(batch, active))
             parsed = _parse_response(resp, len(batch))

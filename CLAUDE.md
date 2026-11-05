@@ -69,6 +69,23 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   always equals israel_weight, blanks on failed fetches. Old months keep old
   headers — consumers must read via row.get(). publish approximates comp for
   rows older than meta.comp_exact_since.
+- **Clustering context** (2026-11-05): the model is NOT given the whole live registry.
+  It gets `cluster.shortlist`: the `ACTIVE_RECENT_KEEP` (10) most recently seen stories
+  unconditionally, then the rest ranked by vocabulary overlap with the batch, capped at
+  `ACTIVE_SHORTLIST` (30). The recency block is load-bearing — a sibling cluster minted
+  two hours ago shares no vocabulary yet, and that is exactly the duplicate case (the
+  West Bank attack split into two stories 2h05m apart, 11 of 22 outlets filing into
+  both). Each candidate also carries `recent`: its `STORY_SAMPLE` (2) newest headlines,
+  rebuilt per run in `run.py` from the items index, because the registry deliberately
+  holds no item lists. Before this the model matched a headline against ~100 bare
+  titles, which is why two phases of one event ("campaign gains momentum" vs "holds
+  election") were indistinguishable. Replayed on the run that misfiled DW's youth-vote
+  headline: 95 active → 30 offered, both candidates present with discriminating
+  evidence, prompt ~2,700 tokens against ~4,400 before — cheaper and better.
+  `CLUSTER_VERSION` is deliberately **not** bumped: the rubric's decision rule is
+  unchanged, and bumping re-clusters the whole window, which churns story ids
+  (`sha1(title|first_seen)`), orphans them and would reshuffle the front page for no
+  measured gain. Assignments made before this date simply had thinner context.
 - **Story clustering**: related items carry story + cluster_v; the registry
   (data/stories/) holds {id,title,first_seen,last_seen,model,cv} and never item
   lists. Bumping `CLUSTER_VERSION` re-clusters without touching sentiment.
@@ -101,6 +118,12 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
 - **Page chrome is never a headline** (2026-09-15): extract.py drops page-level
   headers, nav/menus/popins, newsletter/promo/subscription containers, links to
   the homepage or to digit-free short-slug index pages, photo-credit link text,
+  leading section flags and relative timestamps ("• Breaking News", "BREAKING:",
+  "Live"/"Liveblog", "Explainer", "In pictures", "a min ago") — these are **not**
+  cosmetic, because the stored headline is what clustering sees, so a prefix splits one
+  story in two; "Live" excludes "Live Aid" and "BREAKING" requires a colon so
+  "Breaking point:" survives, and topic-tag prefixes ("Benjamin Netanyahu As a divided
+  Israel …") are an arbitrary name and stay uncovered —
   "Skip to…"/"Play …" affordances and hub/utility paths (tags, topics, games,
   account, programs…); sources may add `skip` CSS selectors (Spiegel) or a
   `selector` (Le Monde, Corriere…). Audit with `scripts/audit_headlines.py` —

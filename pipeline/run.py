@@ -14,7 +14,7 @@ import time
 from datetime import datetime, timedelta, timezone
 
 from . import enrich, health, intl, publish, subjects
-from .cluster import cluster_items
+from .cluster import STORY_SAMPLE, cluster_items
 from .common import (CLUSTER_VERSION, LOGS, RUBRIC_VERSION, SCORE_RETRY_WINDOW_H,
                      item_id, load_sources, month_key)
 from .detect import match_keyword
@@ -161,7 +161,18 @@ def run(no_llm=False, no_enrich=False, retry_hours=None):
             stories_idx = load_recent_stories(months)
             for r in to_cluster:
                 r["source_display"] = disp.get(r["source"], r["source"])
-            n = cluster_items(to_cluster, stories_idx, ts, log=log)
+            # Evidence behind each candidate title: a live story's newest headlines.
+            # The registry deliberately holds no item lists, so it is rebuilt here
+            # from the items index each run.
+            recent = {}
+            for r in items_idx.values():
+                if r.get("story"):
+                    recent.setdefault(r["story"], []).append(r)
+            for sid, rows in recent.items():
+                rows.sort(key=lambda r: r["first_seen"], reverse=True)
+                recent[sid] = [r["ht"] if r.get("lang") != "en" and r.get("ht") else r["headline"]
+                               for r in rows[:STORY_SAMPLE]]
+            n = cluster_items(to_cluster, stories_idx, ts, log=log, recent=recent)
             for r in to_cluster:
                 r.pop("source_display", None)
                 sid = r.get("story")

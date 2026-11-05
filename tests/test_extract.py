@@ -1,7 +1,7 @@
 """extract_items: page chrome (nav, header, promos, credits, hubs) is never a headline."""
 import unittest
 
-from pipeline.extract import extract_items
+from pipeline.extract import _strip_labels, extract_items
 
 PAGE = """<html><body><main>
 <a href="https://abonnement.lefigaro.fr/abonnement-premium-figaro-vente-flash?app=Figaro">VENTE FLASH -70% par mois pendant 12 mois</a>
@@ -101,6 +101,40 @@ class TestSkipHosts(unittest.TestCase):
             "https://www.lefigaro.fr/international/un-vrai-titre-assez-long-pour-passer-20260911",
             "https://sport.lefigaro.fr/football/un-titre-sportif-assez-long",
         ])
+
+class TestLabelPrefixes(unittest.TestCase):
+    """Prefixes are not cosmetic: the stored headline is what the clustering pass
+    sees, so '• Breaking News X' and 'X' became two stories two hours apart."""
+
+    def test_strips_section_flags_and_timestamps(self):
+        for raw, want in [
+            ("a min ago No clear winner in Israeli election, exit polls suggest",
+             "No clear winner in Israeli election, exit polls suggest"),
+            ("• Breaking News West Bank attack aftermath Reuters",
+             "West Bank attack aftermath Reuters"),
+            ("BREAKING: Netanyahu bloc on track to have 50 seats",
+             "Netanyahu bloc on track to have 50 seats"),
+            ("Live ICJ judge Navi Pillay dedicates Nobel peace prize to survivors",
+             "ICJ judge Navi Pillay dedicates Nobel peace prize to survivors"),
+            ("Liveblog Israel-Wahl : Prognosen fuer Netanjahus Likud-Partei",
+             "Israel-Wahl : Prognosen fuer Netanjahus Likud-Partei"),
+            ("Live Updates 8 min ago Rockets fired toward central Israel overnight",
+             "Rockets fired toward central Israel overnight"),
+            ("Explainer What you need to know about the most consequential election",
+             "What you need to know about the most consequential election"),
+            ("In pictures Commemorations for the 7 October Hamas attacks",
+             "Commemorations for the 7 October Hamas attacks"),
+        ]:
+            self.assertEqual(_strip_labels(raw), want, raw)
+
+    def test_leaves_headlines_that_merely_start_with_those_words(self):
+        for raw in [
+            "Israel marks October 7 memorial day",
+            "Live Aid at 40: the concert that changed charity",
+            "Living standards in Israel fall for a third year",
+            "Breaking point: why the coalition cannot hold",
+        ]:
+            self.assertEqual(_strip_labels(raw), raw, raw)
 
 
 if __name__ == "__main__":

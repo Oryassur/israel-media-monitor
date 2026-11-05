@@ -274,10 +274,24 @@ def _is_chrome(tag) -> bool:
 
 # Kicker/label decorations some sites render inside the link text: CNN's "• Analysis
 # Analysis …" / "Live Updates 8 min ago …" prefixes and the "Show all" suffix on
-# package titles. Cosmetic — they only touch the stored headline, never the ranking.
+# package titles.
+# NOT cosmetic (2026-11-05): the stored headline is what the clustering pass sees,
+# so a prefix splits one story in two — CNN filed "• Breaking News West Bank ttack
+# Aftermath Reuters" and "West Bank ttack Aftermath Reuters" into different clusters
+# two hours apart. Topic-tag prefixes ("Benjamin Netanyahu As a divided Israel …")
+# are an arbitrary name and stay uncovered.
 _LABEL_PREFIX = re.compile(
-    r"^(?:•\s*)?(?:(?:Analysis|Video|Gallery|Live Updates|CNN Exclusive|Exclusive)\b(?:\s*\d+\s*(?:min|hrs?|hours?)\s+ago)?\s*){1,2}"
-    r"(?:by\s+[A-Z][\w.'’-]+(?:\s+[A-Z][\w.'’-]+)?\s+)?",  # "Analysis by Stephen Collinson …" (two-token names)
+    r"^(?:•\s*)?"
+    r"(?:"
+    # a leading relative timestamp on its own: "a min ago …", "5 hours ago …"
+    r"(?:(?:an?|\d+)\s*(?:secs?|seconds?|mins?|minutes?|hrs?|hours?|days?)\s+ago[:\s]*)"
+    r"|"
+    # or a section flag, optionally carrying its own timestamp
+    r"(?:(?:Analysis|Video|Gallery|Live Updates|Live ?blog|Live(?!\s+Aid\b)|Breaking News|BREAKING(?=\s*:)|"
+    r"Explainer|Explained|In pictures|CNN Exclusive|Exclusive)\b[:\s]*"
+    r"(?:\s*(?:an?|\d+)\s*(?:mins?|hrs?|hours?)\s+ago[:\s]*)?)"
+    r"){1,2}"
+    r"(?:by\s+[A-Z][\w.'’-]+(?:\s+[A-Z][\w.'’-]+)?\s+)?",  # "Analysis by Stephen Collinson …"
     re.I,
 )
 _LABEL_SUFFIX = re.compile(r"\s+(?:Show all|Read more|\d+:\d\d)\s*$", re.I)

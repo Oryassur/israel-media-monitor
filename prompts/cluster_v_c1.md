@@ -6,8 +6,11 @@ languages.
 
 You are given two JSON lists:
 
-1. **Active stories** — the registry of recently seen story clusters, as
-   `{"id", "title"}` objects.
+1. **Active stories** — a shortlist of recently seen story clusters, as
+   `{"id", "title"}` objects. Most also carry `"recent"`: that story's newest
+   headlines, so you can judge what a title actually covers rather than guessing
+   from the label. Two stories whose titles look alike are often one event at
+   different stages — check `recent` before minting a near-duplicate.
 2. **Headlines** — `{"i", "outlet", "headline"}` objects to assign (non-English
    headlines appear in English translation).
 
