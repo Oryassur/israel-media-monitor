@@ -217,7 +217,7 @@ a{color:inherit}
 .chip.ov{position:absolute;box-shadow:0 1px 4px rgba(0,0,0,.25);font-size:15px;padding:2px 9px;left:10px;bottom:10px}
 .th .chip.ov{font-size:11.5px;padding:0 6px;left:auto;bottom:auto;right:4px;top:4px;border-radius:5px}
 /* compound chip on a bundle card: the mean and its three blocs as one object. The plate
-   is neutral because the number already carries the sentiment; the bars take the colour. */
+   is neutral because the number already carries the sentiment; the bars take the color. */
 .chip2{display:inline-flex;align-items:center;gap:8px;background:var(--surface);
   border-radius:6px;padding:4px 8px 4px 9px}
 .chip2 .n2{font:600 15px/1 var(--font-display);font-variant-numeric:lining-nums tabular-nums}
@@ -371,14 +371,14 @@ svg text.ann{font-size:11px}
 .storyhead:first-of-type{margin-top:6px}
 .storyhead .t{flex:1 1 auto;min-width:0}
 .storyhead .m{font:400 12px var(--font-ui);color:var(--muted)}
-/* the divergence figure: alert colour on a wide gap, muted on a narrow one */
+/* the divergence figure: alert color on a wide gap, muted on a narrow one */
 .storyhead .dl{flex:0 0 auto;min-width:44px;text-align:right;color:var(--dv-n2);
   font:700 12.5px/1.3 var(--font-ui);font-variant-numeric:tabular-nums}
 .storyhead .dl.calm{color:var(--muted)}
 .storyhead .dl.gap{font-size:11px}
 /* lean blocs on a story row: three bars from one baseline, always left, center, right.
-   Height is the bloc's share of the story's attention normalised to its own largest
-   bloc; colour is that bloc's framing. A bloc that never carried the story draws no
+   Height is the bloc's share of the story's attention normalized to its own largest
+   bloc; color is that bloc's framing. A bloc that never carried the story draws no
    bar at all — just a tick on the baseline. */
 /* 19px, not 18: border-box plus the 1px baseline rule would otherwise leave a
    17px content area for the 18px scale blocMark draws to */
@@ -534,7 +534,7 @@ footer li b{color:var(--ink2);font-weight:600}
       <div class="sv none" id="heroSent">—</div>
     </div>
     <div class="subj" id="subjBlock" hidden>
-      <div class="hd"><p class="ttl" title="What the Israel-related headlines are about, and who is in them · size = front-page weight · colour = mean sentiment">Subjects</p><button type="button" class="xp" id="subjOpen" title="Expand">⤢</button></div>
+      <div class="hd"><p class="ttl" title="What the Israel-related headlines are about, and who is in them · size = front-page weight · color = mean sentiment">Subjects</p><button type="button" class="xp" id="subjOpen" title="Expand">⤢</button></div>
       <svg class="cloud" id="subjCloud" role="group" aria-label="Subjects"></svg>
     </div>
   </div>
@@ -652,7 +652,7 @@ footer li b{color:var(--ink2);font-weight:600}
         the same hours, pooled over the selected period. It answers: of the foreign news these front pages
         carried, how much was about Israel?</li>
       <li><b>The pie</b> between the two figures: the four largest subjects of international coverage in the
-        selection, clockwise from twelve o'clock, with Israel's slice pulled out and labelled (Israel is added
+        selection, clockwise from twelve o'clock, with Israel's slice pulled out and labeled (Israel is added
         as a fifth slice when it is not among the four); everything else is "Other". Hover any slice,
         including Israel's, for its name and share; click the pie to jump to the full breakdown below.</li>
       <li><b>Attention, of all front-page news:</b> for each outlet and hour, Israel-related weight divided by
@@ -664,7 +664,7 @@ footer li b{color:var(--ink2);font-weight:600}
         when nothing fits — and up to three figures, with titles and bynames reconciled to one name
         ("the Israeli prime minister", "Bibi" and "Netanyahu" are one term). The cloud shows the subjects
         and figures of the selected period and outlets: size is the front-page weight of the headlines
-        carrying the term, colour its mean sentiment; figures are set in italic. Click a term for its headlines.</li>
+        carrying the term, color its mean sentiment; figures are set in italic. Click a term for its headlines.</li>
       <li><b>Sentiment:</b> the average framing score of the Israel-related headlines in the window, from −2
         (hostile) to +2 (sympathetic), each hour weighted by how many such headlines it had. Framing toward
         Israel is what is scored, not general positivity: a report of Israeli casualties can score positive, a
@@ -731,12 +731,12 @@ footer li b{color:var(--ink2);font-weight:600}
     <ul>
       <li>Every story in the list carries three bars on one baseline — left, center, right, always in that
         order. Bar <b>height</b> is the share of the story's front-page weight that lean bloc gave it,
-        normalised to the story's own largest bloc, so the split is legible on a small story as well as on a
-        big one; the row already prints the story's size as a number. Bar <b>colour</b> is that bloc's
+        normalized to the story's own largest bloc, so the split is legible on a small story as well as on a
+        big one; the row already prints the story's size as a number. Bar <b>color</b> is that bloc's
         prominence-weighted mean framing. The bars use a steeper ramp than the sentiment chips do: a chip
-        prints its number, so colour there is only a hint, while a bar has no number and colour is its whole
+        prints its number, so color there is only a hint, while a bar has no number and color is its whole
         signal. &plusmn;0.5 reaches the full mid tone, &plusmn;1 the full end tone &mdash; a bloc mean of
-        &plusmn;1 means every outlet in it framed the story the same way &mdash; and beyond that the colour
+        &plusmn;1 means every outlet in it framed the story the same way &mdash; and beyond that the color
         deepens rather than brightens. A bloc that carried the story but has no score yet is gray.</li>
       <li>A bloc that never carried the story draws <b>no bar at all</b> — only a red tick on the baseline.
         A bloc that carried it barely keeps a minimum bar, so "covered it lightly" is never shown as "did not
@@ -745,10 +745,10 @@ footer li b{color:var(--ink2);font-weight:600}
         horizontal bar, its framing to two decimals and how many outlets it had.</li>
       <li>The four top stories carry the same three bars, beside the story's mean on the card image &mdash;
         one object, so the average and the spread behind it are read together rather than in two places.</li>
-      <li><b>Divided</b> orders the list by the gap between the most and least favourable bloc (Δ, the figure
+      <li><b>Divided</b> orders the list by the gap between the most and least favorable bloc (Δ, the figure
         at the end of each row). A story needs weight in at least two blocs and at least four scored
         headlines to get a figure; below that the bars still draw and the story does not rank. A gap of 0.75
-        or more is coloured as a divergence. Where exactly one bloc skipped the story there is no full Δ, so
+        or more is colored as a divergence. Where exactly one bloc skipped the story there is no full Δ, so
         the row ranks on the gap between the two blocs that did carry it and reads "no L", "no C" or "no R".</li>
     </ul>
 
@@ -789,7 +789,7 @@ footer li b{color:var(--ink2);font-weight:600}
         and the bars' height stood for prominence weight, which the card no longer shows.</li>
       <li><b>2026-11-05 · lean rows.</b> Each row on the lead card now stands for a lean bloc rather
         than for one article: the figure beside the lean is that bloc's own mean framing — the same
-        number its bar is coloured by — and the quoted headline names its outlet and placement
+        number its bar is colored by — and the quoted headline names its outlet and placement
         underneath, with how many more outlets in that bloc carried the story.</li>
       <li><b>2026-11-05 · top stories.</b> The lead card leads with the story, not with one paper.
         The aggregating title is the headline, the kicker counts the outlets and dates the story, and
@@ -800,16 +800,16 @@ footer li b{color:var(--ink2);font-weight:600}
         so rather than being filled in. The image cross-fades through three outlets' photographs,
         uncredited, because the card speaks for the whole bundle. "+ N news sites" opens every
         headline in the story as an overlay.</li>
-      <li><b>2026-10-22 · stories.</b> The lean bars got a colour ramp of their own, steeper than the
+      <li><b>2026-10-22 · stories.</b> The lean bars got a color ramp of their own, steeper than the
         chips', because a bar carries no number to lean on: &plusmn;0.5 now reaches the full mid tone and
         &plusmn;1 the full end tone. Their zero sits on a less yellow neutral, so a bloc at 0.00 reads as the
         middle of the scale rather than the quiet end of the red half. The top four stories carry the bars
-        too, inside the sentiment chip on the card image: the plate turned neutral and the colour it was
+        too, inside the sentiment chip on the card image: the plate turned neutral and the color it was
         spending on a number it already printed now goes to the bars.</li>
       <li><b>2026-10-21 · stories.</b> Where outlets diverge: every story row carries a left / center / right
-        mark (height = that bloc's share of the story's attention, colour = its framing, no bar where the bloc
+        mark (height = that bloc's share of the story's attention, color = its framing, no bar where the bloc
         skipped the story), its expansion unrolls the three blocs with framing and outlet counts, and a third
-        list mode, <b>Divided</b>, ranks stories by the gap between the most and least favourable bloc. The
+        list mode, <b>Divided</b>, ranks stories by the gap between the most and least favorable bloc. The
         row bars and the expanded bars are both driven by share of the story's weight — the row bars were
         going to use raw weight, which would have given the two marks different denominators.</li>
       <li><b>2026-10-18 · links.</b> Back and Forward now step through the views you have looked at
@@ -829,7 +829,7 @@ footer li b{color:var(--ink2);font-weight:600}
         those rows are approximate).</li>
       <li><b>2026-09-13 · V2.5.</b> Subjects: a cloud of what the Israel-related headlines are about and who
         is in them, inside the attention card, expandable; the population comparison retired. Sentiment
-        shifts labelled on the chart alongside attention spikes.</li>
+        shifts labeled on the chart alongside attention spikes.</li>
       <li><b>2026-09-13 · V2.4.</b> Page system: one type scale (section titles alike for news and
         analytics), one surface rule (analytics on white cards, editorial on the page), the attention card as a
         right rail beside the top stories.</li>
@@ -861,9 +861,10 @@ const $=s=>document.querySelector(s);
 const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 const LEAN_ORDER=["left","center","right"];
 // "center" is the stored value (sources.yaml, the ?lean= query, LEAN_ORDER) and never
-// changes. Everything a reader sees goes through these: the dashboard's prose is
-// British, so the label is Centre. Never render a lean with cap() or raw.
-const LEAN_LC={left:"left",center:"centre",right:"right"};
+// changes. Everything a reader sees goes through these two maps — a label and a
+// sentence form. Never render a lean with cap() or raw: that is how three spellings
+// went live at once. Copy is American English throughout.
+const LEAN_LC={left:"left",center:"center",right:"right"};
 const cap=s=>s?s[0].toUpperCase()+s.slice(1):s;
 const REGION=(c)=>c==="US"?"US":c==="UK"?"UK":["FR","DE","ES","IT","INT"].includes(c)?"EU":"Other";
 const REGION_ORDER=["US","UK","EU","Other"];
@@ -1732,13 +1733,13 @@ const storyTitle=st=>(STORIES[st]&&STORIES[st].t)||"";
 // cut at a word boundary, "…" marks the cut
 const trunc=(s,n)=>{s=(s||"").trim();if(s.length<=n)return s;const c=s.slice(0,n-1);const i=c.lastIndexOf(" ");return (i>n*.6?c.slice(0,i):c).replace(/[\s,;:—–-]+$/,"")+"…"};
 const fmtSent1=v=>Math.abs(v)<.05?"0.0":v<0?"−"+(-v).toFixed(1):"+"+v.toFixed(1);
-// Sentiment → colour, the one place it is decided: the five-step dv scale read
+// Sentiment → color, the one place it is decided: the five-step dv scale read
 // continuously, |v|/2 of the hostile or sympathetic end token mixed over neutral
 // (so ±1 lands halfway, ±2 solid). Used by the chips and by the lean bloc marks.
 const dvStrength=v=>Math.min(100,Math.round(Math.abs(v)/2*100));
 const dvMix=v=>`color-mix(in srgb, var(${v<0?"--dv-n2":"--dv-p2"}) ${dvStrength(v)}%, var(--dv-0))`;
-// A chip prints its number, so colour there is only a hint and dvMix's gentle tint is
-// right. A bar has no number — colour is its whole signal — so it gets its own ramp,
+// A chip prints its number, so color there is only a hint and dvMix's gentle tint is
+// right. A bar has no number — color is its whole signal — so it gets its own ramp,
 // reading the five dv tokens as real stops instead of one long fade through neutral:
 // ±0.5 lands on the full mid token, ±1 on the full end token, and past that it deepens
 // toward ink rather than brightening. It saturates at ±1 because a bloc mean of ±1
@@ -1769,7 +1770,7 @@ const fmtWhen=ts=>new Date(ts).toLocaleString(undefined,{month:"short",day:"nume
 // Both marks — the row bars and the expansion's fills — are driven by that one
 // share, so they never disagree about what a bloc's slice of a story is.
 const LEAN_SHORT={left:"L",center:"C",right:"R"};
-const DELTA_FLAG=0.75;   // Δ at or above this is coloured as a divergence, below it stays muted
+const DELTA_FLAG=0.75;   // Δ at or above this is colored as a divergence, below it stays muted
 const MIN_SCORED=4;      // scored headlines a story needs before it gets a figure or ranks
 function blocStats(items){
   const acc={};
@@ -1787,7 +1788,7 @@ function blocStats(items){
   const missing=blocs.filter(b=>b.w===0).map(b=>b.lean);
   const gap=framed.length>1?Math.max(...framed)-Math.min(...framed):null;
   // The one rule for the figure, kept in one place: a full Δ when every bloc carried
-  // the story; when exactly one did not, the gap between the two that did, labelled
+  // the story; when exactly one did not, the gap between the two that did, labeled
   // "no R / no L / no C" rather than a synthesised Δ; nothing at all below the floor
   // of two framed blocs and MIN_SCORED headlines, in which case the story does not rank.
   const rankable=gap!=null&&scored>=MIN_SCORED&&missing.length<2;
@@ -1798,7 +1799,7 @@ function blocStats(items){
 const blocTip=S=>S.blocs.map(b=>b.w===0?LEAN_LC[b.lean]+" not carried"
   :b.f==null?LEAN_LC[b.lean]+" unscored":LEAN_LC[b.lean]+" "+fmtSent(b.f)).join(" · ");
 const blocFill=b=>b.f==null?"var(--dv-u)":dvBar(b.f);
-// Height is attention, normalised per row — the story's largest bloc fills the mark,
+// Height is attention, normalized per row — the story's largest bloc fills the mark,
 // floored at 3px so "covered it lightly" never renders as "did not cover it". That
 // distinction belongs to the omission tick alone. Story size is already in the row text.
 function blocMark(S){
@@ -1815,7 +1816,7 @@ function blocMark(S){
 }
 // On a card, the average and its breakdown are one object, not two: the plate goes
 // neutral (the number already states the sentiment — it was saying it twice, once as
-// a figure and once as the colour behind it) and the freed colour channel is what the
+// a figure and once as the color behind it) and the freed color channel is what the
 // bars spend. Sits where the chip already sat, so sentiment stays scannable.
 function blocChip(v,S){
   const el=document.createElement("span");el.className="chip2";
@@ -1989,7 +1990,7 @@ function kickerEl(text){const k=document.createElement("p");k.className="skick";
 // said. On ~60% of stories all three land on 0, because 58% of bloc means sit
 // inside the band — that is the blocs agreeing, not the rule failing.
 const VOICE_MID=0.2;   // owner, 2026-11-05: a bloc leans once its mean passes ±0.2
-const LEAN_CAP={left:"Left",center:"Centre",right:"Right"};
+const LEAN_CAP={left:"Left",center:"Center",right:"Right"};
 const LEAN_WORD={left:"left-leaning",center:"centrist",right:"right-leaning"};
 // A newsletter digest is a front-page link like any other and keeps its weight,
 // but it must never be quoted: "Morning Rundown: Trump pushes to ramp up Alaska
@@ -2020,7 +2021,7 @@ function pickVoices(b){
 // reader meets out of L-C-R order still maps onto the bar above it
 // A row stands for a lean bloc, not for one article. So the left column carries
 // the bloc: its name and ITS mean framing — the same number the bar above is
-// coloured by — and the quoted headline names its own outlet underneath, with how
+// colored by — and the quoted headline names its own outlet underneath, with how
 // many more outlets in that bloc carried the story. The article's own score is not
 // shown: the row is the bloc's position, and the quote is only its evidence.
 function voiceLine(bloc,it,b){
