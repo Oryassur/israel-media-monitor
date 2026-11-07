@@ -294,7 +294,17 @@ _LABEL_PREFIX = re.compile(
     r"(?:by\s+[A-Z][\w.'’-]+(?:\s+[A-Z][\w.'’-]+)?\s+)?",  # "Analysis by Stephen Collinson …"
     re.I,
 )
-_LABEL_SUFFIX = re.compile(r"\s+(?:Show all|Read more|\d+:\d\d)\s*$", re.I)
+# Trailing format tags. Like the prefixes above these are not cosmetic: the same
+# story carrying one and not the other hashes to two item ids, so one outlet's
+# single story counts twice toward a bundle's weight. Il Giornale ran "…Ascari
+# applaude" and "…Ascari applaude | VIDEO" 75 minutes apart, both at rank 1, and
+# the pair put a one-outlet story into the front unit's top four.
+# A separator is required, so "Hostages return home alive" and a headline that
+# merely ends in the word video are untouched.
+_LABEL_SUFFIX = re.compile(
+    r"(?:\s+(?:Show all|Read more|\d+:\d\d)"
+    r"|\s*[|\u2013\u2014-]\s*(?:VIDEO|FOTO|FOTOS|PHOTO|PHOTOS|GALLERY|LIVE|PODCAST|AUDIO"
+    r"|INTERVISTA|GRAFICI|IN PICTURES))\s*$", re.I)
 
 
 # Link text that is nothing but labels, durations and credits ("• Video 4:47 Video 4:47 CNN").

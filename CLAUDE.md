@@ -270,6 +270,18 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   **Story titles are coined once
   and never revisited** (see clustering), so the kicker dates the story — a 48-day-old title in
   21px needs the "since" anchor to read as an arc.
+- **Format tags are never part of a headline** (2026-11-07): an item id is
+  `hash(source, normalized headline)`, so a trailing `| VIDEO` / `– live` / `| FOTO` /
+  `Show all` turns one story into two records, each keeping its own rank. Front-unit bundles
+  sum `best_weight` across a story's items regardless of when each was seen, so one outlet's
+  duplicate counted twice: Il Giornale ran the same headline 75 minutes apart, both at rank 1,
+  and its **one-outlet** story reached the front unit's top four. `extract._LABEL_SUFFIX` strips
+  these (a separator is required, so "returns home alive" survives; `MIN_HEADLINE_LEN` still
+  guards a too-short remainder). `scripts/merge_suffix_dupes_2026-11-07.py` repaired the 11
+  already stored and repointed 34 `data/runs` rows. It merges only when the stripped id already
+  exists — a tag on the only copy is cosmetic, and rewriting it would change an id that
+  `data/runs` references — and refuses a pair whose windows overlap, because that means a run
+  saw both and the snapshots need a weight rebuild, not a merge (1 such pair was skipped).
 - **Copy is American English** (2026-11-07, owner's call): color, center, labeled, normalized,
   favorable. The page had drifted British (17 `colour`), so the whole visible surface and the
   comments beside it were converted in one pass; keep new copy American.
