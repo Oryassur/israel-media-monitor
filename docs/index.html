@@ -773,10 +773,12 @@ footer li b{color:var(--ink2);font-weight:600}
 
     <h3>Changelog</h3>
     <ul>
-      <li><b>2026-11-07 · top stories.</b> A story's rank now counts each outlet once, at its best
-        placement, and is scaled by how many outlets carried it. An outlet that files the same story
-        several times used to be counted several times, which let one newsroom outrank stories the
-        whole press covered.</li>
+      <li><b>2026-11-07 · one outlet, one vote.</b> Everything a story reports now counts each
+        outlet once — its rank, its place in the story list, its mean sentiment and the height and
+        color of its lean bars. An outlet that filed the same story several times used to be counted
+        several times in all four, which let one newsroom outrank stories the whole press covered and
+        set the sentiment of a story it did not dominate. Ranks are also scaled by how many outlets
+        carried the story.</li>
       <li><b>2026-11-05 · quoting.</b> Newsletter digests are never quoted on a card. A
         "Morning Rundown" link is several unrelated stories under one headline and sat at rank 1,
         so it kept winning the slot; it still counts toward attention like any other front-page
@@ -1776,18 +1778,41 @@ const fmtWhen=ts=>new Date(ts).toLocaleString(undefined,{month:"short",day:"nume
 const LEAN_SHORT={left:"L",center:"C",right:"R"};
 const DELTA_FLAG=0.75;   // Δ at or above this is colored as a divergence, below it stays muted
 const MIN_SCORED=4;      // scored headlines a story needs before it gets a figure or ranks
+// Within a story each outlet speaks once: its best placement carries its weight, and
+// its own prominence-weighted mean carries its framing. Summing raw items let a
+// newsroom that filed the same story four ways count four times — in the rank, in the
+// story's mean sentiment, and in the height and color of its bloc's bar.
+function outletVotes(items){
+  const by=new Map();
+  for(const it of items){
+    let v=by.get(it.src);
+    if(!v){v={src:it.src,w:0,sn:0,sd:0,s:null};by.set(it.src,v)}
+    if(it.w>v.w)v.w=it.w;
+    if(it.s!=null){v.sn+=it.s*it.w;v.sd+=it.w}
+  }
+  for(const v of by.values())v.s=v.sd?v.sn/v.sd:null;
+  return by;
+}
+// weighted mean over votes, each outlet weighted by its best placement
+function voteMean(votes){
+  let n=0,d=0;
+  for(const v of votes){if(v.s!=null){n+=v.s*v.w;d+=v.w}}
+  return d?n/d:null;
+}
 function blocStats(items){
   const acc={};
-  for(const L of LEAN_ORDER)acc[L]={w:0,outlets:new Set(),sn:0,sd:0};
+  for(const L of LEAN_ORDER)acc[L]=[];
   let total=0,scored=0;
-  for(const it of items){
-    const e=acc[(SRC[it.src]||{}).lean];
-    if(!e)continue;
-    e.w+=it.w;e.outlets.add(it.src);total+=it.w;
-    if(it.s!=null){e.sn+=it.s*it.w;e.sd+=it.w;scored++}
+  for(const v of outletVotes(items).values()){
+    const L=(SRC[v.src]||{}).lean;
+    if(!acc[L])continue;
+    acc[L].push(v);total+=v.w;
   }
-  const blocs=LEAN_ORDER.map(L=>({lean:L,w:acc[L].w,n:acc[L].outlets.size,
-    f:acc[L].sd?acc[L].sn/acc[L].sd:null,share:total?acc[L].w/total:0}));
+  for(const it of items)if(it.s!=null)scored++;   // the data-sufficiency floor still counts headlines
+  const blocs=LEAN_ORDER.map(L=>{
+    let w=0;for(const v of acc[L])w+=v.w;
+    return {lean:L,w,n:acc[L].length,f:voteMean(acc[L]),share:total?w/total:0};
+  });
   const framed=blocs.filter(b=>b.w>0&&b.f!=null).map(b=>b.f);
   const missing=blocs.filter(b=>b.w===0).map(b=>b.lean);
   const gap=framed.length>1?Math.max(...framed)-Math.min(...framed):null;
@@ -1898,27 +1923,21 @@ function topBundles(list,n){
   for(const it of list){
     if(!it.st)continue;
     let b=by.get(it.st);
-    if(!b){b={st:it.st,items:[],best:new Map(),sn:0,sd:0};by.set(it.st,b)}
+    if(!b){b={st:it.st,items:[]};by.set(it.st,b)}
     b.items.push(it);
-    // One outlet, one vote. Summing every item let a newsroom that files the same
-    // story four different ways vote four times — the project equal-weights sources
-    // everywhere else, and that rule used to stop at the bundle. Each outlet now
-    // contributes its best placement only.
-    const prev=b.best.get(it.src);
-    if(prev===undefined||it.w>prev)b.best.set(it.src,it.w);
-    if(it.s!=null){b.sn+=it.s*it.w;b.sd+=it.w}
   }
   const bundles=[...by.values()];
   for(const b of bundles){
     b.title=storyTitle(b.st)||"Untitled story";
     b.items.sort(byRank);
     b.lead=b.items[0];b.card=b.items.find(it=>it.img)||b.lead;
-    b.sent=b.sd?b.sn/b.sd:null;b.nSources=b.best.size;b.S=blocStats(b.items);
+    const votes=[...outletVotes(b.items).values()];
+    b.sent=voteMean(votes);b.nSources=votes.length;b.S=blocStats(b.items);
     // Breadth: n/(n+1). One outlet keeps half its reach, two keep two-thirds,
     // nineteen keep 95%. A penalty rather than a floor, because excluding
     // single-outlet stories would empty a 24h front unit — 14 of 18 bundles there
     // are one outlet, and 7 of 8 once the US filter is on.
-    let reach=0;for(const w of b.best.values())reach+=w;
+    let reach=0;for(const v of votes)reach+=v.w;
     b.reach=reach;b.score=reach*b.nSources/(b.nSources+1);
   }
   bundles.sort((a,b)=>(b.score-a.score)||(b.nSources-a.nSources)||(b.items.length-a.items.length));
@@ -2232,11 +2251,18 @@ function groupByStory(list){
   }
   const groups=[];
   for(const [st,items] of by){
-    if(items.length>1)groups.push({st,title:storyTitle(st)||"Untitled story",items:items.sort(byRank),
-      nSources:new Set(items.map(i=>i.src)).size,S:blocStats(items)});
+    if(items.length>1){
+      // same score as the front unit: ordering the list by item count rewarded the
+      // newsroom that filed most often, which is the churn the bundle rank just lost
+      const votes=[...outletVotes(items).values()];
+      let reach=0;for(const v of votes)reach+=v.w;
+      groups.push({st,title:storyTitle(st)||"Untitled story",items:items.sort(byRank),
+        nSources:votes.length,reach,score:reach*votes.length/(votes.length+1),
+        S:blocStats(items)});
+    }
     else other.push(items[0]);
   }
-  groups.sort((a,b)=>(b.items.length-a.items.length)||(b.items[0].w-a.items[0].w));
+  groups.sort((a,b)=>(b.score-a.score)||(b.nSources-a.nSources)||(b.items.length-a.items.length));
   if(other.length)groups.push({title:"Other headlines",items:other.sort((a,b)=>(b.w-a.w)||(b.fs<a.fs?-1:1))});
   return groups;
 }

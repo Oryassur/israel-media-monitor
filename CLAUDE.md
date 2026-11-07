@@ -339,6 +339,15 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   expansion row for "and N more") → chart → stories list; spike annotations come
   from story clusters (combined view, items window = meta.items_window_days,
   one per distinct story, measured after the svg is in the DOM).
+- **One outlet, one vote** (2026-11-07): `outletVotes(items)` is the single place a story is
+  reduced to its outlets — each gets its **best placement** as weight and **its own**
+  prominence-weighted mean as framing — and `voteMean` combines them. Every figure a story reports
+  runs through it: bundle rank, story-list order, the story's mean sentiment, and `blocStats`
+  (bloc weight, bar height, bar color, Δ). Before, all four summed raw items, so a newsroom filing
+  one story sixteen ways counted sixteen times: Corriere filed 16 of the Pillay story's 36 items
+  and dragged its mean to −0.33, where per-outlet it is −0.03 and the press was simply split
+  (Δ rose 1.35 → 1.72, measuring outlets rather than articles). `blocStats.scored` still counts
+  scored *headlines*, because it is a data-sufficiency floor for `MIN_SCORED`, not a weight.
 - **Bundle ranking** (2026-11-07): `score = reach × n/(n+1)`, where `reach` sums **each outlet's
   best placement only** and `n` is the distinct outlets. Summing every item let a newsroom filing
   one story four ways vote four times — the equal-weighting invariant stopped at the bundle — and
@@ -347,8 +356,8 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   needs days to accumulate) but 276 of 326 at 30d, while `n/(n+1)` moves 2 at 24h, 37 at 7d and
   199 at 30d. A penalty, never a floor: 78% of 24h bundles are single-outlet (88% under the US
   filter), so excluding them would empty the front unit. `b.reach` is kept on the bundle for
-  debugging. NOT yet applied to `groupByStory`, which still orders the story list by
-  `items.length` — the same churn metric, a separate decision.
+  debugging. `groupByStory` orders the story list by the same score (it used to sort by
+  `items.length`, which rewarded the newsroom that filed most often).
 - **Front-page bundles** are computed client-side from items.json: clustered
   items only, ranked by that score within the selected period + filters;
   card headline = best placement (ties → best rank → newest) that has an image,
