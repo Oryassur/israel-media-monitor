@@ -773,6 +773,10 @@ footer li b{color:var(--ink2);font-weight:600}
 
     <h3>Changelog</h3>
     <ul>
+      <li><b>2026-11-07 · top stories.</b> A story's rank now counts each outlet once, at its best
+        placement, and is scaled by how many outlets carried it. An outlet that files the same story
+        several times used to be counted several times, which let one newsroom outrank stories the
+        whole press covered.</li>
       <li><b>2026-11-05 · quoting.</b> Newsletter digests are never quoted on a card. A
         "Morning Rundown" link is several unrelated stories under one headline and sat at rank 1,
         so it kept winning the slot; it still counts toward attention like any other front-page
@@ -1894,8 +1898,14 @@ function topBundles(list,n){
   for(const it of list){
     if(!it.st)continue;
     let b=by.get(it.st);
-    if(!b){b={st:it.st,items:[],score:0,sn:0,sd:0,srcs:new Set()};by.set(it.st,b)}
-    b.items.push(it);b.score+=it.w;b.srcs.add(it.src);
+    if(!b){b={st:it.st,items:[],best:new Map(),sn:0,sd:0};by.set(it.st,b)}
+    b.items.push(it);
+    // One outlet, one vote. Summing every item let a newsroom that files the same
+    // story four different ways vote four times — the project equal-weights sources
+    // everywhere else, and that rule used to stop at the bundle. Each outlet now
+    // contributes its best placement only.
+    const prev=b.best.get(it.src);
+    if(prev===undefined||it.w>prev)b.best.set(it.src,it.w);
     if(it.s!=null){b.sn+=it.s*it.w;b.sd+=it.w}
   }
   const bundles=[...by.values()];
@@ -1903,9 +1913,15 @@ function topBundles(list,n){
     b.title=storyTitle(b.st)||"Untitled story";
     b.items.sort(byRank);
     b.lead=b.items[0];b.card=b.items.find(it=>it.img)||b.lead;
-    b.sent=b.sd?b.sn/b.sd:null;b.nSources=b.srcs.size;b.S=blocStats(b.items);
+    b.sent=b.sd?b.sn/b.sd:null;b.nSources=b.best.size;b.S=blocStats(b.items);
+    // Breadth: n/(n+1). One outlet keeps half its reach, two keep two-thirds,
+    // nineteen keep 95%. A penalty rather than a floor, because excluding
+    // single-outlet stories would empty a 24h front unit — 14 of 18 bundles there
+    // are one outlet, and 7 of 8 once the US filter is on.
+    let reach=0;for(const w of b.best.values())reach+=w;
+    b.reach=reach;b.score=reach*b.nSources/(b.nSources+1);
   }
-  bundles.sort((a,b)=>(b.score-a.score)||(b.items.length-a.items.length));
+  bundles.sort((a,b)=>(b.score-a.score)||(b.nSources-a.nSources)||(b.items.length-a.items.length));
   return bundles.slice(0,n);
 }
 

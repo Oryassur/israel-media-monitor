@@ -339,8 +339,18 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   expansion row for "and N more") → chart → stories list; spike annotations come
   from story clusters (combined view, items window = meta.items_window_days,
   one per distinct story, measured after the svg is in the DOM).
+- **Bundle ranking** (2026-11-07): `score = reach × n/(n+1)`, where `reach` sums **each outlet's
+  best placement only** and `n` is the distinct outlets. Summing every item let a newsroom filing
+  one story four ways vote four times — the equal-weighting invariant stopped at the bundle — and
+  that is how a one-outlet story took a top-four slot. The two terms cover opposite windows and
+  neither is sufficient alone: measured over live data, `reach` changes **0 ranks at 24h** (churn
+  needs days to accumulate) but 276 of 326 at 30d, while `n/(n+1)` moves 2 at 24h, 37 at 7d and
+  199 at 30d. A penalty, never a floor: 78% of 24h bundles are single-outlet (88% under the US
+  filter), so excluding them would empty the front unit. `b.reach` is kept on the bundle for
+  debugging. NOT yet applied to `groupByStory`, which still orders the story list by
+  `items.length` — the same churn metric, a separate decision.
 - **Front-page bundles** are computed client-side from items.json: clustered
-  items only, ranked by Σ prominence weight within the selected period + filters;
+  items only, ranked by that score within the selected period + filters;
   card headline = best placement (ties → best rank → newest) that has an image,
   else the lead text-only; bundle sentiment = prominence-weighted mean (shown as a
   chip overlaid on the card image). Every headline row shows the outlet's
