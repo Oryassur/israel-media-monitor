@@ -339,6 +339,27 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   expansion row for "and N more") → chart → stories list; spike annotations come
   from story clusters (combined view, items window = meta.items_window_days,
   one per distinct story, measured after the svg is in the DOM).
+- **Expansion** (decided 2026-10-18, not yet started): grow into **Asia**, **deeper Europe** and
+  **Latin America**. Three things constrain it, and the first two are easy to miss.
+  1. **The lean blocs are exactly 10 / 10 / 10 today.** That is why a bloc's raw weight compares
+     fairly against another's in `blocStats`, the bars and Δ. Add outlets unevenly and those
+     figures start measuring bloc headcount instead of editorial choice — either keep the balance
+     or normalise per bloc size, deliberately, not by accident.
+  2. **There is no real region field.** `REGION()` in the dashboard is a country ternary —
+     US / UK / EU(FR,DE,ES,IT,INT) / Other — so Canada and Australia already fall into "Other".
+     Non-western outlets need an explicit region in `sources.yaml` before they arrive, or the
+     region filter and the By-region split become meaningless.
+  3. **The headline attention figure stays western** (owner's call): new regions are a dimension
+     to filter and compare by, not a redefinition, so the existing series stays continuous.
+  Also: `config/keywords.yaml` covers en/fr/de/es/it only — Latin America needs Portuguese, and
+  anything beyond the Latin alphabet is new ground. Current spread: 30 outlets, US 9, UK 5, DE 4,
+  FR 3, IT 2, CA 2, AU 2, INT 2, ES 1.
+  **Blocked outlets** may be recovered with real-browser rendering (owner approved), with a line:
+  an honest user agent and robots.txt respected, never defeating bot detection or CAPTCHAs — NYT
+  stays on its feed. Expect roughly half the blocked list back, not all of it.
+  Vetting a new source, in order: a published lean rating (AllSides / Ad Fontes, basis commented),
+  the desktop-vs-mobile front comparison (see Mobile fronts), then a week of
+  `scripts/audit_headlines.py` before it enters aggregates.
 - **One outlet, one vote** (2026-11-07): `outletVotes(items)` is the single place a story is
   reduced to its outlets — each gets its **best placement** as weight and **its own**
   prominence-weighted mean as framing — and `voteMean` combines them. Every figure a story reports
