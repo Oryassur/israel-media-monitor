@@ -860,6 +860,10 @@ footer li b{color:var(--ink2);font-weight:600}
 const $=s=>document.querySelector(s);
 const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 const LEAN_ORDER=["left","center","right"];
+// "center" is the stored value (sources.yaml, the ?lean= query, LEAN_ORDER) and never
+// changes. Everything a reader sees goes through these: the dashboard's prose is
+// British, so the label is Centre. Never render a lean with cap() or raw.
+const LEAN_LC={left:"left",center:"centre",right:"right"};
 const cap=s=>s?s[0].toUpperCase()+s.slice(1):s;
 const REGION=(c)=>c==="US"?"US":c==="UK"?"UK":["FR","DE","ES","IT","INT"].includes(c)?"EU":"Other";
 const REGION_ORDER=["US","UK","EU","Other"];
@@ -1102,7 +1106,7 @@ function buildControls(){
   buildMultiSelect($("#fRegion"),"Region",
     REGION_ORDER.filter(r=>META.sources.some(s=>REGION(s.country)===r)).map(r=>({v:r,label:r})),state.regions);
   buildMultiSelect($("#fLean"),"Lean",
-    LEAN_ORDER.filter(l=>META.sources.some(s=>s.lean===l)).map(v=>({v,label:cap(v)})),state.leans);
+    LEAN_ORDER.filter(l=>META.sources.some(s=>s.lean===l)).map(v=>({v,label:LEAN_CAP[v]})),state.leans);
   buildMultiSelect($("#fSource"),"Source",
     META.sources.map(s=>({v:s.name,label:s.display})),state.sources);
   syncCustomInputs();
@@ -1155,7 +1159,7 @@ function selectedSources(){
 function groupsFor(sources){
   if(state.split==="lean"){
     const gs=LEAN_ORDER.filter(l=>sources.some(s=>s.lean===l));
-    return gs.map(l=>({key:l,label:cap(l),members:new Set(sources.filter(s=>s.lean===l).map(s=>s.name))}));
+    return gs.map(l=>({key:l,label:LEAN_CAP[l],members:new Set(sources.filter(s=>s.lean===l).map(s=>s.name))}));
   }
   if(state.split==="region"){
     const gs=REGION_ORDER.filter(r=>sources.some(s=>REGION(s.country)===r));
@@ -1298,7 +1302,7 @@ function outletStats(S,list){
   }
   for(const r of (useHourly?INTL.hourly:INTL.daily)){const o=rows.get(r[1]);if(!o||!inWin(r))continue;o.intl+=r[3];o.isr+=r[5]}
   return [...rows.values()].map(o=>{const src=SRC[o.name]||{};const home=src.home||src.country||"";
-    return {name:o.name,display:DISPN[o.name]||o.name,lean:LEAN_ORDER.indexOf(src.lean),leanLabel:cap(src.lean||""),
+    return {name:o.name,display:DISPN[o.name]||o.name,lean:LEAN_ORDER.indexOf(src.lean),leanLabel:LEAN_CAP[src.lean]||"",
     country:home,r1:o.r1,r5:o.r5,r10:o.r10,r20:o.r20,
     intl:o.intl?Math.min(1,o.isr/o.intl):null,share:o.shn?o.sh/o.shn:null,sent:o.sd?o.sn/o.sd:null}});
 }
@@ -1791,8 +1795,8 @@ function blocStats(items){
     label:!rankable?null:missing.length?"no "+LEAN_SHORT[missing[0]]:"Δ"+gap.toFixed(2)};
 }
 // terse tooltip, no sentences
-const blocTip=S=>S.blocs.map(b=>b.w===0?b.lean+" not carried"
-  :b.f==null?b.lean+" unscored":b.lean+" "+fmtSent(b.f)).join(" · ");
+const blocTip=S=>S.blocs.map(b=>b.w===0?LEAN_LC[b.lean]+" not carried"
+  :b.f==null?LEAN_LC[b.lean]+" unscored":LEAN_LC[b.lean]+" "+fmtSent(b.f)).join(" · ");
 const blocFill=b=>b.f==null?"var(--dv-u)":dvBar(b.f);
 // Height is attention, normalised per row — the story's largest bloc fills the mark,
 // floored at 3px so "covered it lightly" never renders as "did not cover it". That
@@ -1832,7 +1836,7 @@ function blocDelta(S){
 function blocDetail(S){
   const g=document.createElement("div");g.className="cgrid";
   for(const b of S.blocs){
-    const lab=document.createElement("span");lab.className="lab";lab.textContent=b.lean;g.appendChild(lab);
+    const lab=document.createElement("span");lab.className="lab";lab.textContent=LEAN_LC[b.lean];g.appendChild(lab);
     if(b.w===0){
       const none=document.createElement("div");none.className="none";none.textContent="not carried";g.appendChild(none);
     }else{

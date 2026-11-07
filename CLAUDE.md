@@ -270,6 +270,13 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   **Story titles are coined once
   and never revisited** (see clustering), so the kicker dates the story — a 48-day-old title in
   21px needs the "since" anchor to read as an arc.
+- **One spelling for a lean** (2026-11-07): `center` is the stored value — `sources.yaml`,
+  `LEAN_ORDER`, the `?lean=` query — and never changes; renaming it would break saved links and
+  the archive. Everything a reader sees goes through `LEAN_CAP` (Centre) or `LEAN_LC` (centre),
+  because the dashboard's prose is British (17 `colour`, no prose `color`). Never render a lean
+  with `cap()` or raw: that is how three spellings ended up live at once — "Center" in the lean
+  filter, the by-lean legend and the outlets table, "center" in the bar tooltips and the bloc
+  grid, "Centre" only on the lead card.
 - **Lean blocs / "Where outlets diverge"** (2026-10-21, client-side only, no pipeline
   change): per story cluster, items are grouped by the outlet's `lean` from
   `META.sources` into left/center/right. A bloc carries weight (Σ `w`), outlets
