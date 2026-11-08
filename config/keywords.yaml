@@ -72,7 +72,11 @@ es:
   - israelíes
   - gaza
   - hamás
+  - hamas  # 2026-11-07: El Mundo, Infobae, Clarín write it unaccented; 5 stored El Mundo headlines had missed the filter
   - hezbolá
+  - hezbollah
+  - hizbulá
+  - hizbolá
   - netanyahu
   - cisjordania
   - jerusalén

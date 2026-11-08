@@ -42,6 +42,25 @@ jobs:
 
       - run: pip install -r requirements.txt
 
+      # Sources with `render: browser` (pipeline/render.py) load their front in
+      # headless Chromium. The browser build is cached; the apt deps install each
+      # run (~40 s). Skipped entirely while no source asks for it.
+      - name: Browser for render-mode sources
+        id: render
+        run: |
+          if grep -q "render: browser" config/sources.yaml; then
+            echo "needed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "needed=false" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/cache@v4
+        if: steps.render.outputs.needed == 'true'
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
+      - if: steps.render.outputs.needed == 'true'
+        run: python -m playwright install --with-deps chromium
+
       - name: Run pipeline
         id: pipeline
         env:

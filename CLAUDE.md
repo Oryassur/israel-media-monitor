@@ -16,7 +16,7 @@ archive rather than re-fetching.
 ## Architecture
 
 ```
-config/sources.yaml        30 outlets: url, country, lang, lean (3-way: left/center/right, from AllSides / Ad Fontes ratings — basis commented per source), type, optional home scope + selector
+config/sources.yaml        39 outlets: url, country, lang, lean (3-way: left/center/right, from AllSides / Ad Fontes / MBFC ratings — basis commented per source), type, optional home scope + selector/skip/headline/render
 config/keywords.yaml       multilingual Israel keyword pre-filter (en/fr/de/es/it)
 prompts/sentiment_rubric_v3.1.md the scoring rubric (versioned — see below; older versions kept for history)
 prompts/cluster_v_c1.md    story-clustering rubric (versioned via CLUSTER_VERSION)
@@ -29,6 +29,8 @@ pipeline/                  the whole pipeline (plain Python, no agent in the loo
                            (--retry-hours N: one-off backfill of the unscored backlog after an outage)
   extract.py               homepage HTML → ranked headlines; prominence weights v2 (rank1 ×10, 2–5 ×5, 6–10 ×3, 11–20 ×1, 21+ ×0);
                            fetch_feed: bot-walled outlets measured on their front-page RSS (`feed:` in sources.yaml — NYT)
+  render.py                headless Chromium fetch for fronts with `render: browser` (JavaScript-built or walled);
+                           honest UA (HeadlessChrome), robots.txt checked first, images/media/fonts not downloaded
   health.py                end-of-run alert conditions → logs/health.json (LLM dead, source down/empty 24h); never committed
   detect.py                keyword matching per language
   score.py                 LLM sentiment (backends: anthropic API / claude CLI); batch, cached per headline
@@ -40,6 +42,8 @@ pipeline/                  the whole pipeline (plain Python, no agent in the loo
                            data/snapshots (monthly csv, append-only) · data/intl (monthly jsonl, append-only)
   publish.py               builds docs/data/*.json for the dashboard (items 30d w/ img+desc; stories {id:{t,fs,ls}};
                            meta.sources w/ home, domain, logo)
+scripts/probe_fronts.py    vet candidate fronts with the pipeline's fetcher/extractor (--render for Chromium, --sources for
+                           sources.yaml names); .github/workflows/probe.yml runs it from a GitHub runner on demand
 scripts/alert.py           workflow's last step: health.json → one GitHub issue per incident (@mentions the owner ⇒ email),
                            updated when the condition set changes, auto-closed on the first clean run
 scripts/fetch_wordmarks.py one-off: outlet wordmark logos (Wikipedia infobox, header <img> fallback) → docs/logos/<name>.svg|png
@@ -144,6 +148,21 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   2026-09-09 to 2026-09-11 07:45 UTC counted columnist boxes as headlines — attention 0,
   intl 0 — and are not recoverable). When a source's Israel share is flat zero, check
   its extracted headlines before trusting it.
+- **Panel 30 → 39** (2026-11-07, "package A", owner's choice over a `core` flag: the published attention
+  series simply changes composition from the first run that carries the new sources; this is the break
+  date). One outlet per bloc per country where a country lacked one: El País (L), La Vanguardia (C) for
+  Spain; La Repubblica (L) for Italy; t-online (L) and Welt (R) for Germany; franceinfo (C); CTV News (C)
+  and National Post (R) for Canada; 9News (R, measured on the nine.com.au portal its domain now redirects
+  to). Blocs stay equal at 13/13/13. TGCOM24 was the planned Italian right and was dropped: the only
+  headline list in its HTML is the chronological "ultim'ora" ticker, which is a feed, not a front. El País
+  (retired 2026-09-09 for runner-side fetch failures) answered 403 once today after six probes in ten
+  minutes and 200 again twenty seconds later — rate-limited, not walled; elDiario.es (L, DNR #2 in Spain)
+  is the fallback if the runner still fails. Per-source knob added for this batch: `headline`, a CSS
+  selector for the element inside a link that carries the headline proper, because t-online's link text
+  runs kicker + headline + byline together and franceinfo's starts with its tag (": Témoignages …") —
+  the stored headline is the item id and what clustering sees, so the kicker must not be in it.
+  Spanish keywords gained the unaccented `hamas`, `hezbollah`, `hizbulá`, `hizbolá` the same day
+  (5 of 4,836 stored El Mundo headlines had missed the filter).
 - Blocked sources (401/402/403) get swapped for an equivalent outlet, preserving
   country/lean balance — WSJ, WaPo, Reuters, Telegraph, Sky, France24, Politico
   are known-blocked (plus, from runner IPs: The Hill, news.com.au, Ouest-France,
@@ -341,7 +360,7 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   one per distinct story, measured after the svg is in the DOM).
 - **Expansion** (decided 2026-10-18, not yet started): grow into **Asia**, **deeper Europe** and
   **Latin America**. Three things constrain it, and the first two are easy to miss.
-  1. **The lean blocs are exactly 10 / 10 / 10 today.** That is why a bloc's raw weight compares
+  1. **The lean blocs are exactly 13 / 13 / 13 today** (10 / 10 / 10 before package A). That is why a bloc's raw weight compares
      fairly against another's in `blocStats`, the bars and Δ. Add outlets unevenly and those
      figures start measuring bloc headcount instead of editorial choice — either keep the balance
      or normalise per bloc size, deliberately, not by accident.
@@ -352,11 +371,17 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   3. **The headline attention figure stays western** (owner's call): new regions are a dimension
      to filter and compare by, not a redefinition, so the existing series stays continuous.
   Also: `config/keywords.yaml` covers en/fr/de/es/it only — Latin America needs Portuguese, and
-  anything beyond the Latin alphabet is new ground. Current spread: 30 outlets, US 9, UK 5, DE 4,
-  FR 3, IT 2, CA 2, AU 2, INT 2, ES 1.
+  anything beyond the Latin alphabet is new ground. Spread after package A (2026-11-07): 39 outlets,
+  US 9, DE 6, UK 5, FR 4, CA 4, ES 3, IT 3, AU 3, INT 2.
   **Blocked outlets** may be recovered with real-browser rendering (owner approved), with a line:
   an honest user agent and robots.txt respected, never defeating bot detection or CAPTCHAs — NYT
-  stays on its feed. Expect roughly half the blocked list back, not all of it.
+  stays on its feed. Expect roughly half the blocked list back, not all of it. Built 2026-11-07
+  as `pipeline/render.py` + `render: browser` per source (package E): the browser keeps its own
+  HeadlessChrome user agent, robots.txt is fetched first (The Sun, Sky, Reuters, Politico, The
+  Australian, news.com.au, Le Point, Ouest-France, Fanpage, Le Soir and Kurier disallow all
+  crawlers, which rules them out for good), and the workflow installs Chromium only while some
+  source asks for it. Measured results per front are in the research doc "Source expansion
+  candidates" (2026-11-07).
   Vetting a new source, in order: a published lean rating (AllSides / Ad Fontes, basis commented),
   the desktop-vs-mobile front comparison (see Mobile fronts), then a week of
   `scripts/audit_headlines.py` before it enters aggregates.

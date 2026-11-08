@@ -9,7 +9,12 @@
 #   games, "for you" carousels) — removed before ranking
 # lead: optional CSS selector for the visual lead story's link when the DOM puts a
 #   text column before it (moved to rank 1)
+# headline: optional CSS selector for the element inside a link that carries the headline
+#   proper, when the link text runs kicker + headline + byline together (t-online "h3",
+#   franceinfo "[class*='__title']")
 # ua: "mobile" to fetch the outlet's separately edited phone front (default: desktop)
+# render: "browser" to load the front in headless Chromium (pipeline/render.py) when the
+#   HTML carries no headlines or a plain request is refused; honest UA, robots.txt respected
 # site_hook: name of an extract.SITE_HOOKS entry for outlets that embed part of the
 #   front page as script data (USA Today's "More Top Stories" / "Top Headlines")
 # home: the outlet's home scope for domestic-vs-international classification
@@ -178,6 +183,17 @@ sources:
     lang: fr
     lean: center  # documented centrist
     type: broadsheet
+  - name: franceinfo
+    display: franceinfo
+    url: https://www.franceinfo.fr
+    country: FR
+    lang: fr
+    lean: center  # public broadcaster (France Télévisions / Radio France) -> center, as Tagesschau; MBFC Left-Center
+    type: broadcaster
+    skip: ["section.shuffle-videos"]  # 2026-11-07: a video carousel sits before the lead stories in the DOM
+    headline: "[class*='__title']"  # link text runs the kicker (": Témoignages", "• Direct") into the title
+    # 2026-11-07 (package A): DNR 2026 weekly online reach 11%, ACPM Sep 2026 149M visits (#4 news brand)
+
   - name: spiegel
     display: Der Spiegel
     url: https://www.spiegel.de
@@ -211,6 +227,25 @@ sources:
     lang: de
     lean: center  # documented centrist public broadcaster
     type: broadcaster
+  - name: tonline
+    display: t-online
+    url: https://www.t-online.de
+    country: DE
+    lang: de
+    lean: left  # MBFC Left-Center
+    type: digital
+    skip: ["t-sdc-live-now"]  # 2026-11-07: Bundesliga live widget renders as "Loading... Stuttgart Loading..."
+    headline: h3  # link text runs kicker + headline + "Eine Analyse von …" together; the h3 is the headline
+    # 2026-11-07 (package A): DNR 2026 online reach 17% (#2 brand after tagesschau.de), Similarweb world #32
+  - name: welt
+    display: Welt
+    url: https://www.welt.de
+    country: DE
+    lang: de
+    lean: right  # MBFC Right-Center; documented conservative (Axel Springer)
+    type: broadsheet
+    # 2026-11-07 (package A): DNR 2026 online reach 11%, Similarweb world #40
+
   - name: elmundo
     display: El Mundo
     url: https://www.elmundo.es
@@ -219,6 +254,24 @@ sources:
     lean: right  # documented centre-right
     type: broadsheet
     selector: main
+  - name: elpais
+    display: El País
+    url: https://elpais.com
+    country: ES
+    lang: es
+    lean: left  # MBFC Left-Center; DNR Spain 2026 (UNAV) groups it with the center-left
+    type: broadsheet
+    # 2026-11-07 (package A): DNR 2026 online reach 15% (#1 Spain), Similarweb world #35. Retired 2026-09-09
+    # for persistent fetch failures from the runner; open from a residential IP today — probe from the runner first
+  - name: lavanguardia
+    display: La Vanguardia
+    url: https://www.lavanguardia.com
+    country: ES
+    lang: es
+    lean: center  # MBFC Least Biased
+    type: broadsheet
+    # 2026-11-07 (package A): DNR 2026 online reach 7%, Similarweb #3-4 in Spain
+
   - name: corriere
     display: Corriere della Sera
     url: https://www.corriere.it
@@ -235,6 +288,16 @@ sources:
     lean: right  # documented conservative
     type: broadsheet
     selector: main
+  - name: repubblica
+    display: La Repubblica
+    url: https://www.repubblica.it
+    country: IT
+    lang: it
+    lean: left  # MBFC Left-Center (Antenna Group since March 2026)
+    type: broadsheet
+    skip: ["#as21-dashboard-wrapper"]  # 2026-11-07: Serie A live-score dashboard outranked every headline
+    # 2026-11-07 (package A): DNR 2026 online reach 11%, Audicom #1-2 news site by daily users
+
 
   # --- Anglosphere ---
   - name: cbc
@@ -266,3 +329,28 @@ sources:
     lean: left  # documented centre-left
     type: broadsheet
     selector: main
+  - name: ctvnews
+    display: CTV News
+    url: https://www.ctvnews.ca
+    country: CA
+    lang: en
+    lean: center  # MBFC Least Biased
+    type: broadcaster
+    # 2026-11-07 (package A): DNR 2026 online reach 22% of anglophones (#2 after CBC)
+  - name: nationalpost
+    display: National Post
+    url: https://nationalpost.com
+    country: CA
+    lang: en
+    lean: right  # MBFC Right-Center
+    type: broadsheet
+    # 2026-11-07 (package A): Canada's right-leaning national; outside the DNR online top 12
+  - name: ninenews
+    display: 9News
+    url: https://www.nine.com.au
+    country: AU
+    lang: en
+    lean: right  # MBFC Right-Center (nine.com.au, Nov 2024)
+    type: broadcaster
+    # 2026-11-07 (package A): DNR 2026 online reach 17% (#3), Ipsos iris Sep 2026 8.7M. 9news.com.au redirects to
+    # the nine.com.au portal since 2026; its top ranks are the 9News lead, lifestyle/sport follow (like UOL)

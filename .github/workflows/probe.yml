@@ -1,0 +1,40 @@
+name: probe-fronts
+
+# Vetting step for new sources (CLAUDE.md, Expansion): fetch candidate homepages
+# from a GitHub runner, whose IPs are refused more often than residential ones,
+# and print what the pipeline's extractor would see. Writes nothing.
+on:
+  workflow_dispatch:
+    inputs:
+      targets:
+        description: "Space-separated URLs, or source names with 'sources' mode"
+        required: true
+      mode:
+        description: "urls | sources | render (headless Chromium)"
+        required: false
+        default: "urls"
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Browser
+        if: ${{ inputs.mode == 'render' }}
+        run: python -m playwright install --with-deps chromium
+      - name: Probe
+        run: |
+          case "${{ inputs.mode }}" in
+            sources) python scripts/probe_fronts.py --sources ${{ inputs.targets }} ;;
+            render)  python scripts/probe_fronts.py --render ${{ inputs.targets }} ;;
+            *)       python scripts/probe_fronts.py ${{ inputs.targets }} ;;
+          esac

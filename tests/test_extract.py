@@ -139,3 +139,23 @@ class TestLabelPrefixes(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+KICKER = """<html><body><main>
+<article><a href="/nachrichten/id_1/krakau">
+  <span class="text-15">"Habe noch nie so eine Panik erlebt"</span>
+  <h3 class="pt-8">Schüsse mitten in Krakau – mindestens sechs Tote</h3>
+  <span class="byline">Eine Analyse von Julia Naue</span></a></article>
+<article><a href="/nachrichten/id_2/plain">Ein Link ohne eigene Überschrift, der ganz übernommen wird</a></article>
+</main></body></html>"""
+
+
+class TestHeadlineSelector(unittest.TestCase):
+    def test_headline_selector_takes_the_inner_element(self):
+        got = [it["headline"] for it in extract_items(KICKER, "https://www.t-online.de", "main", headline="h3")]
+        self.assertEqual(got, ["Schüsse mitten in Krakau – mindestens sechs Tote",
+                               "Ein Link ohne eigene Überschrift, der ganz übernommen wird"])
+
+    def test_without_selector_the_whole_link_text_is_kept(self):
+        got = extract_items(KICKER, "https://www.t-online.de", "main")[0]["headline"]
+        self.assertTrue(got.startswith('"Habe noch nie so eine Panik erlebt" Schüsse mitten in Krakau'))

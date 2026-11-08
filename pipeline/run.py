@@ -66,9 +66,13 @@ def run(no_llm=False, no_enrich=False, retry_hours=None):
             if src.get("feed"):  # bot-walled homepage: measured on its front-page feed
                 extracted = fetch_feed(src["feed"])
             else:
-                html = fetch_html(src["url"], ua=src.get("ua"))
+                if src.get("render") == "browser":  # JavaScript-built or walled front: headless Chromium
+                    from . import render  # lazy: playwright is optional
+                    html = render.render_html(src["url"])
+                else:
+                    html = fetch_html(src["url"], ua=src.get("ua"))
                 extracted = extract_items(html, src["url"], src.get("selector"), src.get("skip"),
-                                          src.get("lead"), src.get("site_hook"))
+                                          src.get("lead"), src.get("site_hook"), src.get("headline"))
         except Exception as e:  # noqa: BLE001 — one dead source must not kill the run
             log(f"FETCH FAIL {name}: {e}")
             per_source[name] = {"ok": False, "present": [], "top20": [],
@@ -117,6 +121,9 @@ def run(no_llm=False, no_enrich=False, retry_hours=None):
         log(f"{name}: {total} items, {len(present)} israel-candidates"
             + ("" if total else "  <-- EMPTY EXTRACTION, check parser"))
         time.sleep(1)  # be polite between hosts
+    if any(s.get("render") == "browser" for s in sources):
+        from . import render
+        render.close()
 
     # Score fresh items plus earlier ones that missed scoring, within the retry window
     cutoff = (now - timedelta(hours=retry_h)).strftime("%Y-%m-%dT%H:%M:%SZ")

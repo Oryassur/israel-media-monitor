@@ -141,7 +141,7 @@ def fetch_feed(url: str, timeout: int = 25):
 
 
 def extract_items(html: str, base_url: str, selector: str = None, skip=None, lead: str = None,
-                  site: str = None):
+                  site: str = None, headline: str = None):
     """Return headline items in page order: [{rank, headline, url}].
 
     Rank is the order of first appearance in the DOM, which approximates
@@ -152,7 +152,12 @@ def extract_items(html: str, base_url: str, selector: str = None, skip=None, lea
     for the visual lead story's link(s) when the DOM puts a text column before
     the hero (USA Today) — matching items move to the front; `site` names a
     hook in SITE_HOOKS for outlets that embed part of the front page as data
-    rather than markup.
+    rather than markup; `headline` is a CSS selector for the element inside a
+    link that carries the headline proper, for fronts whose link text runs the
+    kicker, headline and byline together (t-online: "Nach Zwischenwahlen Droht
+    Trump ein drittes Impeachment-Verfahren? Eine Analyse von …", franceinfo:
+    ": Témoignages …") — without it the stored headline, and so the item id and
+    what clustering sees, carries the kicker.
     """
     soup = BeautifulSoup(html, "html.parser")
     for t in soup(["script", "style", "noscript", "template"]):
@@ -174,7 +179,9 @@ def extract_items(html: str, base_url: str, selector: str = None, skip=None, lea
         # skip links inside non-editorial chrome
         if any(_is_chrome(p) for p in a.parents):
             continue
-        head = a.find(class_=lambda c: c and "headline" in c.lower())
+        head = a.select_one(headline) if headline else None
+        if head is None:
+            head = a.find(class_=lambda c: c and "headline" in c.lower())
         raw_text = head.get_text(" ") if head and len(_clean_text(head.get_text(" "))) >= MIN_HEADLINE_LEN else a.get_text(" ")
         text = _strip_labels(strip_meta_suffix(_clean_text(raw_text)))
         if len(text) < MIN_HEADLINE_LEN or len(text) > 300:
