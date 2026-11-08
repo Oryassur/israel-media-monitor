@@ -150,14 +150,14 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   its extracted headlines before trusting it.
 - **Panel 30 → 39** (2026-11-07, "package A", owner's choice over a `core` flag: the published attention
   series simply changes composition from the first run that carries the new sources; this is the break
-  date). One outlet per bloc per country where a country lacked one: El País (L), La Vanguardia (C) for
+  date). One outlet per bloc per country where a country lacked one: elDiario.es (L), La Vanguardia (C) for
   Spain; La Repubblica (L) for Italy; t-online (L) and Welt (R) for Germany; franceinfo (C); CTV News (C)
   and National Post (R) for Canada; 9News (R, measured on the nine.com.au portal its domain now redirects
   to). Blocs stay equal at 13/13/13. TGCOM24 was the planned Italian right and was dropped: the only
   headline list in its HTML is the chronological "ultim'ora" ticker, which is a feed, not a front. El País
   (retired 2026-09-09 for runner-side fetch failures) answered 403 once today after six probes in ten
-  minutes and 200 again twenty seconds later — rate-limited, not walled; elDiario.es (L, DNR #2 in Spain)
-  is the fallback if the runner still fails. Per-source knob added for this batch: `headline`, a CSS
+  minutes and 200 again twenty seconds later, but the runner-side probe (2026-11-08) got the same 403 as in
+  September, so elDiario.es (L, DNR #2 in Spain) took its slot before the first run. Per-source knob added for this batch: `headline`, a CSS
   selector for the element inside a link that carries the headline proper, because t-online's link text
   runs kicker + headline + byline together and franceinfo's starts with its tag (": Témoignages …") —
   the stored headline is the item id and what clustering sees, so the kicker must not be in it.

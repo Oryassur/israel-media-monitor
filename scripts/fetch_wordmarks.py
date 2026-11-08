@@ -42,7 +42,7 @@ WIKI = {
     "cbc": "CBC News", "globeandmail": "The Globe and Mail", "abcau": "ABC News (Australia)",
     "smh": "The Sydney Morning Herald",
     # 2026-11-07 (package A)
-    "elpais": "El País", "lavanguardia": "La Vanguardia", "repubblica": "La Repubblica",
+    "lavanguardia": "La Vanguardia", "repubblica": "La Repubblica",
     "tonline": "T-Online", "welt": "Die Welt", "franceinfo": "Franceinfo", "ctvnews": "CTV News",
     "nationalpost": "National Post", "ninenews": "Nine News", "eldiario": "ElDiario.es",
 }

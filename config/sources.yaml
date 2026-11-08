@@ -254,15 +254,15 @@ sources:
     lean: right  # documented centre-right
     type: broadsheet
     selector: main
-  - name: elpais
-    display: El País
-    url: https://elpais.com
+  - name: eldiario
+    display: elDiario.es
+    url: https://www.eldiario.es
     country: ES
     lang: es
-    lean: left  # MBFC Left-Center; DNR Spain 2026 (UNAV) groups it with the center-left
-    type: broadsheet
-    # 2026-11-07 (package A): DNR 2026 online reach 15% (#1 Spain), Similarweb world #35. Retired 2026-09-09
-    # for persistent fetch failures from the runner; open from a residential IP today — probe from the runner first
+    lean: left  # MBFC Left-Center; DNR Spain 2026 (UNAV) groups it with the left/center-left
+    type: digital
+    # 2026-11-08 (package A): DNR 2026 online reach 14% (#2 Spain, top digital-native). Stands in for El País,
+    # which answers 403 from GitHub runners (probe-fronts run 42471894685) as it did before its 2026-09-09 retirement
   - name: lavanguardia
     display: La Vanguardia
     url: https://www.lavanguardia.com
