@@ -83,11 +83,14 @@ def run(no_llm=False, no_enrich=False, retry_hours=None):
         total_weight = sum(prominence_weight(it["rank"], total) for it in extracted)
         present = []
         top20 = []  # every top-20 headline, for the international benchmark
+        urls = {}   # headline -> url of those, stored on the all-item record
         for it in extracted:
             weight = prominence_weight(it["rank"], total)
             if weight == 0:
                 continue  # below the top-20 window: counted above, never ingested
             top20.append((it["headline"], it["rank"], weight))
+            if it.get("url"):
+                urls.setdefault(it["headline"], it["url"])
             kw = match_keyword(it["headline"], src["lang"])
             if not kw:
                 continue
@@ -115,7 +118,7 @@ def run(no_llm=False, no_enrich=False, retry_hours=None):
                 items_idx[iid] = rec
                 fresh.append(rec)
         per_source[name] = {
-            "ok": True, "present": present, "top20": top20,
+            "ok": True, "present": present, "top20": top20, "urls": urls,
             "total_items": total, "total_weight": total_weight,
         }
         log(f"{name}: {total} items, {len(present)} israel-candidates"

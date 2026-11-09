@@ -6,7 +6,8 @@
 - data/stories/YYYY-MM.jsonl : story cluster registry (partitioned/rewritten
   like items; rows never hold item lists — items point at stories)
 - data/allitems/YYYY-MM.jsonl : every top-20 headline, Israel-related or not,
-  for the international benchmark (partitioned/rewritten like items)
+  for the international benchmark (partitioned/rewritten like items); carries
+  `url` since 2026-11-09, absent on older records
 - data/intl/YYYY-MM.jsonl : international-coverage aggregates, one row per
   source per run (append-only)
 - data/runs/YYYY-MM.jsonl : each run's ranked top-20, one row per source per

@@ -145,6 +145,40 @@ def pending_classification(allidx, per_source, ts, src_by_name):
     return pending[:MAX_INTL_ITEMS_PER_RUN]
 
 
+def upsert_allitems(allidx, sources, per_source, ts):
+    """Create or refresh the all-item record of every top-20 headline fetched
+    this run. `url` is stored since 2026-11-09 (the conflict-mirror repo reads
+    this archive and links every headline); it is only known at fetch time, so
+    a record written before that date gains one only if the headline is still
+    on the front page, and otherwise never has it — read with .get("url")."""
+    for src in sources:
+        ps = per_source[src["name"]]
+        if not ps["ok"]:
+            continue
+        urls = ps.get("urls") or {}
+        for headline, rank, weight in ps["top20"]:
+            iid = item_id(src["name"], headline)
+            url = urls.get(headline)
+            rec = allidx.get(iid)
+            if rec:
+                rec["last_seen"] = ts
+                if weight > rec.get("best_weight", 0):
+                    rec["best_weight"] = weight
+                    rec["best_rank"] = rank
+                if url and not rec.get("url"):
+                    rec["url"] = url
+            else:
+                rec = {"id": iid, "source": src["name"]}
+                if url:
+                    rec["url"] = url
+                rec.update({
+                    "headline": headline,
+                    "lang": src["lang"], "first_seen": ts, "last_seen": ts,
+                    "best_rank": rank, "best_weight": weight,
+                })
+                allidx[iid] = rec
+
+
 def collect(sources, per_source, ts, months, log=print):
     """The full benchmark pass for one run: upsert all-item records for every
     fetched top-20 headline, classify what's still unclassified, then append
@@ -152,24 +186,7 @@ def collect(sources, per_source, ts, months, log=print):
     allidx = load_recent_allitems(months)
     src_by_name = {s["name"]: s for s in sources}
 
-    for src in sources:
-        ps = per_source[src["name"]]
-        if not ps["ok"]:
-            continue
-        for headline, rank, weight in ps["top20"]:
-            iid = item_id(src["name"], headline)
-            rec = allidx.get(iid)
-            if rec:
-                rec["last_seen"] = ts
-                if weight > rec.get("best_weight", 0):
-                    rec["best_weight"] = weight
-                    rec["best_rank"] = rank
-            else:
-                allidx[iid] = {
-                    "id": iid, "source": src["name"], "headline": headline,
-                    "lang": src["lang"], "first_seen": ts, "last_seen": ts,
-                    "best_rank": rank, "best_weight": weight,
-                }
+    upsert_allitems(allidx, sources, per_source, ts)
 
     pending = pending_classification(allidx, per_source, ts, src_by_name)
     if pending:
