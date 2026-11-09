@@ -11,7 +11,7 @@ architecture to 12 Israeli outlets; its analysis layer ("data stories") is TBD.
 The retired Netanyahu-family monitor (`bibi-media-monitor/`) was moved there as
 an archive — its history stays in this repo's git log. A third sibling
 ("IL media — headlines alignment") is planned, consuming the Israeli repo's raw
-archive rather than re-fetching. **`Oryassur/conflict-mirror`** (2026-11-09, local:
+archive rather than re-fetching. **`Oryassur/frontline-wire`** ("Frontline Wire", 2026-11-09, local:
 `~/Desktop/conflict-mirror`) is a separate product started as a copy of this repo:
 a two-sided rivalry dashboard (India–Pakistan first) that reads this repo's
 `data/allitems` + `data/runs` for the western panel. Never nest it here.
@@ -203,7 +203,7 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
 - **All-item URLs** (2026-11-09): `data/allitems` records carry `url` for every top-20 headline,
   not only Israel-related ones (`intl.upsert_allitems`; `run.py` passes `per_source[name]["urls"]`,
   headline → url, beside `top20`, whose tuple shape is unchanged). Added for the sibling repo
-  **`Oryassur/conflict-mirror`** (local: `~/Desktop/conflict-mirror`), which reads this archive and
+  **`Oryassur/frontline-wire`** (local: `~/Desktop/conflict-mirror`), which reads this archive and
   `data/runs` for the western panel instead of fetching the same fronts again, and links every
   headline. A URL is only known at fetch time: records written before this date have none unless the
   headline was still on a front page afterwards, so consumers read `.get("url")`. A stored URL is

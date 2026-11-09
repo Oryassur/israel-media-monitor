@@ -147,7 +147,7 @@ def pending_classification(allidx, per_source, ts, src_by_name):
 
 def upsert_allitems(allidx, sources, per_source, ts):
     """Create or refresh the all-item record of every top-20 headline fetched
-    this run. `url` is stored since 2026-11-09 (the conflict-mirror repo reads
+    this run. `url` is stored since 2026-11-09 (the frontline-wire repo reads
     this archive and links every headline); it is only known at fetch time, so
     a record written before that date gains one only if the headline is still
     on the front page, and otherwise never has it — read with .get("url")."""
