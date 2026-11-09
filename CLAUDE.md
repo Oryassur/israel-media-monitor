@@ -64,7 +64,8 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   top-20 window per homepage. Prominence weights: rank 1 ×10, 2–5 ×5, 6–10 ×3,
   11–20 ×1, 21+ ×0. Only the top-20 window is ingested as items (since
   2026-09-09); stories beyond it count toward total_items/total_weight for
-  parser health but are never tracked. Sources are equal-weighted in
+  parser health but are never tracked (ranks 21–40 are *recorded* in `data/tail`
+  for a sibling repo since 2026-11-09 — see Tail archive — and never measured here). Sources are equal-weighted in
   aggregates. Failed fetches are recorded as missing, never zero.
 - **Sentiment is framing toward Israel**, not generic positivity. Every score
   stores model + rubric version; changing either means bumping `RUBRIC_VERSION`
@@ -209,6 +210,18 @@ docs/                      GitHub Pages dashboard "The Israel Mirror" (vanilla J
   headline was still on a front page afterwards, so consumers read `.get("url")`. A stored URL is
   never overwritten. That repo depends on the shape of `data/allitems`, `data/runs` and
   `config/sources.yaml` — adding fields is safe, renaming or removing one must be coordinated there.
+- **Tail archive** (2026-11-09): ranks 21–40 of every front are recorded in `data/tail/` —
+  `runs/YYYY-MM.jsonl` ({ts, source, ids}, rank 21 first, pruned to 90 days like `data/runs`) and
+  `items/YYYY-MM.jsonl` ({id, source, url, headline, lang, first_seen, rank}, written once per id,
+  never updated or pruned). **Nothing in this repo measures them**: attention share, the benchmark,
+  `data/runs` and `data/allitems` are top-20 and stay so, and `prominence_weight` still returns 0
+  below rank 20. They exist for `Oryassur/frontline-wire`, which counts ranks 21–40 at weight 0.5
+  (owner's call, for recall on low-volume subjects) and cannot fetch what it does not have: a rank
+  below 20 is only knowable at fetch time, so nothing before this date is recoverable. Best-effort
+  (`run.archive_tail` never raises). Expect more page furniture down there than in the top 20
+  (first live check: a streaming promo at Spiegel's rank 40) — the parser was tuned on the top 20,
+  and auditing the tail is the consumer's job. Fronts with fewer than 21 links (the NYT feed has 15)
+  get no row. Roughly 0.4 MB/day of run rows and 0.6 MB/day of items.
 - **Outage 2026-09-18 22:45 → 09-22 ~09:00 UTC** (API credits exhausted): no item
   scored/clustered/tagged, intl rows have uncl_w ≈ total_w, snapshot rows carry
   the candidates in w_u (attention slightly overstated by the LLM's usual ~3%

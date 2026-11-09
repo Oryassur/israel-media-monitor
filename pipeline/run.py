@@ -20,7 +20,7 @@ from .common import (CLUSTER_VERSION, LOGS, RUBRIC_VERSION, SCORE_RETRY_WINDOW_H
 from .detect import match_keyword
 from .extract import extract_items, fetch_feed, fetch_html, prominence_weight
 from .score import score_items
-from .store import (append_runs, append_snapshots, load_recent_items,
+from .store import (TAIL_MAX_RANK, append_runs, append_snapshots, append_tail, tail_rows, load_recent_items,
                     load_recent_stories, run_rows, save_items, save_stories)
 
 
@@ -45,6 +45,21 @@ def archive_run(ts, sources, per_source, log=log):
         return len(rows)
     except Exception as e:  # noqa: BLE001
         log(f"runs: archive failed ({e}); continuing")
+        return 0
+
+
+def archive_tail(ts, sources, per_source, log=log):
+    """Append ranks 21-40 of each front to data/tail (see store.py). Recorded
+    for the frontline-wire repo; nothing here reads it back. Best-effort like
+    archive_run — it never raises. Returns the number of run rows written."""
+    try:
+        runs, items = tail_rows(ts, sources, per_source)
+        if runs:
+            fresh = append_tail(ts, runs, items)
+            log(f"tail: archived ranks 21-{TAIL_MAX_RANK} for {len(runs)} sources ({fresh} new items)")
+        return len(runs)
+    except Exception as e:  # noqa: BLE001
+        log(f"tail: archive failed ({e}); continuing")
         return 0
 
 
@@ -84,10 +99,14 @@ def run(no_llm=False, no_enrich=False, retry_hours=None):
         present = []
         top20 = []  # every top-20 headline, for the international benchmark
         urls = {}   # headline -> url of those, stored on the all-item record
+        tail = []   # ranks 21-40: archived for the frontline-wire repo, never measured here
         for it in extracted:
             weight = prominence_weight(it["rank"], total)
             if weight == 0:
-                continue  # below the top-20 window: counted above, never ingested
+                # below the top-20 window: counted above, never ingested as an item
+                if it["rank"] <= TAIL_MAX_RANK:
+                    tail.append((it["headline"], it["rank"], it.get("url")))
+                continue
             top20.append((it["headline"], it["rank"], weight))
             if it.get("url"):
                 urls.setdefault(it["headline"], it["url"])
@@ -118,7 +137,7 @@ def run(no_llm=False, no_enrich=False, retry_hours=None):
                 items_idx[iid] = rec
                 fresh.append(rec)
         per_source[name] = {
-            "ok": True, "present": present, "top20": top20, "urls": urls,
+            "ok": True, "present": present, "top20": top20, "urls": urls, "tail": tail,
             "total_items": total, "total_weight": total_weight,
         }
         log(f"{name}: {total} items, {len(present)} israel-candidates"
@@ -258,6 +277,7 @@ def run(no_llm=False, no_enrich=False, retry_hours=None):
         })
 
     archive_run(ts, sources, per_source)
+    archive_tail(ts, sources, per_source)
     save_items(items_idx)
     append_snapshots(ts, snaps)
     publish.build()

@@ -12,6 +12,9 @@
   source per run (append-only)
 - data/runs/YYYY-MM.jsonl : each run's ranked top-20, one row per source per
   run (append-only, pruned to RUN_RETENTION_DAYS)
+- data/tail/runs/YYYY-MM.jsonl, data/tail/items/YYYY-MM.jsonl : ranks 21-40 of
+  each front, recorded for the frontline-wire repo and never measured here
+  (append-only; runs pruned like data/runs)
 """
 import csv
 import json
@@ -38,6 +41,20 @@ TS_FMT = "%Y-%m-%dT%H:%M:%SZ"
 # data/allitems and data/items. ~30 rows/run, ~22k rows/month.
 RUN_FIELDS = ["ts", "source", "ids"]
 RUN_RETENTION_DAYS = 90  # pruned on write, so the store cannot grow without bound
+
+# Tail archive (2026-11-09): ranks 21..TAIL_MAX_RANK of every front. Nothing in
+# this repo measures them — attention share, the benchmark and data/runs are
+# all top-20 and stay so. They are recorded because the frontline-wire repo
+# reads this archive instead of fetching the same fronts, counts ranks 21-40 at
+# a low weight, and a rank below 20 is only knowable at fetch time.
+#   tail/runs  : {ts, source, ids} — ids of ranks 21..40 in order (rank 21 first)
+#   tail/items : {id, source, url, headline, lang, first_seen, rank} — written
+#                once, the first time an id is seen in the tail; never updated.
+#                An item that also reached the top 20 has a data/allitems
+#                record under the same id.
+TAIL_RUNS_DIR = DATA / "tail" / "runs"
+TAIL_ITEMS_DIR = DATA / "tail" / "items"
+TAIL_MAX_RANK = 40
 
 # w_n2..w_p2: Israel prominence weight in each sentiment bucket that run;
 # w_u: present but unscored (related not yet decided). Sum == israel_weight.
@@ -151,18 +168,20 @@ def _run_cutoff(ts, days=RUN_RETENTION_DAYS):
     return (datetime.strptime(ts, TS_FMT) - timedelta(days=days)).strftime(TS_FMT)
 
 
-def prune_runs(ts, days=RUN_RETENTION_DAYS):
+def prune_runs(ts, days=RUN_RETENTION_DAYS, directory=None):
     """Drop archived run rows older than `days` (relative to `ts`).
 
     Month files entirely out of the window are deleted; the month the cutoff
     falls in is filtered row by row. Returns the number of rows dropped.
+    `directory` defaults to data/runs; the tail archive passes its own.
     """
-    if not RUNS_DIR.exists():
+    runs_dir = directory or RUNS_DIR
+    if not runs_dir.exists():
         return 0
     cutoff = _run_cutoff(ts, days)
     cut_month = month_key(cutoff)
     dropped = 0
-    for path in sorted(RUNS_DIR.glob("*.jsonl")):
+    for path in sorted(runs_dir.glob("*.jsonl")):
         if path.stem > cut_month:  # YYYY-MM sorts lexicographically
             continue
         rows = read_jsonl(path)
@@ -208,6 +227,79 @@ def load_all_runs():
     for path in sorted(RUNS_DIR.glob("*.jsonl")):
         out.extend(read_jsonl(path))
     return out
+
+
+def tail_rows(ts, sources, per_source):
+    """This run's tail archive: (run_rows, items) for ranks 21..TAIL_MAX_RANK.
+
+    per_source[name]["tail"] is [(headline, rank, url)]. A front with fewer
+    than 21 links, or a failed fetch, gets no row — missing, never empty.
+    """
+    runs, items = [], []
+    for src in sources:
+        ps = per_source.get(src["name"]) or {}
+        tail = ps.get("tail")
+        if not ps.get("ok") or not tail:
+            continue
+        ordered = sorted(tail, key=lambda t: t[1])
+        ids = []
+        for headline, rank, url in ordered:
+            iid = item_id(src["name"], headline)
+            if iid in ids:
+                continue  # the same headline linked twice in the tail
+            ids.append(iid)
+            rec = {"id": iid, "source": src["name"]}
+            if url:
+                rec["url"] = url
+            rec.update({"headline": headline, "lang": src.get("lang"), "first_seen": ts, "rank": rank})
+            items.append(rec)
+        runs.append({"ts": ts, "source": src["name"], "ids": ids})
+    return runs, items
+
+
+def _known_tail_ids(ts):
+    """Ids already written to tail/items in this month or the one before —
+    enough to keep a headline that sits in the tail for days to one record."""
+    if not TAIL_ITEMS_DIR.exists():
+        return set()
+    months = [p for p in sorted(TAIL_ITEMS_DIR.glob("*.jsonl")) if p.stem <= month_key(ts)][-2:]
+    return {r["id"] for p in months for r in read_jsonl(p)}
+
+
+def append_tail(ts, runs, items, retention_days=RUN_RETENTION_DAYS):
+    """Append the tail run rows and the item records not written before, then
+    prune tail/runs. Returns the number of new item records."""
+    path = TAIL_RUNS_DIR / f"{month_key(ts)}.jsonl"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "a") as f:
+        for r in runs:
+            f.write(json.dumps({k: r[k] for k in RUN_FIELDS}, ensure_ascii=False) + "\n")
+    known = _known_tail_ids(ts)
+    fresh = []
+    for it in items:
+        if it["id"] not in known:
+            known.add(it["id"])
+            fresh.append(it)
+    if fresh:
+        ipath = TAIL_ITEMS_DIR / f"{month_key(ts)}.jsonl"
+        ipath.parent.mkdir(parents=True, exist_ok=True)
+        with open(ipath, "a") as f:
+            for it in fresh:
+                f.write(json.dumps(it, ensure_ascii=False) + "\n")
+    prune_runs(ts, retention_days, directory=TAIL_RUNS_DIR)
+    return len(fresh)
+
+
+def load_all_tail_runs():
+    if not TAIL_RUNS_DIR.exists():
+        return []
+    return [r for p in sorted(TAIL_RUNS_DIR.glob("*.jsonl")) for r in read_jsonl(p)]
+
+
+def load_all_tail_items():
+    if not TAIL_ITEMS_DIR.exists():
+        return []
+    return [r for p in sorted(TAIL_ITEMS_DIR.glob("*.jsonl")) for r in read_jsonl(p)]
 
 
 def _ensure_snapshot_schema(path):
