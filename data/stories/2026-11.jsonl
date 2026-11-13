@@ -89,7 +89,7 @@
 {"id": "6b1ae7a3213c", "title": "UN denies ties to Hamas-linked aid group", "first_seen": "2026-11-11T10:45:36Z", "last_seen": "2026-11-11T10:45:36Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "9db99250ac1f", "title": "Survey shows college students' views on Israel", "first_seen": "2026-11-11T11:45:34Z", "last_seen": "2026-11-11T11:45:34Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "41d62c1041bc", "title": "Interview on Israeli-Palestinian conflict and religion", "first_seen": "2026-11-11T11:45:34Z", "last_seen": "2026-11-11T11:45:34Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "42541512a0d6", "title": "Trump and Netanyahu clash over Iran war", "first_seen": "2026-11-11T11:45:34Z", "last_seen": "2026-11-12T16:45:38Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "42541512a0d6", "title": "Trump and Netanyahu clash over Iran war", "first_seen": "2026-11-11T11:45:34Z", "last_seen": "2026-11-13T12:45:40Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "45d860756228", "title": "Documentary on Gaza killings gains viewership", "first_seen": "2026-11-11T12:45:35Z", "last_seen": "2026-11-12T10:45:41Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "f3ecb375a547", "title": "Democratic congressman-elect criticized over Israel and Iran stance", "first_seen": "2026-11-11T14:09:08Z", "last_seen": "2026-11-11T14:09:08Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "cbaf62b7816b", "title": "US states threaten London over Hezbollah ties", "first_seen": "2026-11-11T14:45:36Z", "last_seen": "2026-11-11T14:45:36Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -108,3 +108,4 @@
 {"id": "6cf0e3239e78", "title": "Italian imam flagged for pro-Hamas remarks", "first_seen": "2026-11-13T09:45:35Z", "last_seen": "2026-11-13T09:45:35Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "b2b32e746e44", "title": "Eric Trump deal sends robots to Gaza tunnels", "first_seen": "2026-11-13T11:39:22Z", "last_seen": "2026-11-13T11:39:22Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "9cbd7a3973e3", "title": "Carney Liberals criticized over Palestinian Authority ties", "first_seen": "2026-11-13T11:39:22Z", "last_seen": "2026-11-13T11:39:22Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "59f02a9e0297", "title": "UK man convicted of Hamas-linked knife attack", "first_seen": "2026-11-13T12:45:40Z", "last_seen": "2026-11-13T12:45:40Z", "model": "claude-sonnet-5", "cv": "c1"}
