@@ -145,7 +145,7 @@
 {"id": "83fbc05ce762", "title": "Dangerous suspicion looms in Israel", "first_seen": "2026-11-17T11:45:38Z", "last_seen": "2026-11-17T11:45:38Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "82adce9ffdff", "title": "Opinion on America's role in Israel's future", "first_seen": "2026-11-17T13:14:16Z", "last_seen": "2026-11-17T16:47:52Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "ed577551215a", "title": "Palestinian woman killed by settlers in West Bank", "first_seen": "2026-11-17T13:14:16Z", "last_seen": "2026-11-19T01:45:33Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "e7eae7885451", "title": "UK sanctions firms over West Bank settlements", "first_seen": "2026-11-17T14:45:37Z", "last_seen": "2026-11-18T17:45:41Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "e7eae7885451", "title": "UK sanctions firms over West Bank settlements", "first_seen": "2026-11-17T14:45:37Z", "last_seen": "2026-11-19T12:45:36Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "b4515b50f56f", "title": "Iran blames Israel for dirty bomb reports", "first_seen": "2026-11-17T18:45:51Z", "last_seen": "2026-11-17T18:45:51Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "bda3544ede24", "title": "Anti-Arab hate speech surged during Israeli election", "first_seen": "2026-11-17T20:45:46Z", "last_seen": "2026-11-17T20:45:46Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "215c7885c520", "title": "Australia sanctions Israeli settler movement figures", "first_seen": "2026-11-17T20:45:46Z", "last_seen": "2026-11-18T04:14:00Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -154,7 +154,7 @@
 {"id": "ac76483f4ee8", "title": "Deutsche Bank financed tanks used by Israel", "first_seen": "2026-11-18T06:45:40Z", "last_seen": "2026-11-18T06:45:40Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "eca7a83aed5d", "title": "Debate over defining criticism of Israel as hatred", "first_seen": "2026-11-18T06:45:40Z", "last_seen": "2026-11-18T06:45:40Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "555d557ca061", "title": "German left party deputy backs Israel critic", "first_seen": "2026-11-18T09:45:37Z", "last_seen": "2026-11-18T09:45:37Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "8407e848e606", "title": "Israel strikes central Gaza, first since ceasefire", "first_seen": "2026-11-18T13:45:52Z", "last_seen": "2026-11-19T11:45:36Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "8407e848e606", "title": "Israel strikes central Gaza, first since ceasefire", "first_seen": "2026-11-18T13:45:52Z", "last_seen": "2026-11-19T12:45:36Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "a041df0db26a", "title": "Gaza war as testing ground for robotics", "first_seen": "2026-11-18T14:31:07Z", "last_seen": "2026-11-18T14:31:07Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "2b98386fb0ab", "title": "Italian lawmaker's Gaza remark sparks parliament uproar", "first_seen": "2026-11-18T14:45:47Z", "last_seen": "2026-11-18T15:45:40Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "1523541796f7", "title": "Israel blames Hamas for Gaza aid blockage", "first_seen": "2026-11-18T16:45:37Z", "last_seen": "2026-11-18T16:45:37Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -163,3 +163,4 @@
 {"id": "6f6af81e80f6", "title": "Mamdani defends Oct. 7 anniversary post criticizing Israel", "first_seen": "2026-11-19T03:19:06Z", "last_seen": "2026-11-19T03:19:06Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "76bbb8d1f928", "title": "Israel becoming demographic heart of world Jewry", "first_seen": "2026-11-19T07:45:41Z", "last_seen": "2026-11-19T07:45:41Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "6df88c5f5368", "title": "Trump warns of bioweapons amid Israel pressure", "first_seen": "2026-11-19T09:45:36Z", "last_seen": "2026-11-19T09:45:36Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "1af1883e5bd3", "title": "Suspected agricultural terror targets Israeli livestock", "first_seen": "2026-11-19T12:45:36Z", "last_seen": "2026-11-19T12:45:36Z", "model": "claude-sonnet-5", "cv": "c1"}
