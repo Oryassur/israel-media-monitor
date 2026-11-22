@@ -144,7 +144,7 @@
 {"id": "a15f0177e526", "title": "Biden says Netanyahu had Trump-like tendencies", "first_seen": "2026-11-17T10:45:38Z", "last_seen": "2026-11-17T10:45:38Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "83fbc05ce762", "title": "Dangerous suspicion looms in Israel", "first_seen": "2026-11-17T11:45:38Z", "last_seen": "2026-11-17T11:45:38Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "82adce9ffdff", "title": "Opinion on America's role in Israel's future", "first_seen": "2026-11-17T13:14:16Z", "last_seen": "2026-11-17T16:47:52Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "ed577551215a", "title": "Palestinian woman killed by settlers in West Bank", "first_seen": "2026-11-17T13:14:16Z", "last_seen": "2026-11-19T01:45:33Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "ed577551215a", "title": "Palestinian woman killed by settlers in West Bank", "first_seen": "2026-11-17T13:14:16Z", "last_seen": "2026-11-22T13:45:36Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "e7eae7885451", "title": "UK sanctions firms over West Bank settlements", "first_seen": "2026-11-17T14:45:37Z", "last_seen": "2026-11-19T12:45:36Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "b4515b50f56f", "title": "Iran blames Israel for dirty bomb reports", "first_seen": "2026-11-17T18:45:51Z", "last_seen": "2026-11-17T18:45:51Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "bda3544ede24", "title": "Anti-Arab hate speech surged during Israeli election", "first_seen": "2026-11-17T20:45:46Z", "last_seen": "2026-11-17T20:45:46Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -180,7 +180,7 @@
 {"id": "5429923a0305", "title": "Commentary on Mamdani joke and Gaza child marriage", "first_seen": "2026-11-21T13:45:38Z", "last_seen": "2026-11-21T13:45:38Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "f22e71f06e4f", "title": "Gaza children face flooding crisis in winter", "first_seen": "2026-11-21T14:45:48Z", "last_seen": "2026-11-21T14:45:48Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "11989ec4309b", "title": "Israeli strike kills aid distributors in Gaza", "first_seen": "2026-11-21T15:45:35Z", "last_seen": "2026-11-21T15:45:35Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "6fd538ac7be7", "title": "Settler violence surges during Palestinian olive harvest", "first_seen": "2026-11-21T16:45:36Z", "last_seen": "2026-11-21T16:45:36Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "6fd538ac7be7", "title": "Settler violence surges during Palestinian olive harvest", "first_seen": "2026-11-21T16:45:36Z", "last_seen": "2026-11-22T13:45:36Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "6f2fd506b9dd", "title": "FDP politician attacked at Berlin protest", "first_seen": "2026-11-21T20:45:47Z", "last_seen": "2026-11-21T20:45:47Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "aa71c4008cd3", "title": "Historian Ilan Pappé calls Israel apartheid state", "first_seen": "2026-11-22T05:45:35Z", "last_seen": "2026-11-22T05:45:35Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "90fc705a0245", "title": "Canadian unions debate refusing Israeli goods", "first_seen": "2026-11-22T09:45:35Z", "last_seen": "2026-11-22T09:45:35Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -188,3 +188,4 @@
 {"id": "e2ff5d172588", "title": "Israeli city sues Iran over damages", "first_seen": "2026-11-22T10:45:36Z", "last_seen": "2026-11-22T10:45:36Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "8231d93c2398", "title": "Resurfaced clip calls Jerusalem NYC's sixth borough", "first_seen": "2026-11-22T11:45:36Z", "last_seen": "2026-11-22T12:45:37Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "4829ffb543a7", "title": "Israel's economy grows amid war", "first_seen": "2026-11-22T12:45:37Z", "last_seen": "2026-11-22T12:45:37Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "c60a286d1a90", "title": "Investigation opens into West Bank settler fires", "first_seen": "2026-11-22T13:45:36Z", "last_seen": "2026-11-22T13:45:36Z", "model": "claude-sonnet-5", "cv": "c1"}
