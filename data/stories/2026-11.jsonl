@@ -184,7 +184,7 @@
 {"id": "6f2fd506b9dd", "title": "FDP politician attacked at Berlin protest", "first_seen": "2026-11-21T20:45:47Z", "last_seen": "2026-11-22T21:43:35Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "aa71c4008cd3", "title": "Historian Ilan Pappé calls Israel apartheid state", "first_seen": "2026-11-22T05:45:35Z", "last_seen": "2026-11-22T05:45:35Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "90fc705a0245", "title": "Canadian unions debate refusing Israeli goods", "first_seen": "2026-11-22T09:45:35Z", "last_seen": "2026-11-22T20:45:36Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "f7634b440b22", "title": "Gaza braces for winter amid aid restrictions", "first_seen": "2026-11-22T10:45:36Z", "last_seen": "2026-11-23T20:45:38Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "f7634b440b22", "title": "Gaza braces for winter amid aid restrictions", "first_seen": "2026-11-22T10:45:36Z", "last_seen": "2026-11-24T19:45:39Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "e2ff5d172588", "title": "Israeli city sues Iran over damages", "first_seen": "2026-11-22T10:45:36Z", "last_seen": "2026-11-22T14:45:49Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "8231d93c2398", "title": "Resurfaced clip calls Jerusalem NYC's sixth borough", "first_seen": "2026-11-22T11:45:36Z", "last_seen": "2026-11-22T12:45:37Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "4829ffb543a7", "title": "Israel's economy grows amid war", "first_seen": "2026-11-22T12:45:37Z", "last_seen": "2026-11-22T19:45:37Z", "model": "claude-sonnet-5", "cv": "c1"}
@@ -209,4 +209,4 @@
 {"id": "3858ee7c70fb", "title": "Rise of Israel's Arab professionals highlighted", "first_seen": "2026-11-24T11:45:43Z", "last_seen": "2026-11-24T11:45:43Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "99310e2b355a", "title": "AfD politician incites against Israel", "first_seen": "2026-11-24T12:45:36Z", "last_seen": "2026-11-24T12:45:36Z", "model": "claude-sonnet-5", "cv": "c1"}
 {"id": "c0e3e2e085af", "title": "Kushner warns Israel of global pariah status", "first_seen": "2026-11-24T17:45:50Z", "last_seen": "2026-11-24T18:45:38Z", "model": "claude-sonnet-5", "cv": "c1"}
-{"id": "2bae83a9cde5", "title": "Israel accuses Iran of chemical weapons development", "first_seen": "2026-11-24T18:45:38Z", "last_seen": "2026-11-24T18:45:38Z", "model": "claude-sonnet-5", "cv": "c1"}
+{"id": "2bae83a9cde5", "title": "Israel accuses Iran of chemical weapons development", "first_seen": "2026-11-24T18:45:38Z", "last_seen": "2026-11-24T19:45:39Z", "model": "claude-sonnet-5", "cv": "c1"}
